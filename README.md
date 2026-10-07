@@ -46,6 +46,10 @@ All of these are in `index.html` unless noted.
 - **Experience bullets, skills, certifications:** edit the lists directly; the layout adapts.
 - **Social preview image:** `assets/img/og-image.png` (1200×630) is what LinkedIn and others show when the link is shared.
 
+## After changing CSS or JavaScript
+
+The HTML files load `style.css?v=...` and `main.js?v=...`. When you change either file, bump that number in `index.html`, `contact/index.html` and `404.html` so visitors' browsers fetch the new version instead of a saved copy.
+
 ## Preview locally
 
 From this folder run `python3 -m http.server 8000` and open http://localhost:8000.

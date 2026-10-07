@@ -720,7 +720,7 @@
     var done = $('#contact-done');
     var alertBox = $('.contact-form-alert', form);
     var button = $('.send-btn', form);
-    var buttonText = $('.liquid-btn-text', button);
+    var buttonText = $('.btn-circle-text, .liquid-btn-text', button);
     var message = form.elements.message;
     var openedAt = Date.now();
 

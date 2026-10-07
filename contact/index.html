@@ -24,7 +24,7 @@
   <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
   <link rel="preload" href="/assets/fonts/plus-jakarta-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/assets/css/style.css">
+  <link rel="stylesheet" href="/assets/css/style.css?v=20261007-3">
 
   <script>
     /* No intro greeting on this page; fall back to the plain page if the main script never starts. */
@@ -92,19 +92,22 @@
 
   <main id="main" class="contact-page">
     <section class="contact-page-header" aria-labelledby="contact-page-title">
-      <div class="ds-container medium contact-page-top">
-        <h1 class="contact-page-title" id="contact-page-title" data-reveal="lines">
-          <span class="line"><span style="--i:0">Let’s build</span></span>
-          <span class="line"><span style="--i:1">something</span></span>
-          <span class="line"><span style="--i:2">together</span></span>
-        </h1>
+      <div class="ds-container contact-container contact-page-top">
+        <div class="contact-page-intro">
+          <p class="contact-page-eyebrow">Contact</p>
+          <h1 class="contact-page-title" id="contact-page-title" data-reveal="lines">
+            <span class="line"><span style="--i:0">Let’s build</span></span>
+            <span class="line"><span style="--i:1">something</span></span>
+            <span class="line"><span style="--i:2">together</span></span>
+          </h1>
+        </div>
         <picture class="contact-avatar-wrap">
           <source srcset="/assets/img/sarun-avatar.webp" type="image/webp">
           <img class="contact-avatar contact-page-avatar" src="/assets/img/sarun-avatar.jpg" alt="" width="288" height="288" decoding="async">
         </picture>
       </div>
 
-      <div class="ds-container medium contact-page-grid">
+      <div class="ds-container contact-container contact-page-grid">
         <div class="contact-form-wrap">
           <!--
             Messages are delivered by FormSubmit (formsubmit.co) to the email in the URLs below.
@@ -124,7 +127,7 @@
               <div>
                 <label class="contact-form-label" for="cf-name">What’s your name?</label>
                 <input class="contact-form-input" id="cf-name" name="name" type="text" autocomplete="name"
-                       placeholder="Jane Doe *" required aria-describedby="cf-name-error">
+                       placeholder="John, nice to meet you *" required aria-describedby="cf-name-error">
                 <p class="contact-form-error" id="cf-name-error"></p>
               </div>
             </div>
@@ -134,7 +137,7 @@
               <div>
                 <label class="contact-form-label" for="cf-email">What’s your email?</label>
                 <input class="contact-form-input" id="cf-email" name="email" type="email" autocomplete="email" inputmode="email"
-                       placeholder="jane@company.com *" required aria-describedby="cf-email-error">
+                       placeholder="hello@company.com *" required aria-describedby="cf-email-error">
                 <p class="contact-form-error" id="cf-email-error"></p>
               </div>
             </div>
@@ -142,7 +145,7 @@
             <div class="contact-form-field">
               <span class="contact-form-num" aria-hidden="true">03</span>
               <div>
-                <label class="contact-form-label" for="cf-org">What’s your organization? <span class="contact-form-optional">(optional)</span></label>
+                <label class="contact-form-label" for="cf-org">What’s your organization?</label>
                 <input class="contact-form-input" id="cf-org" name="organization" type="text" autocomplete="organization"
                        placeholder="Company Inc.">
               </div>
@@ -151,7 +154,7 @@
             <div class="contact-form-field" role="group" aria-labelledby="cf-topics-label">
               <span class="contact-form-num" aria-hidden="true">04</span>
               <div>
-                <p class="contact-form-label" id="cf-topics-label">What’s this about? <span class="contact-form-optional">(optional)</span></p>
+                <p class="contact-form-label" id="cf-topics-label">What’s this about?</p>
                 <div class="service-options">
                   <label class="service-option"><input type="checkbox" name="topics" value="Job opportunity"><span>Job opportunity</span></label>
                   <label class="service-option"><input type="checkbox" name="topics" value="Networking"><span>Networking</span></label>
@@ -166,7 +169,7 @@
               <div>
                 <label class="contact-form-label" for="cf-message">Your message</label>
                 <textarea class="contact-form-input" id="cf-message" name="message" rows="2"
-                          placeholder="Hi Sarun, I’d like to talk about… *" required aria-describedby="cf-message-error"></textarea>
+                          placeholder="Hello Sarun, I’d like to talk about … *" required aria-describedby="cf-message-error"></textarea>
                 <p class="contact-form-error" id="cf-message-error"></p>
               </div>
             </div>
@@ -174,10 +177,9 @@
             <div class="contact-form-alert" role="alert" hidden></div>
 
             <div class="contact-send-row">
-              <div class="stripe"></div>
-              <div class="contact-send-anchor" data-magnetic>
-                <button class="liquid-btn send-btn" type="submit"><span class="liquid-btn-text" data-magnetic-inner>Send it!</span></button>
-              </div>
+              <span class="magnetic" data-magnetic>
+                <button class="btn-circle btn-circle--on-dark send-btn" type="submit"><span class="btn-circle-text" data-magnetic-inner>Send it!</span></button>
+              </span>
             </div>
           </form>
 
@@ -209,7 +211,7 @@
             </ul>
           </div>
           <div class="contact-details-group">
-            <h2 class="contact-details-label">Local time</h2>
+            <h2 class="contact-details-label contact-details-label--plain">Local time</h2>
             <p class="contact-details-time"><time data-clock>US Central Time</time></p>
           </div>
         </aside>
@@ -218,7 +220,7 @@
   </main>
 
   <footer class="contact-page-footer">
-    <div class="ds-container medium">
+    <div class="ds-container contact-container">
       <div class="contact-footer-bottom">
         <div class="footer-meta-group">
           <div>
@@ -240,6 +242,6 @@
     </div>
   </footer>
 
-  <script src="/assets/js/main.js" defer></script>
+  <script src="/assets/js/main.js?v=20261007-3" defer></script>
 </body>
 </html>
