@@ -686,8 +686,8 @@
      Footer: live local time + year
      ------------------------------------------------------------------------ */
   function initClock() {
-    var el = $('[data-clock]');
-    if (!el) return;
+    var clocks = $$('[data-clock]');
+    if (!clocks.length) return;
     var fmt;
     try {
       fmt = new Intl.DateTimeFormat('en-US', {
@@ -696,7 +696,10 @@
         hour12: true, timeZoneName: 'short'
       });
     } catch (e) { return; }
-    function tick() { el.textContent = fmt.format(new Date()); }
+    function tick() {
+      var now = fmt.format(new Date());
+      clocks.forEach(function (el) { el.textContent = now; });
+    }
     tick();
     setInterval(tick, 1000);
   }
@@ -704,6 +707,138 @@
   function setYear() {
     var year = String(new Date().getFullYear());
     $$('[data-year]').forEach(function (el) { el.textContent = year; });
+  }
+
+  /* ------------------------------------------------------------------------
+     Contact form (contact page). Sends through FormSubmit; falls back to email.
+     ------------------------------------------------------------------------ */
+  function initContactForm() {
+    var form = $('#contact-form');
+    if (!form) return;
+    var EMAIL = 'sarun.shrestha.dev@gmail.com';
+    var endpoint = form.getAttribute('data-endpoint');
+    var done = $('#contact-done');
+    var alertBox = $('.contact-form-alert', form);
+    var button = $('.send-btn', form);
+    var buttonText = $('.liquid-btn-text', button);
+    var message = form.elements.message;
+    var openedAt = Date.now();
+
+    form.noValidate = true; // our own messages replace the browser's bubbles
+
+    // Let the message box grow with its text where CSS can't do it.
+    if (!(window.CSS && CSS.supports && CSS.supports('field-sizing', 'content'))) {
+      message.addEventListener('input', function () {
+        message.style.height = 'auto';
+        message.style.height = message.scrollHeight + 'px';
+      });
+    }
+
+    function setError(input, text) {
+      var box = document.getElementById(input.getAttribute('aria-describedby'));
+      if (text) input.setAttribute('aria-invalid', 'true');
+      else input.removeAttribute('aria-invalid');
+      if (box) box.textContent = text || '';
+    }
+
+    function validate() {
+      var firstBad = null;
+      function check(input, text) {
+        setError(input, text);
+        if (text && !firstBad) firstBad = input;
+      }
+      var email = form.elements.email.value.trim();
+      check(form.elements.name, form.elements.name.value.trim() ? '' : 'Please tell me your name.');
+      check(form.elements.email, !email ? 'Please add your email so I can reply.'
+        : (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? '' : 'That email address looks incomplete. Check it and try again.'));
+      check(message, message.value.trim() ? '' : 'Please write a short message.');
+      if (firstBad) firstBad.focus();
+      return !firstBad;
+    }
+
+    ['name', 'email', 'message'].forEach(function (key) {
+      form.elements[key].addEventListener('input', function () {
+        if (this.getAttribute('aria-invalid')) setError(this, '');
+      });
+    });
+
+    function mailtoLink(data) {
+      var body = data.message + '\n\n' + data.name + (data.organization ? ', ' + data.organization : '') + '\n' + data.email;
+      return 'mailto:' + EMAIL + '?subject=' + encodeURIComponent('Hello from ' + data.name) + '&body=' + encodeURIComponent(body);
+    }
+
+    function showDone(data) {
+      var first = (data.name || '').split(/\s+/)[0];
+      $('[data-done-title]', done).textContent = first ? 'Thanks, ' + first + '. Your message is on its way.' : 'Thanks, your message is on its way.';
+      $('[data-done-text]', done).textContent = data.email
+        ? 'I’ll reply to ' + data.email + ' as soon as I can.'
+        : 'I’ll get back to you as soon as I can.';
+      form.hidden = true;
+      done.hidden = false;
+      done.focus();
+    }
+
+    function showFailure(data) {
+      alertBox.innerHTML = 'Your message didn’t go through. Please try again, or <a href="' +
+        mailtoLink(data).replace(/"/g, '&quot;') + '">send it by email</a> instead.';
+      alertBox.hidden = false;
+    }
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      alertBox.hidden = true;
+      if (!validate()) return;
+
+      var data = {
+        name: form.elements.name.value.trim(),
+        email: form.elements.email.value.trim(),
+        organization: form.elements.organization.value.trim(),
+        topics: $$('input[name="topics"]:checked', form).map(function (c) { return c.value; }).join(', '),
+        message: message.value.trim()
+      };
+
+      // Spam traps: a filled honeypot or an impossibly fast submit is quietly accepted and dropped.
+      if (form.elements._honey.value || Date.now() - openedAt < 2500) { showDone(data); return; }
+
+      button.disabled = true;
+      buttonText.textContent = 'Sending…';
+      fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({
+          name: data.name,
+          email: data.email,
+          organization: data.organization || '-',
+          topics: data.topics || '-',
+          message: data.message,
+          _replyto: data.email,
+          _subject: 'New message from ' + data.name + ' via sarunshrestha.com.np',
+          _template: 'table'
+        })
+      })
+        .then(function (res) {
+          return res.json().catch(function () { return {}; }).then(function (json) {
+            return res.ok && (json.success === true || json.success === 'true');
+          });
+        })
+        .catch(function () { return false; })
+        .then(function (sent) {
+          button.disabled = false;
+          buttonText.textContent = 'Send it!';
+          if (sent) showDone(data); else showFailure(data);
+        });
+    });
+
+    $('[data-send-another]', done).addEventListener('click', function () {
+      form.reset();
+      message.style.height = '';
+      done.hidden = true;
+      form.hidden = false;
+      form.elements.name.focus();
+    });
+
+    // Coming back from the no-JavaScript submission flow.
+    if (/[?&]sent=1\b/.test(window.location.search)) showDone({});
   }
 
   /* ------------------------------------------------------------------------ */
@@ -717,6 +852,7 @@
   initScrollSpy();
   initClock();
   setYear();
+  initContactForm();
   initCursor();
   initMagnetic();
   runIntro();

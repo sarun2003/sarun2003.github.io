@@ -5,7 +5,8 @@ Personal site for Sarun Shrestha, Senior Data Engineer. Plain HTML, CSS and Java
 ## Files
 
 ```
-index.html               the whole site (all text content lives here)
+index.html               the home page (all main text content lives here)
+contact/index.html       contact page with the message form (www.sarunshrestha.com.np/contact/)
 404.html                 "page not found" page
 CNAME                    custom domain for GitHub Pages (www.sarunshrestha.com.np)
 .nojekyll                tells GitHub Pages to serve files as-is
@@ -25,6 +26,14 @@ assets/img/              favicon, touch icon, social preview image (og-image.png
 3. If the domain doesn't load after that, check the DNS at your domain provider:
    - `www` → CNAME → `sarun2003.github.io`
    - the bare domain → A records `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`
+
+## Contact form
+
+The form on the contact page sends messages through [FormSubmit](https://formsubmit.co) (free, no account) to sarun.shrestha.dev@gmail.com.
+
+- **One-time activation:** the first message anyone sends triggers an "Activate Form" email from FormSubmit. Click it once; every message after that goes straight to your inbox. Until then, visitors see a link to email you directly instead.
+- **Hide your address (optional):** after activation FormSubmit emails you a random string. Replace the email in both `formsubmit.co/...` URLs in `contact/index.html` with it.
+- **Topic chips:** edit the "What's this about?" options in `contact/index.html`.
 
 ## Common edits
 
