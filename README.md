@@ -18,13 +18,13 @@ assets/img/              favicon, touch icon, social preview image (og-image.png
 
 ## Deploy
 
-1. Copy everything in this folder (including `CNAME` and `.nojekyll`) into the root of the `sarun2003.github.io` repository and push to `main`.
+1. Copy everything in this folder (including `CNAME` and `.nojekyll`) into the root of the GitHub Pages repository and push to `main`.
 2. In the repository, open **Settings → Pages**:
    - **Source:** Deploy from a branch, `main`, `/ (root)`
    - **Custom domain:** `www.sarunshrestha.com.np` → Save
    - Tick **Enforce HTTPS** once the certificate is ready (can take a few minutes).
 3. If the domain doesn't load after that, check the DNS at your domain provider:
-   - `www` → CNAME → `sarun2003.github.io`
+   - `www` → CNAME → your `<username>.github.io` address
    - the bare domain → A records `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`
 
 ## Contact form
