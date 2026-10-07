@@ -32,7 +32,7 @@ assets/img/              favicon, touch icon, social preview image (og-image.png
 The form on the contact page sends messages through [FormSubmit](https://formsubmit.co) (free, no account) to sarun.shrestha.dev@gmail.com.
 
 - **One-time activation:** the first message anyone sends triggers an "Activate Form" email from FormSubmit. Click it once; every message after that goes straight to your inbox. Until then, visitors see a link to email you directly instead.
-- **Hide your address (optional):** after activation FormSubmit emails you a random string. Replace the email in both `formsubmit.co/...` URLs in `contact/index.html` with it.
+- **Where the address lives:** `EMAIL` in `assets/js/main.js` (used by the form) and the form's `action` URL in `contact/index.html` (used only without JavaScript). After activation FormSubmit emails you a random string you can use in place of the address in both.
 - **Topic chips:** edit the "What's this about?" options in `contact/index.html`.
 
 ## Common edits
