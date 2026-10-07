@@ -1,0 +1,48 @@
+# sarunshrestha.com.np
+
+Personal site for Sarun Shrestha, Senior Data Engineer. Plain HTML, CSS and JavaScript with no build step, hosted on GitHub Pages.
+
+## Files
+
+```
+index.html               the whole site (all text content lives here)
+404.html                 "page not found" page
+CNAME                    custom domain for GitHub Pages (www.sarunshrestha.com.np)
+.nojekyll                tells GitHub Pages to serve files as-is
+assets/css/style.css     styles (colors and fonts are at the top, under "Tokens")
+assets/js/main.js        intro greeting, hero pipeline animation, menu, accordion, cursor
+assets/fonts/            self-hosted fonts (Plus Jakarta Sans, JetBrains Mono)
+assets/img/              favicon, touch icon, social preview image (og-image.png)
+```
+
+## Deploy
+
+1. Copy everything in this folder (including `CNAME` and `.nojekyll`) into the root of the `sarun2003.github.io` repository and push to `main`.
+2. In the repository, open **Settings → Pages**:
+   - **Source:** Deploy from a branch, `main`, `/ (root)`
+   - **Custom domain:** `www.sarunshrestha.com.np` → Save
+   - Tick **Enforce HTTPS** once the certificate is ready (can take a few minutes).
+3. If the domain doesn't load after that, check the DNS at your domain provider:
+   - `www` → CNAME → `sarun2003.github.io`
+   - the bare domain → A records `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`
+
+## Common edits
+
+All of these are in `index.html` unless noted.
+
+- **Location / availability** (hero): search for `Located in the` and `Open to new opportunities`.
+- **Add a project:** in the `Work` section there is a commented-out project block. Copy it, fill in the title, link and discipline, and delete the "Projects coming soon" item.
+- **Add your photo** to the contact section: put the image in `assets/img/` and replace
+  `<span class="contact-avatar" aria-hidden="true">SS</span>` with
+  `<img class="contact-avatar" src="assets/img/photo.jpg" alt="">`.
+- **Footer clock time zone:** `timeZone: 'America/Chicago'` in `assets/js/main.js`.
+- **Experience bullets, skills, certifications:** edit the lists directly; the layout adapts.
+- **Social preview image:** `assets/img/og-image.png` (1200×630) is what LinkedIn and others show when the link is shared.
+
+## Preview locally
+
+From this folder run `python3 -m http.server 8000` and open http://localhost:8000.
+
+## Credits
+
+Fonts: Plus Jakarta Sans, JetBrains Mono and Noto Sans Devanagari (subset), all under the SIL Open Font License 1.1.

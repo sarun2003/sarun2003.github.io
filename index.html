@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sarun Shrestha — Senior Data Engineer</title>
+  <meta name="description" content="Sarun Shrestha is a Senior Data Engineer with 6+ years of experience building scalable data platforms, pipelines, lakehouses and cloud warehouses on AWS, Azure and GCP across insurance, healthcare and retail.">
+  <meta name="keywords" content="Sarun Shrestha, Senior Data Engineer, Data Engineering, Snowflake, Databricks, Apache Spark, PySpark, dbt, Airflow, Kafka, AWS, Azure, GCP, Lakehouse">
+  <meta name="author" content="Sarun Shrestha">
+  <meta name="theme-color" content="#011013">
+  <meta name="color-scheme" content="dark light">
+  <link rel="canonical" href="https://www.sarunshrestha.com.np/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.sarunshrestha.com.np/">
+  <meta property="og:site_name" content="Sarun Shrestha">
+  <meta property="og:title" content="Sarun Shrestha — Senior Data Engineer">
+  <meta property="og:description" content="Senior Data Engineer building scalable data platforms, lakehouses and cloud warehouses for analytics and AI.">
+  <meta property="og:image" content="https://www.sarunshrestha.com.np/assets/img/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Sarun Shrestha — Senior Data Engineer">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Sarun Shrestha — Senior Data Engineer">
+  <meta name="twitter:description" content="Senior Data Engineer building scalable data platforms, lakehouses and cloud warehouses for analytics and AI.">
+  <meta name="twitter:image" content="https://www.sarunshrestha.com.np/assets/img/og-image.png">
+
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+  <link rel="preload" href="assets/fonts/plus-jakarta-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/css/style.css">
+
+  <script>
+    /* Runs before first paint: enables JS styles and decides whether to play the intro. */
+    (function () {
+      var h = document.documentElement;
+      h.classList.remove('no-js');
+      h.classList.add('js');
+      var seen = false;
+      try { seen = sessionStorage.getItem('ss:intro-seen') === '1'; } catch (e) {}
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (seen || reduce) { h.classList.add('skip-loader'); } else { h.classList.add('is-loading'); }
+      /* Failsafe: if the main script never starts, fall back to the plain, fully visible page. */
+      setTimeout(function () {
+        if (!h.classList.contains('app-ready')) {
+          h.classList.remove('js', 'is-loading');
+          h.classList.add('no-js');
+        }
+      }, 6000);
+    })();
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Sarun Shrestha",
+    "jobTitle": "Senior Data Engineer",
+    "url": "https://www.sarunshrestha.com.np/",
+    "email": "mailto:sarun.shrestha.dev@gmail.com",
+    "sameAs": [
+      "https://www.linkedin.com/in/sarun2003",
+      "https://github.com/sarun2003"
+    ],
+    "alumniOf": { "@type": "CollegeOrUniversity", "name": "Louisiana Tech University" },
+    "knowsAbout": ["Data Engineering", "Apache Spark", "PySpark", "Snowflake", "Databricks", "dbt", "Apache Airflow", "Apache Kafka", "AWS", "Microsoft Azure", "Google Cloud", "Lakehouse Architecture", "Data Governance", "Data Quality"]
+  }
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- Intro greeting (decorative) -->
+  <div class="loading-screen" aria-hidden="true">
+    <p class="loading-word"><span class="loading-word-text">Hello</span><span class="loading-dot">.</span></p>
+    <div class="loading-bar"><div class="loading-bar-fill"></div></div>
+  </div>
+
+  <div class="noise-overlay" aria-hidden="true"></div>
+
+  <!-- Navigation -->
+  <header class="ds-nav">
+    <a class="ds-logo" href="#hero" aria-label="Sarun Shrestha, back to top">
+      <span class="ds-logo-mark" aria-hidden="true">©</span>
+      <span class="ds-logo-text">Sarun Shrestha</span>
+    </a>
+    <nav aria-label="Primary">
+      <ul class="ds-nav-links">
+        <li><a class="ds-nav-link" href="#about" data-nav="about">About</a></li>
+        <li><a class="ds-nav-link" href="#experience" data-nav="experience">Experience</a></li>
+        <li><a class="ds-nav-link" href="#skills" data-nav="skills">Skills</a></li>
+        <li><a class="ds-nav-link" href="#contact" data-nav="contact">Contact</a></li>
+        <li>
+          <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="side-menu">
+            <span class="menu-toggle-icon" aria-hidden="true"></span>Menu
+          </button>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="side-menu-overlay" data-menu-close></div>
+  <aside class="side-menu" id="side-menu" role="dialog" aria-modal="true" aria-label="Menu">
+    <button class="side-menu-close" type="button" data-menu-close>
+      Close
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>
+    </button>
+    <p class="side-menu-label">Navigation</p>
+    <nav aria-label="Menu">
+      <ul>
+        <li><a class="side-menu-nav-link" href="#hero" data-nav="hero">Home</a></li>
+        <li><a class="side-menu-nav-link" href="#about" data-nav="about">About</a></li>
+        <li><a class="side-menu-nav-link" href="#work" data-nav="work">Work</a></li>
+        <li><a class="side-menu-nav-link" href="#experience" data-nav="experience">Experience</a></li>
+        <li><a class="side-menu-nav-link" href="#skills" data-nav="skills">Skills</a></li>
+        <li><a class="side-menu-nav-link" href="#contact" data-nav="contact">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="side-menu-socials">
+      <p class="side-menu-label">Socials</p>
+      <ul class="side-menu-social-links">
+        <li><a href="https://www.linkedin.com/in/sarun2003" target="_blank" rel="noopener">LinkedIn</a></li>
+        <li><a href="https://github.com/sarun2003" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="mailto:sarun.shrestha.dev@gmail.com">Email</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main id="main">
+
+    <!-- ============ Hero ============ -->
+    <section class="hero-section" id="hero" aria-labelledby="hero-title">
+      <canvas class="hero-canvas" aria-hidden="true"></canvas>
+      <h1 class="sr-only" id="hero-title">Sarun Shrestha, Senior Data Engineer</h1>
+
+      <div class="hero-location hero-enter" style="--enter-delay:.1s">
+        <p>Located in the<br>United States</p>
+        <span class="hero-globe" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M2 12h20"/>
+            <path d="M4.3 7h15.4M4.3 17h15.4" opacity=".55"/>
+            <ellipse class="globe-meridian" cx="12" cy="12" rx="4.6" ry="10"/>
+            <ellipse class="globe-meridian" cx="12" cy="12" rx="4.6" ry="10"/>
+            <ellipse class="globe-meridian" cx="12" cy="12" rx="4.6" ry="10"/>
+          </svg>
+          <span class="globe-satellite"></span>
+        </span>
+      </div>
+
+      <div class="hero-role hero-enter" style="--enter-delay:.22s">
+        <svg class="hero-role-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 8v10H8"/></svg>
+        <p>Senior</p>
+        <p>Data Engineer</p>
+      </div>
+
+      <div class="hero-meta hero-enter" style="--enter-delay:.3s">
+        <p class="hero-available"><span class="hero-available-dot" aria-hidden="true"></span>Open to new opportunities</p>
+        <a class="hero-scroll" href="#about">Scroll<span class="hero-scroll-line" aria-hidden="true"></span></a>
+      </div>
+
+      <div class="big-name hero-enter" style="--enter-delay:0s" aria-hidden="true">
+        <div class="marquee-track">
+          <span class="marquee-item ds-h1 hero-name-text">Sarun Shrestha<span class="marquee-dash">—</span></span>
+          <span class="marquee-item ds-h1 hero-name-text">Sarun Shrestha<span class="marquee-dash">—</span></span>
+          <span class="marquee-item ds-h1 hero-name-text">Sarun Shrestha<span class="marquee-dash">—</span></span>
+          <span class="marquee-item ds-h1 hero-name-text">Sarun Shrestha<span class="marquee-dash">—</span></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ About ============ -->
+    <section class="intro-section" id="about" aria-labelledby="about-title">
+      <div class="ds-container medium">
+        <div class="intro-grid">
+          <figure class="profile-card" data-reveal="up" aria-label="Profile summary">
+            <div class="profile-card-bar">
+              <span class="profile-card-file">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg>
+                profile.yml
+              </span>
+              <span class="profile-card-status">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+                valid
+              </span>
+            </div>
+            <code class="profile-code">
+              <span class="ln"><span class="tok-c"># the short version</span></span>
+              <span class="ln"><span class="tok-k">name</span><span class="tok-p">:</span> Sarun Shrestha</span>
+              <span class="ln"><span class="tok-k">role</span><span class="tok-p">:</span> Senior Data Engineer</span>
+              <span class="ln"><span class="tok-k">experience</span><span class="tok-p">:</span> <span class="tok-n">6+</span> years</span>
+              <span class="ln"><span class="tok-k">domains</span><span class="tok-p">:</span></span>
+              <span class="ln">  <span class="tok-p">-</span> insurance</span>
+              <span class="ln">  <span class="tok-p">-</span> healthcare</span>
+              <span class="ln">  <span class="tok-p">-</span> retail</span>
+              <span class="ln"><span class="tok-k">clouds</span><span class="tok-p">:</span> <span class="tok-p">[</span>aws<span class="tok-p">,</span> azure<span class="tok-p">,</span> gcp<span class="tok-p">]</span></span>
+              <span class="ln"><span class="tok-k">stack</span><span class="tok-p">:</span> <span class="tok-p">[</span>spark<span class="tok-p">,</span> snowflake<span class="tok-p">,</span> dbt<span class="tok-p">,</span></span>
+              <span class="ln">        airflow<span class="tok-p">,</span> databricks<span class="tok-p">]</span></span>
+              <span class="ln"><span class="tok-k">certifications</span><span class="tok-p">:</span> <span class="tok-n">3</span></span>
+              <span class="ln"><span class="tok-k">education</span><span class="tok-p">:</span> CS<span class="tok-p">,</span> Louisiana Tech</span>
+            </code>
+          </figure>
+
+          <div class="intro-copy">
+            <h2 class="ds-h4 intro-statement" id="about-title" data-reveal="lines" data-split-lines>Building reliable data platforms that analytics and AI teams can trust.</h2>
+            <p class="intro-bio" data-reveal="up">In 6+ years across insurance, healthcare and retail, I’ve designed ETL/ELT pipelines, Snowflake warehouses and Databricks lakehouses on AWS, Azure and GCP, with data quality, governance and monitoring built into the platform.</p>
+            <p class="intro-bio" data-reveal="up" style="--d:.08s">Today I lead data engineering for claims, policy, underwriting and pricing analytics at The Hartford, and prepare enterprise data for machine learning and generative AI.</p>
+            <div class="intro-actions" data-reveal="up" style="--d:.16s">
+              <span class="magnetic" data-magnetic>
+                <a class="btn-circle" href="#experience">
+                  <span class="btn-circle-text" data-magnetic-inner>My<br>experience</span>
+                </a>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Work ============ -->
+    <section class="work-section" id="work" aria-labelledby="work-title">
+      <div class="ds-container">
+        <h2 class="work-list-label" id="work-title">Recent work</h2>
+        <div class="stripe"></div>
+        <ul class="work-list">
+          <!--
+            To add a project: copy this block, fill it in, and delete the "Projects coming soon" item below.
+
+            <li class="work-list-item">
+              <a href="https://github.com/sarun2003/your-repo" target="_blank" rel="noopener">
+                <h3>Project title</h3>
+                <span class="work-meta">
+                  <span class="work-discipline">Data engineering · 2026</span>
+                  <svg class="work-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg>
+                </span>
+              </a>
+              <div class="stripe"></div>
+            </li>
+          -->
+          <li class="work-list-item">
+            <div class="work-empty">
+              <p class="work-empty-title">Projects coming soon</p>
+              <p class="work-discipline work-empty-note"><span class="work-empty-dot" aria-hidden="true"></span>Selected work will be added here</p>
+            </div>
+            <div class="stripe"></div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ============ Focus strip ============ -->
+    <div class="rolling-strip">
+      <div class="rolling-strip-track">
+        <ul class="rolling-strip-set">
+          <li class="rolling-strip-item">Data Engineering</li>
+          <li aria-hidden="true"><svg class="rolling-strip-dot" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1c.7 5.8 5.2 10.3 11 11-5.8.7-10.3 5.2-11 11-.7-5.8-5.2-10.3-11-11 5.8-.7 10.3-5.2 11-11z"/></svg></li>
+          <li class="rolling-strip-item">Lakehouse Architecture</li>
+          <li aria-hidden="true"><svg class="rolling-strip-dot" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1c.7 5.8 5.2 10.3 11 11-5.8.7-10.3 5.2-11 11-.7-5.8-5.2-10.3-11-11 5.8-.7 10.3-5.2 11-11z"/></svg></li>
+          <li class="rolling-strip-item">Snowflake &amp; dbt</li>
+          <li aria-hidden="true"><svg class="rolling-strip-dot" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1c.7 5.8 5.2 10.3 11 11-5.8.7-10.3 5.2-11 11-.7-5.8-5.2-10.3-11-11 5.8-.7 10.3-5.2 11-11z"/></svg></li>
+          <li class="rolling-strip-item">Apache Spark</li>
+          <li aria-hidden="true"><svg class="rolling-strip-dot" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1c.7 5.8 5.2 10.3 11 11-5.8.7-10.3 5.2-11 11-.7-5.8-5.2-10.3-11-11 5.8-.7 10.3-5.2 11-11z"/></svg></li>
+          <li class="rolling-strip-item">Streaming Pipelines</li>
+          <li aria-hidden="true"><svg class="rolling-strip-dot" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1c.7 5.8 5.2 10.3 11 11-5.8.7-10.3 5.2-11 11-.7-5.8-5.2-10.3-11-11 5.8-.7 10.3-5.2 11-11z"/></svg></li>
+          <li class="rolling-strip-item">Data Quality &amp; Governance</li>
+          <li aria-hidden="true"><svg class="rolling-strip-dot" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1c.7 5.8 5.2 10.3 11 11-5.8.7-10.3 5.2-11 11-.7-5.8-5.2-10.3-11-11 5.8-.7 10.3-5.2 11-11z"/></svg></li>
+          <li class="rolling-strip-item">Data for AI &amp; ML</li>
+          <li aria-hidden="true"><svg class="rolling-strip-dot" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1c.7 5.8 5.2 10.3 11 11-5.8.7-10.3 5.2-11 11-.7-5.8-5.2-10.3-11-11 5.8-.7 10.3-5.2 11-11z"/></svg></li>
+          <li class="rolling-strip-item">AWS · Azure · GCP</li>
+          <li aria-hidden="true"><svg class="rolling-strip-dot" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1c.7 5.8 5.2 10.3 11 11-5.8.7-10.3 5.2-11 11-.7-5.8-5.2-10.3-11-11 5.8-.7 10.3-5.2 11-11z"/></svg></li>
+        </ul>
+        <!-- a copy of the set above is added by script for a seamless loop -->
+      </div>
+    </div>
+
+    <!-- ============ Experience ============ -->
+    <section class="about-section" id="experience" aria-labelledby="exp-title">
+      <div class="ds-container">
+        <div class="section-head">
+          <h2 class="ds-h2" id="exp-title" data-reveal="lines"><span class="line"><span>Experience</span></span></h2>
+          <p class="section-note" data-reveal="up">6+ years across insurance, healthcare and retail. Select a role to see the details.</p>
+        </div>
+
+        <ol class="exp-list">
+          <!-- The Hartford -->
+          <li class="exp-item" data-reveal="left">
+            <article class="exp-card is-open">
+              <h3 class="exp-heading">
+                <button class="exp-row-btn" type="button" aria-expanded="true" aria-controls="exp-hartford">
+                  <span class="exp-date">Apr 2024 – Present</span>
+                  <span class="exp-main">
+                    <span class="exp-logo" aria-hidden="true">TH</span>
+                    <span class="exp-text">
+                      <span class="exp-title">Senior Data Engineer</span>
+                      <span class="exp-company">The Hartford · Hartford, CT (Remote)</span>
+                    </span>
+                  </span>
+                  <span class="exp-toggle" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
+                </button>
+              </h3>
+              <div class="exp-meta-row">
+                <span class="exp-spacer"></span>
+                <div>
+                  <ul class="exp-tags">
+                    <li class="exp-tag">AWS</li><li class="exp-tag">Snowflake</li><li class="exp-tag">PySpark</li><li class="exp-tag">dbt</li><li class="exp-tag">Airflow</li><li class="exp-tag">CDC</li><li class="exp-tag">GenAI / RAG data</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="exp-panel" id="exp-hartford">
+                <div class="exp-panel-inner">
+                  <div class="exp-bullets-grid">
+                    <span class="exp-spacer"></span>
+                    <div>
+                      <ul class="exp-bullets">
+                        <li>Led data engineering for insurance claims, policy, underwriting, pricing and risk analytics, building AWS and Snowflake solutions that integrate enterprise and third-party data for analytics, actuarial and underwriting teams.</li>
+                        <li>Modernized Oracle and SQL Server workloads by migrating ingestion and transformation to AWS and Snowflake, with S3 as the cloud landing layer.</li>
+                        <li>Built distributed PySpark pipelines for claims, policy, customer and underwriting data; partitioning, optimized joins, caching and incremental processing improved batch performance by <strong>~35%</strong>.</li>
+                        <li>Built and maintained the Snowflake warehouse (staging, curated and analytical layers with fact and dimension models), kept current through CDC-based incremental loads.</li>
+                        <li>Developed reusable dbt models with automated tests for business rules, uniqueness, relationships, nulls and source freshness, orchestrated end to end in Airflow.</li>
+                        <li>Implemented data quality and reconciliation frameworks that reduced recurring production data issues by <strong>~30%</strong>, alongside governance for ownership, lineage, access control and sensitive data.</li>
+                        <li>Prepared enterprise data for AI/ML and generative AI use cases (feature-ready datasets, document processing, embeddings and RAG-ready data) and mentored junior engineers.</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </li>
+
+          <!-- Humana -->
+          <li class="exp-item" data-reveal="left" style="--d:.09s">
+            <article class="exp-card">
+              <h3 class="exp-heading">
+                <button class="exp-row-btn" type="button" aria-expanded="false" aria-controls="exp-humana">
+                  <span class="exp-date">Aug 2023 – Mar 2024</span>
+                  <span class="exp-main">
+                    <span class="exp-logo" aria-hidden="true">HU</span>
+                    <span class="exp-text">
+                      <span class="exp-title">Data Engineer</span>
+                      <span class="exp-company">Humana · Louisville, KY (Remote)</span>
+                    </span>
+                  </span>
+                  <span class="exp-toggle" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
+                </button>
+              </h3>
+              <div class="exp-meta-row">
+                <span class="exp-spacer"></span>
+                <div>
+                  <ul class="exp-tags">
+                    <li class="exp-tag">Azure</li><li class="exp-tag">Data Factory</li><li class="exp-tag">Databricks</li><li class="exp-tag">ADLS</li><li class="exp-tag">PySpark</li><li class="exp-tag">Power BI</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="exp-panel" id="exp-humana">
+                <div class="exp-panel-inner">
+                  <div class="exp-bullets-grid">
+                    <span class="exp-spacer"></span>
+                    <div>
+                      <ul class="exp-bullets">
+                        <li>Built production Azure data workloads across member, claims, provider, pharmacy, clinical and population health data for analytics, care management and reporting.</li>
+                        <li>Developed Azure Data Factory pipelines ingesting SQL Server, relational, flat-file and application data into ADLS, standardizing ingestion patterns across healthcare sources.</li>
+                        <li>Built PySpark and SQL transformations in Azure Databricks over datasets of 10M+ records, producing curated data products for analytics and reporting.</li>
+                        <li>Optimized joins, partitioning and data movement in Databricks, reducing selected batch runtimes by <strong>~30%</strong>.</li>
+                        <li>Configured ADF schedules, dependencies, retries and failure handling to sustain a <strong>99.5%+</strong> success rate across recurring pipelines.</li>
+                        <li>Added SQL and Python data quality and reconciliation checks that reduced data quality exceptions by <strong>~25%</strong>, and automated validation to cut manual verification by <strong>~40%</strong>.</li>
+                        <li>Applied RBAC, PHI handling, metadata documentation and lineage to sensitive member and clinical data, and delivered curated datasets for Power BI.</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </li>
+
+          <!-- Target -->
+          <li class="exp-item" data-reveal="left" style="--d:.18s">
+            <article class="exp-card">
+              <h3 class="exp-heading">
+                <button class="exp-row-btn" type="button" aria-expanded="false" aria-controls="exp-target">
+                  <span class="exp-date">Jan 2022 – Jul 2023</span>
+                  <span class="exp-main">
+                    <span class="exp-logo" aria-hidden="true">TG</span>
+                    <span class="exp-text">
+                      <span class="exp-title">Data Engineer (SQL &amp; ETL)</span>
+                      <span class="exp-company">Target · Minneapolis, MN</span>
+                    </span>
+                  </span>
+                  <span class="exp-toggle" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
+                </button>
+              </h3>
+              <div class="exp-meta-row">
+                <span class="exp-spacer"></span>
+                <div>
+                  <ul class="exp-tags">
+                    <li class="exp-tag">Python</li><li class="exp-tag">SQL</li><li class="exp-tag">PySpark</li><li class="exp-tag">BigQuery</li><li class="exp-tag">Cloud Storage</li><li class="exp-tag">ETL/ELT</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="exp-panel" id="exp-target">
+                <div class="exp-panel-inner">
+                  <div class="exp-bullets-grid">
+                    <span class="exp-spacer"></span>
+                    <div>
+                      <ul class="exp-bullets">
+                        <li>Supported retail data engineering across guest, sales, product, pricing, inventory, fulfillment and e-commerce data in a high-volume retail environment.</li>
+                        <li>Developed Python and SQL pipelines and Spark/PySpark batch workflows to cleanse, validate and transform large sales and inventory datasets.</li>
+                        <li>Loaded curated datasets into Google BigQuery and supported ingestion into Google Cloud Storage with file layout and schema validation.</li>
+                        <li>Created reusable SQL transformations and source-to-target mappings that reduced repeated manual data preparation by <strong>~30%</strong>.</li>
+                        <li>Improved Spark jobs by fixing inefficient joins and filtering earlier, shortening selected batch workloads by <strong>~25%</strong>.</li>
+                        <li>Implemented data quality checks for nulls, duplicates, invalid product IDs and source-to-target reconciliation, reducing recurring data exceptions by <strong>~20%</strong>.</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </li>
+
+          <!-- Dell -->
+          <li class="exp-item" data-reveal="left" style="--d:.27s">
+            <article class="exp-card">
+              <h3 class="exp-heading">
+                <button class="exp-row-btn" type="button" aria-expanded="false" aria-controls="exp-dell">
+                  <span class="exp-date">Sep 2020 – Nov 2021</span>
+                  <span class="exp-main">
+                    <span class="exp-logo" aria-hidden="true">DL</span>
+                    <span class="exp-text">
+                      <span class="exp-title">Backend Developer</span>
+                      <span class="exp-company">Dell · Round Rock, TX</span>
+                    </span>
+                  </span>
+                  <span class="exp-toggle" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
+                </button>
+              </h3>
+              <div class="exp-meta-row">
+                <span class="exp-spacer"></span>
+                <div>
+                  <ul class="exp-tags">
+                    <li class="exp-tag">Python</li><li class="exp-tag">REST APIs</li><li class="exp-tag">Microservices</li><li class="exp-tag">Docker</li><li class="exp-tag">Kubernetes</li><li class="exp-tag">PostgreSQL</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="exp-panel" id="exp-dell">
+                <div class="exp-panel-inner">
+                  <div class="exp-bullets-grid">
+                    <span class="exp-spacer"></span>
+                    <div>
+                      <ul class="exp-bullets">
+                        <li>Developed Python REST APIs and automation services for Dell’s enterprise infrastructure and storage platforms, with request validation, error handling and authentication.</li>
+                        <li>Built reusable backend components for microservices and integrated services with PostgreSQL and MySQL databases.</li>
+                        <li>Containerized services with Docker, reducing environment-related deployment issues by <strong>~25%</strong>, and supported deployments on Kubernetes.</li>
+                        <li>Automated infrastructure and application tasks with Python and shell scripting, reducing manual operational effort by <strong>~35%</strong>.</li>
+                        <li>Tuned SQL queries and backend logic, cutting response times for selected operations by <strong>~30%</strong>.</li>
+                        <li>Added unit and integration tests, structured logging and monitoring hooks so production issues were easier to trace.</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ============ Education + certifications ============ -->
+    <section class="credentials-section" id="credentials" aria-labelledby="cred-title">
+      <div class="ds-container">
+        <div class="credentials-head">
+          <h2 class="ds-h3" id="cred-title" data-reveal="lines"><span class="line"><span>Education &amp; certifications</span></span></h2>
+        </div>
+        <ul class="edu-grid">
+          <li class="edu-item" data-reveal="up">
+            <span class="edu-logo" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9.5L12 4.5l10 5-10 5z"/><path d="M6 11.6v4.6c0 1.6 2.7 3.3 6 3.3s6-1.7 6-3.3v-4.6"/><path d="M22 9.5v5.5"/></svg>
+            </span>
+            <div class="edu-content-inner">
+              <h3 class="edu-title">Bachelor in Computer Science</h3>
+              <p class="edu-sub">Louisiana Tech University</p>
+            </div>
+          </li>
+          <li class="edu-item" data-reveal="up" style="--d:.08s">
+            <span class="edu-logo" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="6"/><path d="M9.6 9.1l1.6 1.6 3.3-3.3"/><path d="M8.6 14l-1.4 7.5L12 19l4.8 2.5-1.4-7.5"/></svg>
+            </span>
+            <div class="edu-content-inner">
+              <h3 class="edu-title">Databricks Certified Data Engineer Associate</h3>
+              <p class="edu-sub">Databricks</p>
+            </div>
+          </li>
+          <li class="edu-item" data-reveal="up" style="--d:.16s">
+            <span class="edu-logo" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="6"/><path d="M9.6 9.1l1.6 1.6 3.3-3.3"/><path d="M8.6 14l-1.4 7.5L12 19l4.8 2.5-1.4-7.5"/></svg>
+            </span>
+            <div class="edu-content-inner">
+              <h3 class="edu-title">Azure Data Engineer Associate (DP-203)</h3>
+              <p class="edu-sub">Microsoft Certified</p>
+            </div>
+          </li>
+          <li class="edu-item" data-reveal="up" style="--d:.24s">
+            <span class="edu-logo" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="6"/><path d="M9.6 9.1l1.6 1.6 3.3-3.3"/><path d="M8.6 14l-1.4 7.5L12 19l4.8 2.5-1.4-7.5"/></svg>
+            </span>
+            <div class="edu-content-inner">
+              <h3 class="edu-title">AWS Certified Data Engineer – Associate</h3>
+              <p class="edu-sub">Amazon Web Services</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ============ Skills ============ -->
+    <section class="skills-section" id="skills" aria-labelledby="skills-title">
+      <div class="ds-container">
+        <div class="section-head">
+          <h2 class="ds-h2" id="skills-title" data-reveal="lines"><span class="line"><span>Skills &amp; tools</span></span></h2>
+          <p class="section-note" data-reveal="up">The stack I use to build, test and run production data platforms.</p>
+        </div>
+
+        <div class="skills-grid">
+          <div class="skill-group" data-reveal="tags">
+            <h3 class="skill-group-title">Languages</h3>
+            <ul class="skill-tags">
+              <li class="skill-tag"><span class="skill-tag-inner">Python</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">SQL</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">T-SQL</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">PySpark</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">Bash / Shell</span></li>
+            </ul>
+          </div>
+          <div class="skill-group" data-reveal="tags">
+            <h3 class="skill-group-title">Processing &amp; orchestration</h3>
+            <ul class="skill-tags">
+              <li class="skill-tag"><span class="skill-tag-inner">Apache Spark</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">Databricks</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">Apache Airflow</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">dbt</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">Databricks Workflows</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">AWS Glue</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">Azure Data Factory</span></li>
+            </ul>
+          </div>
+          <div class="skill-group" data-reveal="tags">
+            <h3 class="skill-group-title">Warehouses &amp; lakehouse</h3>
+            <ul class="skill-tags">
+              <li class="skill-tag"><span class="skill-tag-inner">Snowflake</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">Delta Lake</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">Apache Iceberg</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">Amazon Redshift</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">Azure Synapse</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">BigQuery</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">SQL Server</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">PostgreSQL</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">Oracle</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">MySQL</span></li>
+            </ul>
+          </div>
+          <div class="skill-group" data-reveal="tags">
+            <h3 class="skill-group-title">Streaming</h3>
+            <ul class="skill-tags">
+              <li class="skill-tag"><span class="skill-tag-inner">Apache Kafka</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">Kafka Connect</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">AWS Kinesis</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">Spark Structured Streaming</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">Azure Event Hubs</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">Google Pub/Sub</span></li>
+            </ul>
+          </div>
+          <div class="skill-group" data-reveal="tags">
+            <h3 class="skill-group-title">Cloud platforms</h3>
+            <ul class="skill-tags">
+              <li class="skill-tag"><span class="skill-tag-inner">AWS</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">Microsoft Azure</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">Google Cloud</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">S3</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">Lambda</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">Step Functions</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">EventBridge</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">ADLS Gen2</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">Key Vault</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">Dataflow</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">Cloud Functions</span></li>
+            </ul>
+          </div>
+          <div class="skill-group" data-reveal="tags">
+            <h3 class="skill-group-title">Modeling &amp; architecture</h3>
+            <ul class="skill-tags">
+              <li class="skill-tag"><span class="skill-tag-inner">Dimensional modeling</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">Star &amp; snowflake schemas</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">Data Vault</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">Medallion architecture</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">Lakehouse architecture</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">Parquet</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">Avro</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">ORC</span></li>
+            </ul>
+          </div>
+          <div class="skill-group" data-reveal="tags">
+            <h3 class="skill-group-title">Data for AI &amp; ML</h3>
+            <ul class="skill-tags">
+              <li class="skill-tag"><span class="skill-tag-inner">Feature engineering</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">Model-ready datasets</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">MLflow</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">Databricks ML</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">Embeddings</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">Vector databases</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">RAG pipelines</span></li>
+            </ul>
+          </div>
+          <div class="skill-group" data-reveal="tags">
+            <h3 class="skill-group-title">Governance &amp; quality</h3>
+            <ul class="skill-tags">
+              <li class="skill-tag"><span class="skill-tag-inner">Unity Catalog</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">Microsoft Purview</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">Glue Data Catalog</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">Great Expectations</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">Data lineage</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">RBAC</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">HIPAA</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">SOC 2</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">PII / PHI protection</span></li>
+            </ul>
+          </div>
+          <div class="skill-group" data-reveal="tags">
+            <h3 class="skill-group-title">DevOps &amp; observability</h3>
+            <ul class="skill-tags">
+              <li class="skill-tag"><span class="skill-tag-inner">Terraform</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">Docker</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">Kubernetes</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">GitHub Actions</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">Azure DevOps</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">GitLab CI/CD</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">Jenkins</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">CloudWatch</span></li>
+              <li class="skill-tag"><span class="skill-tag-inner">Azure Monitor</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============ Contact ============ -->
+  <div class="divider-wrap" aria-hidden="true"><div class="rounded-divider-top"></div></div>
+  <footer class="contact-footer" id="contact" aria-labelledby="contact-title">
+    <div class="ds-container">
+      <div class="contact-heading-row">
+        <span class="contact-avatar" aria-hidden="true">SS</span>
+        <h2 class="ds-h2 contact-title" id="contact-title" data-reveal="lines">
+          <span class="line"><span style="--i:0">Let’s work</span></span>
+          <span class="line"><span style="--i:1">together</span></span>
+        </h2>
+      </div>
+
+      <div class="contact-cta-row">
+        <div class="stripe"></div>
+        <div class="contact-cta-anchor" data-magnetic>
+          <a class="liquid-btn" href="mailto:sarun.shrestha.dev@gmail.com">
+            <span class="liquid-btn-text" data-magnetic-inner>Get in touch</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="contact-pills">
+        <a class="pill" href="mailto:sarun.shrestha.dev@gmail.com">sarun.shrestha.dev@gmail.com</a>
+        <a class="pill" href="https://www.linkedin.com/in/sarun2003" target="_blank" rel="noopener">
+          LinkedIn
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg>
+        </a>
+      </div>
+
+      <div class="contact-footer-bottom">
+        <div class="footer-meta-group">
+          <div>
+            <p class="footer-meta-label">Version</p>
+            <p class="footer-meta-value"><span data-year>2026</span> © Edition</p>
+          </div>
+          <div>
+            <p class="footer-meta-label">Local time</p>
+            <p class="footer-meta-value"><time data-clock>US Central Time</time></p>
+          </div>
+        </div>
+        <div class="footer-meta-group">
+          <div>
+            <p class="footer-meta-label">Socials</p>
+            <ul class="footer-socials">
+              <li><a href="https://www.linkedin.com/in/sarun2003" target="_blank" rel="noopener">LinkedIn</a></li>
+              <li><a href="https://github.com/sarun2003" target="_blank" rel="noopener">GitHub</a></li>
+              <li><a href="mailto:sarun.shrestha.dev@gmail.com">Email</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/main.js" defer></script>
+</body>
+</html>
