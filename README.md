@@ -41,9 +41,7 @@ All of these are in `index.html` unless noted.
 
 - **Location / availability** (hero): search for `Located in the` and `Open to new opportunities`.
 - **Add a project:** in the `Work` section there is a commented-out project block. Copy it, fill in the title, link and discipline, and delete the "Projects coming soon" item.
-- **Add your photo** to the contact section: put the image in `assets/img/` and replace
-  `<span class="contact-avatar" aria-hidden="true">SS</span>` with
-  `<img class="contact-avatar" src="assets/img/photo.jpg" alt="">`.
+- **Change your photo:** replace `assets/img/sarun-portrait.jpg` and `.webp` (About section, 928×1152) and `assets/img/sarun-avatar.jpg` and `.webp` (round badges, square) with new files of the same names.
 - **Footer clock time zone:** `timeZone: 'America/Chicago'` in `assets/js/main.js`.
 - **Experience bullets, skills, certifications:** edit the lists directly; the layout adapts.
 - **Social preview image:** `assets/img/og-image.png` (1200×630) is what LinkedIn and others show when the link is shared.

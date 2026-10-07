@@ -478,41 +478,20 @@ html.menu-open, html.menu-open body { overflow: hidden; }
 .intro-bio + .intro-bio { margin-top: 1rem; }
 .intro-actions { margin-top: 2.8rem; }
 
-/* Profile card: a YAML "model" standing in for a photo */
-.profile-card {
-  background: var(--dark); color: var(--cream);
-  border-radius: 18px; overflow: hidden;
+/* Portrait */
+.about-photo {
+  position: relative; margin: 0; overflow: hidden;
+  aspect-ratio: 928 / 1152; border-radius: 18px;
+  background: #8c8f92;
   box-shadow: 0 40px 70px -40px rgba(1, 16, 19, .55), 0 2px 6px rgba(1, 16, 19, .12);
-  font-family: var(--font-mono);
 }
-.profile-card-bar {
-  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
-  padding: .95rem 1.3rem; border-bottom: 1px solid rgba(255, 255, 255, .08);
-  font-size: .74rem; color: var(--on-dark-dim);
-}
-.profile-card-file { display: inline-flex; align-items: center; gap: .55rem; }
-.profile-card-file svg { width: 14px; height: 14px; color: var(--sky); }
-.profile-card-status { display: inline-flex; align-items: center; gap: .45rem; color: var(--signal); }
-.profile-card-status svg { width: 13px; height: 13px; }
-.profile-code {
-  display: block; margin: 0; padding: 1.4rem 1.3rem 1.7rem .7rem;
-  font-family: inherit; font-size: clamp(.76rem, 1.05vw, .88rem); line-height: 1.95;
-  overflow-x: auto; counter-reset: ln;
-}
-.profile-code .ln { display: block; white-space: pre; }
-.profile-code .ln::before {
-  counter-increment: ln; content: counter(ln);
-  display: inline-block; width: 2.2em; margin-right: 1.1em; text-align: right;
-  color: rgba(250, 249, 246, .26);
-}
-.tok-k { color: var(--sky); }
-.tok-p { color: rgba(250, 249, 246, .5); }
-.tok-n { color: var(--signal); }
-.tok-c { color: rgba(250, 249, 246, .42); font-style: italic; }
+.about-photo picture { display: block; width: 100%; height: 100%; }
+.about-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s var(--ease-out); }
+.about-photo:hover img { transform: scale(1.03); }
 
 @media (max-width: 860px) {
   .intro-grid { grid-template-columns: 1fr; }
-  .intro-copy { order: -1; }
+  .about-photo { max-width: 460px; }
 }
 
 /* ---------- Work / projects ---------- */
@@ -739,7 +718,8 @@ html.menu-open, html.menu-open body { overflow: hidden; }
   background: var(--sky); color: var(--dark);
   font-size: clamp(1.15rem, 2.1vw, 1.9rem); font-weight: 700; letter-spacing: -.03em;
 }
-img.contact-avatar { object-fit: cover; height: auto; }
+.contact-avatar-wrap { display: contents; }
+img.contact-avatar { object-fit: cover; height: auto; background: #8c8f92; }
 .contact-title { flex: 1; min-width: 0; }
 
 .contact-cta-row { position: relative; margin-top: clamp(3.5rem, 7vw, 5.5rem); }
