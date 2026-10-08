@@ -30,7 +30,7 @@ sys.path.insert(0, HERE)
 
 from common import Gen, esc, highlight  # noqa: E402
 
-VERSION = "20261007-7"
+VERSION = "20261007-8"
 SITE = "https://www.sarunshrestha.com.np"
 EMAIL = "sarun.shrestha.dev@gmail.com"
 LINKEDIN = "https://www.linkedin.com/in/sarun2003"

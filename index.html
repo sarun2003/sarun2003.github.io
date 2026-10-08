@@ -28,7 +28,7 @@
   <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
   <link rel="preload" href="assets/fonts/plus-jakarta-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/style.css?v=20261007-7">
+  <link rel="stylesheet" href="assets/css/style.css?v=20261007-8">
 
   <script>
     /* Runs before first paint: enables JS styles and decides whether to play the intro. */
@@ -131,7 +131,7 @@
     <!-- ============ Hero ============ -->
     <section class="hero-section" id="hero" aria-labelledby="hero-title">
       <canvas class="hero-canvas" aria-hidden="true"></canvas>
-      <h1 class="sr-only" id="hero-title">Sarun Shrestha, Senior Data Engineer</h1>
+      <h1 class="sr-only" id="hero-title">Sarun Shrestha, Data Engineer and Data Analyst</h1>
 
       <div class="hero-location hero-enter" style="--enter-delay:.1s">
         <p>Located in the<br>United States</p>
@@ -150,8 +150,10 @@
 
       <div class="hero-role hero-enter" style="--enter-delay:.22s">
         <svg class="hero-role-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 8v10H8"/></svg>
-        <p>Senior</p>
-        <p>Data Engineer</p>
+        <ul class="hero-roles" aria-label="Roles">
+          <li><span class="hero-roles-node" aria-hidden="true"></span>Data Engineer</li>
+          <li><span class="hero-roles-node" aria-hidden="true"></span>Data Analyst</li>
+        </ul>
       </div>
 
       <div class="hero-meta hero-enter" style="--enter-delay:.3s">
@@ -695,6 +697,6 @@
     </div>
   </footer>
 
-  <script src="assets/js/main.js?v=20261007-7" defer></script>
+  <script src="assets/js/main.js?v=20261007-8" defer></script>
 </body>
 </html>

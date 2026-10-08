@@ -340,9 +340,42 @@ html.menu-open, html.menu-open body { overflow: hidden; }
   box-shadow: 0 24px 60px -24px rgba(0, 0, 0, .7), 0 2px 8px rgba(0, 0, 0, .25);
 }
 .hero-role-arrow { width: 1.4rem; height: 1.4rem; color: var(--sky); margin-bottom: 1.2rem; }
-.hero-role p {
+/* The two roles sit on a small pipeline of their own: ring nodes like the sinks beside the card,
+   joined by a line that a data packet travels down. Sizes are in em so it scales with the text. */
+.hero-roles {
+  position: relative; display: grid; gap: .5em;
   font-size: clamp(1.4rem, 2.4vw, 2rem); font-weight: 500;
   letter-spacing: -.02em; line-height: 1.22; color: var(--white);
+}
+.hero-roles li { display: flex; align-items: center; gap: .55em; white-space: nowrap; }
+.hero-roles-node {
+  position: relative; z-index: 1; flex-shrink: 0;
+  width: 11px; height: 11px; border-radius: 50%;
+  border: 1.5px solid var(--sky); background: var(--dark-2);
+  box-shadow: 0 0 0 4px rgba(56, 189, 248, .08), 0 0 14px rgba(56, 189, 248, .35);
+}
+.hero-roles::before {
+  content: ""; position: absolute; left: 5px; top: .61em; width: 1px; height: 1.72em;
+  background: linear-gradient(rgba(56, 189, 248, .6), rgba(56, 189, 248, .22));
+}
+.hero-roles::after {
+  content: ""; position: absolute; left: 4px; top: .61em; width: 3px; height: .42em; border-radius: 2px;
+  background: var(--sky); box-shadow: 0 0 8px rgba(56, 189, 248, .9);
+  opacity: 0; animation: role-packet 2.8s var(--ease-in-out) 1.6s infinite;
+}
+.hero-roles li + li .hero-roles-node::after {
+  content: ""; position: absolute; inset: -1.5px; border-radius: 50%; border: 1px solid var(--sky);
+  opacity: 0; animation: role-arrive 2.8s var(--ease-out) 1.6s infinite;
+}
+@keyframes role-packet {
+  0% { transform: translateY(0); opacity: 0; }
+  14%, 82% { opacity: 1; }
+  100% { transform: translateY(1.3em); opacity: 0; }
+}
+@keyframes role-arrive {
+  0%, 84% { transform: scale(1); opacity: 0; }
+  88% { opacity: .9; }
+  100% { transform: scale(2.6); opacity: 0; }
 }
 
 .hero-meta {
