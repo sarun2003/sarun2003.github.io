@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Real-Time Fraud Detection Pipeline — Sarun Shrestha</title>
+  <meta name="description" content="Card transactions scored in under 50 ms using streaming features from Spark and a Feast feature store, with alerts, analyst feedback and model quality in one view.">
+  <meta name="author" content="Sarun Shrestha">
+  <meta name="theme-color" content="#011013">
+  <meta name="color-scheme" content="dark light">
+  <link rel="canonical" href="https://www.sarunshrestha.com.np/projects/fraud-detection-streaming/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.sarunshrestha.com.np/projects/fraud-detection-streaming/">
+  <meta property="og:site_name" content="Sarun Shrestha">
+  <meta property="og:title" content="Real-Time Fraud Detection Pipeline — Sarun Shrestha">
+  <meta property="og:description" content="Card transactions scored in under 50 ms using streaming features from Spark and a Feast feature store, with alerts, analyst feedback and model quality in one view.">
+  <meta property="og:image" content="https://www.sarunshrestha.com.np/assets/img/projects/fraud-detection-streaming.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://www.sarunshrestha.com.np/assets/img/projects/fraud-detection-streaming.jpg">
+
+  <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+  <link rel="preload" href="/assets/fonts/plus-jakarta-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/assets/css/style.css?v=20261007-6">
+  <link rel="stylesheet" href="/assets/css/projects.css?v=20261007-6">
+  <script>
+    /* No intro greeting on this page; fall back to the plain page if the main script never starts. */
+    (function () {
+      var h = document.documentElement;
+      h.classList.remove('no-js');
+      h.classList.add('js', 'skip-loader');
+      setTimeout(function () {
+        if (!h.classList.contains('app-ready')) { h.classList.remove('js'); h.classList.add('no-js'); }
+      }, 6000);
+    })();
+  </script>
+</head>
+<body class="dash-page">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="noise-overlay" aria-hidden="true"></div>
+
+  <header class="ds-nav">
+    <a class="ds-logo" href="/" aria-label="Sarun Shrestha, home">
+      <span class="ds-logo-mark" aria-hidden="true">©</span>
+      <span class="ds-logo-text">Sarun Shrestha</span>
+    </a>
+    <nav aria-label="Primary">
+      <ul class="ds-nav-links">
+        <li><a class="ds-nav-link" href="/#about">About</a></li>
+        <li><a class="ds-nav-link is-active" href="/projects/">Projects</a></li>
+        <li><a class="ds-nav-link" href="/#experience">Experience</a></li>
+        <li><a class="ds-nav-link" href="/#skills">Skills</a></li>
+        <li><a class="ds-nav-link" href="/contact/">Contact</a></li>
+        <li>
+          <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="side-menu">
+            <span class="menu-toggle-icon" aria-hidden="true"></span>Menu
+          </button>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="side-menu-overlay" data-menu-close></div>
+  <aside class="side-menu" id="side-menu" role="dialog" aria-modal="true" aria-label="Menu">
+    <button class="side-menu-close" type="button" data-menu-close>
+      Close
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>
+    </button>
+    <p class="side-menu-label">Navigation</p>
+    <nav aria-label="Menu">
+      <ul>
+        <li><a class="side-menu-nav-link" href="/">Home</a></li>
+        <li><a class="side-menu-nav-link" href="/#about">About</a></li>
+        <li><a class="side-menu-nav-link is-active" href="/projects/">Projects</a></li>
+        <li><a class="side-menu-nav-link" href="/#experience">Experience</a></li>
+        <li><a class="side-menu-nav-link" href="/#skills">Skills</a></li>
+        <li><a class="side-menu-nav-link" href="/contact/">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="side-menu-socials">
+      <p class="side-menu-label">Socials</p>
+      <ul class="side-menu-social-links">
+        <li><a href="https://www.linkedin.com/in/sarun2003" target="_blank" rel="noopener">LinkedIn</a></li>
+        <li><a href="mailto:sarun.shrestha.dev@gmail.com">Email</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main id="main">
+    <section class="dash-hero" aria-labelledby="dash-title">
+      <div class="ds-container dash-container">
+        <nav class="dash-crumbs" aria-label="Breadcrumb">
+          <a href="/">Home</a><span aria-hidden="true">/</span><a href="/projects/">Projects</a><span aria-hidden="true">/</span><span aria-current="page">Fraud Detection</span>
+        </nav>
+        <p class="dash-eyebrow">Project 10 · Real-time ML</p>
+        <h1 class="dash-title" id="dash-title">Real-Time Fraud Detection Pipeline</h1>
+        <p class="dash-summary">Every card authorization is published to Kafka. A Spark Structured Streaming job keeps rolling features for each card, merchant and device, such as spend in the last ten minutes and how many merchants a card has used, and pushes them to a Feast feature store backed by Redis. The scoring service reads those features in a few milliseconds, scores the transaction and answers before the payment is approved. High scores become alerts for analysts, and their decisions flow back as labels to measure precision and recall every day.</p>
+        <ul class="dash-stack" aria-label="Tech stack"><li>Apache Kafka</li><li>Spark Structured Streaming</li><li>Feast</li><li>Redis</li><li>Grafana</li></ul>
+        <div class="dash-meta">
+          <span class="dash-badge"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 1.8h4M6.6 1.8v4.1L2.7 12.6a1.1 1.1 0 0 0 1 1.6h8.6a1.1 1.1 0 0 0 1-1.6L9.4 5.9V1.8"/><path d="M4.6 9.6h6.8"/></svg>Sample data</span>
+          <span class="dash-window">Tuesday, Oct 6, 2026 · model quality over the last 30 days</span>
+          <a class="pill pill--sm" href="transactions_5min.csv" download><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M5 19.5h14"/></svg>Download data (CSV)</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="dash-body" data-dashboard data-src="data.json" aria-label="Dashboard">
+      <div class="ds-container dash-container">
+        <noscript><p class="dash-noscript">The charts need JavaScript. The same numbers are in <a href="transactions_5min.csv">transactions_5min.csv</a> and <a href="data.json">data.json</a>.</p></noscript>
+        <div class="dash-kpis" data-kpis></div>
+        <div class="dash-grid">
+          <article class="dash-panel span-6" aria-labelledby="p-tpm">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-tpm">Transactions per minute</h3>
+                <p class="dash-panel-sub">Oct 6, 5-minute average</p>
+              </div>
+            <button class="dash-toggle" type="button" data-toggle aria-pressed="false" hidden><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="1.5" y="2" width="9" height="8" rx="1.2"/><path d="M1.5 5h9M1.5 7.6h9M5 5v5"/></svg>Table</button>
+            </header>
+            <div class="dash-chart" data-chart="tpm" style="height:260px"></div>
+          </article>
+          <article class="dash-panel span-6" aria-labelledby="p-flagrate">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-flagrate">Flag rate</h3>
+                <p class="dash-panel-sub">Sent to review or declined</p>
+              </div>
+            <button class="dash-toggle" type="button" data-toggle aria-pressed="false" hidden><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="1.5" y="2" width="9" height="8" rx="1.2"/><path d="M1.5 5h9M1.5 7.6h9M5 5v5"/></svg>Table</button>
+            </header>
+            <div class="dash-chart" data-chart="flagrate" style="height:260px"></div>
+          </article>
+          <article class="dash-panel span-7" aria-labelledby="p-scores">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-scores">Risk score distribution</h3>
+                <p class="dash-panel-sub">Transactions by score, log scale</p>
+              </div>
+            <button class="dash-toggle" type="button" data-toggle aria-pressed="false" hidden><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="1.5" y="2" width="9" height="8" rx="1.2"/><path d="M1.5 5h9M1.5 7.6h9M5 5v5"/></svg>Table</button>
+            </header>
+            <div class="dash-chart" data-chart="scores" style="height:290px"></div>
+          </article>
+          <article class="dash-panel span-5" aria-labelledby="p-merchants">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-merchants">Flag rate by merchant category</h3>
+                <p class="dash-panel-sub">Oct 6</p>
+              </div>
+            <button class="dash-toggle" type="button" data-toggle aria-pressed="false" hidden><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="1.5" y="2" width="9" height="8" rx="1.2"/><path d="M1.5 5h9M1.5 7.6h9M5 5v5"/></svg>Table</button>
+            </header>
+            <div class="dash-chart" data-chart="merchants" style="height:290px"></div>
+          </article>
+          <article class="dash-panel span-8" aria-labelledby="p-quality">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-quality">Precision and recall</h3>
+                <p class="dash-panel-sub">Daily, from analyst decisions and chargebacks</p>
+              </div>
+            <button class="dash-toggle" type="button" data-toggle aria-pressed="false" hidden><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="1.5" y="2" width="9" height="8" rx="1.2"/><path d="M1.5 5h9M1.5 7.6h9M5 5v5"/></svg>Table</button>
+            </header>
+            <div class="dash-chart" data-chart="quality" style="height:280px"></div>
+          </article>
+          <article class="dash-panel span-4" aria-labelledby="p-confusion">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-confusion">Confusion matrix</h3>
+                <p class="dash-panel-sub">Last 30 days, threshold 0.80</p>
+              </div>
+            <button class="dash-toggle" type="button" data-toggle aria-pressed="false" hidden><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="1.5" y="2" width="9" height="8" rx="1.2"/><path d="M1.5 5h9M1.5 7.6h9M5 5v5"/></svg>Table</button>
+            </header>
+            <div class="dash-chart dash-chart--html" data-chart="confusion"></div>
+          </article>
+          <article class="dash-panel span-12" aria-labelledby="p-alerts">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-alerts">Recent alerts</h3>
+                <p class="dash-panel-sub">Score, the feature that contributed most, and the analyst&#x27;s decision</p>
+              </div>
+            </header>
+            <div class="dash-table-wrap" data-table="alerts"></div>
+          </article>
+          <article class="dash-panel span-12" aria-labelledby="p-features">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-features">Feature store</h3>
+                <p class="dash-panel-sub">Feast feature views and how old their online values are</p>
+              </div>
+            </header>
+            <div class="dash-table-wrap" data-table="features"></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="dash-section" aria-labelledby="how-title">
+      <div class="ds-container dash-container">
+        <div class="dash-section-head">
+          <h2 class="dash-h2" id="how-title">How it works</h2>
+          <p class="dash-section-note">From authorization to decision in about 46 ms at p95, with the same features online and in training.</p>
+        </div>
+        <ol class="flow">
+          <li class="flow-step">
+            <p class="flow-stage">01 · Authorize</p>
+            <p class="flow-tech">Payment gateway</p>
+            <p class="flow-detail">Each card authorization goes to Kafka with amount, merchant, device and location, keyed by card.</p>
+          </li>
+          <li class="flow-step">
+            <p class="flow-stage">02 · Compute features</p>
+            <p class="flow-tech">Spark Structured Streaming</p>
+            <p class="flow-detail">Sliding windows per card, merchant and device: counts, sums, distinct merchants and velocity, updated every 5 seconds.</p>
+          </li>
+          <li class="flow-step">
+            <p class="flow-stage">03 · Serve features</p>
+            <p class="flow-tech">Feast + Redis</p>
+            <p class="flow-detail">Streaming and daily batch features in one registry; online lookups take about 3 ms.</p>
+          </li>
+          <li class="flow-step">
+            <p class="flow-stage">04 · Score</p>
+            <p class="flow-tech">Model service</p>
+            <p class="flow-detail">A gradient-boosted model scores each transaction with its features before the payment is approved.</p>
+          </li>
+          <li class="flow-step">
+            <p class="flow-stage">05 · Act</p>
+            <p class="flow-tech">Rules + review queue</p>
+            <p class="flow-detail">0.90 and above declines, 0.80 to 0.90 goes to an analyst, below 0.80 approves.</p>
+          </li>
+          <li class="flow-step">
+            <p class="flow-stage">06 · Learn</p>
+            <p class="flow-tech">Labels + Grafana</p>
+            <p class="flow-detail">Analyst decisions and chargebacks become labels; precision and recall are tracked daily and drive retraining.</p>
+          </li>
+        </ol>
+        <ul class="steps">
+          <li><strong>Same features online and offline.</strong> Feast serves the feature definitions used in training, with point-in-time joins offline and Redis online, so the model sees the same numbers in production.</li>
+          <li><strong>Fresh features, bounded latency.</strong> Streaming features reach Redis about a second after a transaction. If the store is slow, the service scores with batch features rather than delay the payment.</li>
+          <li><strong>Thresholds are business decisions.</strong> The 0.80 and 0.90 cut-offs trade analyst workload against missed fraud. The confusion matrix shows that trade-off in numbers.</li>
+          <li><strong>Feedback closes the loop.</strong> Every alert outcome and chargeback is joined back to its score. That join produces the daily precision and recall, and the training labels.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="dash-section" aria-labelledby="model-title">
+      <div class="ds-container dash-container">
+        <div class="dash-section-head">
+          <h2 class="dash-h2" id="model-title">Data model</h2>
+          <p class="dash-section-note">One event, one feature view and one score record: the whole life of a decision.</p>
+        </div>
+        <div class="model-grid">
+          <article class="model-card">
+            <div class="model-card-head"><code>payments.authorizations</code><span>Kafka topic · Avro · keyed by card</span></div>
+            <dl class="model-cols">
+              <div><dt><code>txn_id</code><span class="model-type">string</span></dt><dd>Unique per authorization</dd></div>
+              <div><dt><code>card_id</code><span class="model-type">string</span></dt><dd>Tokenised card; never the card number</dd></div>
+              <div><dt><code>merchant_id / mcc</code><span class="model-type">string / int</span></dt><dd>Merchant and its category code</dd></div>
+              <div><dt><code>amount_usd</code><span class="model-type">decimal(12,2)</span></dt><dd>Converted at authorization time</dd></div>
+              <div><dt><code>device_id / lat / lon</code><span class="model-type">string / double</span></dt><dd>Where the request came from</dd></div>
+              <div><dt><code>event_ts</code><span class="model-type">timestamp</span></dt><dd>Authorization time</dd></div>
+            </dl>
+          </article>
+          <article class="model-card">
+            <div class="model-card-head"><code>card_txn_rolling</code><span>Feast feature view · Redis online · TTL 2 h</span></div>
+            <dl class="model-cols">
+              <div><dt><code>card_id</code><span class="model-type">entity</span></dt><dd>Join key</dd></div>
+              <div><dt><code>txn_count_10m / txn_count_1h</code><span class="model-type">int64</span></dt><dd>Transactions in the window</dd></div>
+              <div><dt><code>amount_sum_10m</code><span class="model-type">float</span></dt><dd>Spend in the last ten minutes</dd></div>
+              <div><dt><code>distinct_merchants_10m</code><span class="model-type">int64</span></dt><dd>A burst of merchants is a classic fraud signal</dd></div>
+              <div><dt><code>km_from_last_txn</code><span class="model-type">float</span></dt><dd>Distance from the previous transaction</dd></div>
+              <div><dt><code>event_timestamp</code><span class="model-type">timestamp</span></dt><dd>End of the window the values describe</dd></div>
+            </dl>
+          </article>
+          <article class="model-card">
+            <div class="model-card-head"><code>fraud.scores</code><span>Iceberg table · one row per decision</span></div>
+            <dl class="model-cols">
+              <div><dt><code>txn_id</code><span class="model-type">string</span></dt><dd>The authorization</dd></div>
+              <div><dt><code>score / decision</code><span class="model-type">double / string</span></dt><dd>Risk score and <code>approve</code>, <code>review</code> or <code>decline</code></dd></div>
+              <div><dt><code>model_version</code><span class="model-type">string</span></dt><dd>For example <code>fraud-v14</code></dd></div>
+              <div><dt><code>features</code><span class="model-type">map&lt;string,double&gt;</span></dt><dd>The values used, for audits and debugging</dd></div>
+              <div><dt><code>label / labeled_at</code><span class="model-type">boolean / timestamp</span></dt><dd>Filled in later from analysts and chargebacks</dd></div>
+            </dl>
+          </article>
+        </div>
+        <ul class="dataset-files" aria-label="Downloads">
+          <li><a href="transactions_5min.csv" download><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M5 19.5h14"/></svg><span><strong>transactions_5min.csv</strong> Transactions, flags, declines, amounts and scoring latency in 5-minute intervals · 288 rows, 7 columns</span></a></li>
+          <li><a href="data.json"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M5 19.5h14"/></svg><span><strong>data.json</strong> Everything this dashboard draws: KPIs, chart series and tables</span></a></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="dash-section" aria-labelledby="code-title">
+      <div class="ds-container dash-container">
+        <div class="dash-section-head">
+          <h2 class="dash-h2" id="code-title">Key code</h2>
+          <p class="dash-section-note">The streaming features, their Feast definitions, and the scoring service.</p>
+        </div>
+        <div class="code-block" data-code-block>
+          <div class="code-bar">
+            <div class="code-tabs" role="tablist" aria-label="Source files">
+              <button class="code-tab" type="button" role="tab" id="tab-fraud-detection-streaming-0" aria-controls="code-fraud-detection-streaming-0" aria-selected="true" tabindex="0">card_features.py</button>
+              <button class="code-tab" type="button" role="tab" id="tab-fraud-detection-streaming-1" aria-controls="code-fraud-detection-streaming-1" aria-selected="false" tabindex="-1">feature_repo/cards.py</button>
+              <button class="code-tab" type="button" role="tab" id="tab-fraud-detection-streaming-2" aria-controls="code-fraud-detection-streaming-2" aria-selected="false" tabindex="-1">score.py</button>
+            </div>
+            <button class="code-copy" type="button" data-copy hidden><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8" rx="1.6"/><path d="M10.5 5.5V3.6a1.1 1.1 0 0 0-1.1-1.1H3.6a1.1 1.1 0 0 0-1.1 1.1v5.8a1.1 1.1 0 0 0 1.1 1.1h1.9"/></svg><span>Copy</span></button>
+          </div>
+          <div class="code-panel" role="tabpanel" id="code-fraud-detection-streaming-0" aria-labelledby="tab-fraud-detection-streaming-0" tabindex="0">
+              <p class="code-panel-caption">Spark Structured Streaming: ten-minute sliding windows per card, pushed to Feast every five seconds.</p>
+              <pre><code class="lang-python"><span class="ln"><span class="tok-k">from</span> feast <span class="tok-k">import</span> FeatureStore</span>
+<span class="ln"><span class="tok-k">from</span> feast.data_source <span class="tok-k">import</span> PushMode</span>
+<span class="ln"><span class="tok-k">from</span> pyspark.sql <span class="tok-k">import</span> functions <span class="tok-k">as</span> F</span>
+<span class="ln"><span class="tok-k">from</span> pyspark.sql.avro.functions <span class="tok-k">import</span> from_avro</span>
+<span class="ln"></span>
+<span class="ln">store = <span class="tok-f">FeatureStore</span>(repo_path=<span class="tok-s">&quot;feature_repo&quot;</span>)</span>
+<span class="ln">SCHEMA = <span class="tok-f">open</span>(<span class="tok-s">&quot;schemas/authorization.avsc&quot;</span>).<span class="tok-f">read</span>()</span>
+<span class="ln"></span>
+<span class="ln">txns = (</span>
+<span class="ln">    spark.readStream.<span class="tok-f">format</span>(<span class="tok-s">&quot;kafka&quot;</span>)</span>
+<span class="ln">    .<span class="tok-f">option</span>(<span class="tok-s">&quot;kafka.bootstrap.servers&quot;</span>, <span class="tok-s">&quot;kafka:9092&quot;</span>)</span>
+<span class="ln">    .<span class="tok-f">option</span>(<span class="tok-s">&quot;subscribe&quot;</span>, <span class="tok-s">&quot;payments.authorizations&quot;</span>)</span>
+<span class="ln">    .<span class="tok-f">load</span>()</span>
+<span class="ln">    .<span class="tok-f">select</span>(<span class="tok-f">from_avro</span>(F.<span class="tok-f">expr</span>(<span class="tok-s">&quot;substring(value, 6, length(value) - 5)&quot;</span>), SCHEMA).<span class="tok-f">alias</span>(<span class="tok-s">&quot;t&quot;</span>))</span>
+<span class="ln">    .<span class="tok-f">select</span>(<span class="tok-s">&quot;t.*&quot;</span>)</span>
+<span class="ln">    .<span class="tok-f">withColumn</span>(<span class="tok-s">&quot;event_ts&quot;</span>, F.<span class="tok-f">expr</span>(<span class="tok-s">&quot;timestamp_millis(event_time_ms)&quot;</span>))</span>
+<span class="ln">)</span>
+<span class="ln"></span>
+<span class="ln">rolling = (</span>
+<span class="ln">    txns.<span class="tok-f">withWatermark</span>(<span class="tok-s">&quot;event_ts&quot;</span>, <span class="tok-s">&quot;2 minutes&quot;</span>)</span>
+<span class="ln">    .<span class="tok-f">groupBy</span>(F.<span class="tok-f">window</span>(<span class="tok-s">&quot;event_ts&quot;</span>, <span class="tok-s">&quot;10 minutes&quot;</span>, <span class="tok-s">&quot;1 minute&quot;</span>), <span class="tok-s">&quot;card_id&quot;</span>)</span>
+<span class="ln">    .<span class="tok-f">agg</span>(</span>
+<span class="ln">        F.<span class="tok-f">count</span>(<span class="tok-s">&quot;*&quot;</span>).<span class="tok-f">alias</span>(<span class="tok-s">&quot;txn_count_10m&quot;</span>),</span>
+<span class="ln">        F.<span class="tok-f">sum</span>(<span class="tok-s">&quot;amount_usd&quot;</span>).<span class="tok-f">cast</span>(<span class="tok-s">&quot;float&quot;</span>).<span class="tok-f">alias</span>(<span class="tok-s">&quot;amount_sum_10m&quot;</span>),</span>
+<span class="ln">        F.<span class="tok-f">approx_count_distinct</span>(<span class="tok-s">&quot;merchant_id&quot;</span>).<span class="tok-f">alias</span>(<span class="tok-s">&quot;distinct_merchants_10m&quot;</span>),</span>
+<span class="ln">    )</span>
+<span class="ln">    .<span class="tok-f">select</span>(<span class="tok-s">&quot;card_id&quot;</span>, F.<span class="tok-f">col</span>(<span class="tok-s">&quot;window.end&quot;</span>).<span class="tok-f">alias</span>(<span class="tok-s">&quot;event_timestamp&quot;</span>),</span>
+<span class="ln">            <span class="tok-s">&quot;txn_count_10m&quot;</span>, <span class="tok-s">&quot;amount_sum_10m&quot;</span>, <span class="tok-s">&quot;distinct_merchants_10m&quot;</span>)</span>
+<span class="ln">)</span>
+<span class="ln"></span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-k">def</span> <span class="tok-f">push_to_feast</span>(batch, batch_id):</span>
+<span class="ln">    rows = batch.<span class="tok-f">toPandas</span>()</span>
+<span class="ln">    <span class="tok-k">if</span> rows.empty:</span>
+<span class="ln">        <span class="tok-k">return</span></span>
+<span class="ln">    <span class="tok-c"># Several windows per card can update in one batch; the newest one is what scoring needs.</span></span>
+<span class="ln">    latest = rows.<span class="tok-f">sort_values</span>(<span class="tok-s">&quot;event_timestamp&quot;</span>).<span class="tok-f">drop_duplicates</span>(<span class="tok-s">&quot;card_id&quot;</span>, keep=<span class="tok-s">&quot;last&quot;</span>)</span>
+<span class="ln">    store.<span class="tok-f">push</span>(<span class="tok-s">&quot;card_txn_rolling_push&quot;</span>, latest, to=PushMode.ONLINE_AND_OFFLINE)</span>
+<span class="ln"></span>
+<span class="ln"></span>
+<span class="ln">(rolling.writeStream</span>
+<span class="ln">    .<span class="tok-f">outputMode</span>(<span class="tok-s">&quot;update&quot;</span>)</span>
+<span class="ln">    .<span class="tok-f">foreachBatch</span>(push_to_feast)</span>
+<span class="ln">    .<span class="tok-f">trigger</span>(processingTime=<span class="tok-s">&quot;5 seconds&quot;</span>)</span>
+<span class="ln">    .<span class="tok-f">option</span>(<span class="tok-s">&quot;checkpointLocation&quot;</span>, <span class="tok-s">&quot;s3://fraud-features/checkpoints/card_txn_rolling&quot;</span>)</span>
+<span class="ln">    .<span class="tok-f">start</span>())</span></code></pre>
+            </div>
+          <div class="code-panel" role="tabpanel" id="code-fraud-detection-streaming-1" aria-labelledby="tab-fraud-detection-streaming-1" tabindex="0" hidden>
+              <p class="code-panel-caption">Feast definitions: the card entity, a push source fed by the stream, and the feature view the model reads.</p>
+              <pre><code class="lang-python"><span class="ln"><span class="tok-k">from</span> datetime <span class="tok-k">import</span> timedelta</span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-k">from</span> feast <span class="tok-k">import</span> Entity, FeatureView, Field, FileSource, PushSource</span>
+<span class="ln"><span class="tok-k">from</span> feast.types <span class="tok-k">import</span> Float32, Int64</span>
+<span class="ln"></span>
+<span class="ln">card = <span class="tok-f">Entity</span>(name=<span class="tok-s">&quot;card&quot;</span>, join_keys=[<span class="tok-s">&quot;card_id&quot;</span>])</span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-c"># Offline copy of the pushed features, for point-in-time correct training sets</span></span>
+<span class="ln">card_rolling_offline = <span class="tok-f">FileSource</span>(</span>
+<span class="ln">    name=<span class="tok-s">&quot;card_txn_rolling_offline&quot;</span>,</span>
+<span class="ln">    path=<span class="tok-s">&quot;s3://fraud-features/card_txn_rolling/&quot;</span>,</span>
+<span class="ln">    timestamp_field=<span class="tok-s">&quot;event_timestamp&quot;</span>,</span>
+<span class="ln">)</span>
+<span class="ln"></span>
+<span class="ln">card_rolling_push = <span class="tok-f">PushSource</span>(name=<span class="tok-s">&quot;card_txn_rolling_push&quot;</span>, batch_source=card_rolling_offline)</span>
+<span class="ln"></span>
+<span class="ln">card_txn_rolling = <span class="tok-f">FeatureView</span>(</span>
+<span class="ln">    name=<span class="tok-s">&quot;card_txn_rolling&quot;</span>,</span>
+<span class="ln">    entities=[card],</span>
+<span class="ln">    ttl=<span class="tok-f">timedelta</span>(hours=<span class="tok-n">2</span>),</span>
+<span class="ln">    schema=[</span>
+<span class="ln">        <span class="tok-f">Field</span>(name=<span class="tok-s">&quot;txn_count_10m&quot;</span>, dtype=Int64),</span>
+<span class="ln">        <span class="tok-f">Field</span>(name=<span class="tok-s">&quot;amount_sum_10m&quot;</span>, dtype=Float32),</span>
+<span class="ln">        <span class="tok-f">Field</span>(name=<span class="tok-s">&quot;distinct_merchants_10m&quot;</span>, dtype=Int64),</span>
+<span class="ln">    ],</span>
+<span class="ln">    source=card_rolling_push,</span>
+<span class="ln">    online=<span class="tok-k">True</span>,</span>
+<span class="ln">    tags={<span class="tok-s">&quot;owner&quot;</span>: <span class="tok-s">&quot;fraud-data&quot;</span>, <span class="tok-s">&quot;freshness_sla&quot;</span>: <span class="tok-s">&quot;5s&quot;</span>},</span>
+<span class="ln">)</span></code></pre>
+            </div>
+          <div class="code-panel" role="tabpanel" id="code-fraud-detection-streaming-2" aria-labelledby="tab-fraud-detection-streaming-2" tabindex="0" hidden>
+              <p class="code-panel-caption">The scoring service: online features from Feast, a gradient-boosted model, and the decision thresholds.</p>
+              <pre><code class="lang-python"><span class="ln"><span class="tok-k">import</span> time</span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-k">import</span> xgboost <span class="tok-k">as</span> xgb</span>
+<span class="ln"><span class="tok-k">from</span> fastapi <span class="tok-k">import</span> FastAPI</span>
+<span class="ln"><span class="tok-k">from</span> feast <span class="tok-k">import</span> FeatureStore</span>
+<span class="ln"><span class="tok-k">from</span> pydantic <span class="tok-k">import</span> BaseModel</span>
+<span class="ln"></span>
+<span class="ln">store = <span class="tok-f">FeatureStore</span>(repo_path=<span class="tok-s">&quot;feature_repo&quot;</span>)</span>
+<span class="ln">model = xgb.<span class="tok-f">Booster</span>(model_file=<span class="tok-s">&quot;models/fraud-v14.json&quot;</span>)</span>
+<span class="ln"></span>
+<span class="ln">FEATURES = [</span>
+<span class="ln">    <span class="tok-s">&quot;card_txn_rolling:txn_count_10m&quot;</span>,</span>
+<span class="ln">    <span class="tok-s">&quot;card_txn_rolling:amount_sum_10m&quot;</span>,</span>
+<span class="ln">    <span class="tok-s">&quot;card_txn_rolling:distinct_merchants_10m&quot;</span>,</span>
+<span class="ln">    <span class="tok-s">&quot;card_profile:amount_avg_30d&quot;</span>,</span>
+<span class="ln">    <span class="tok-s">&quot;merchant_risk:chargeback_rate_90d&quot;</span>,</span>
+<span class="ln">    <span class="tok-s">&quot;device_history:cards_seen_24h&quot;</span>,</span>
+<span class="ln">]</span>
+<span class="ln">NAMES = [f.<span class="tok-f">split</span>(<span class="tok-s">&quot;:&quot;</span>)[<span class="tok-n">1</span>] <span class="tok-k">for</span> f <span class="tok-k">in</span> FEATURES]</span>
+<span class="ln"></span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-k">class</span> <span class="tok-f">Authorization</span>(BaseModel):</span>
+<span class="ln">    txn_id: str</span>
+<span class="ln">    card_id: str</span>
+<span class="ln">    merchant_id: str</span>
+<span class="ln">    device_id: str</span>
+<span class="ln">    amount_usd: float</span>
+<span class="ln">    km_from_last_txn: float</span>
+<span class="ln"></span>
+<span class="ln"></span>
+<span class="ln">app = <span class="tok-f">FastAPI</span>()</span>
+<span class="ln"></span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-f">@app.post</span>(<span class="tok-s">&quot;/score&quot;</span>)</span>
+<span class="ln"><span class="tok-k">def</span> <span class="tok-f">score</span>(txn: Authorization) -&gt; dict:</span>
+<span class="ln">    started = time.<span class="tok-f">perf_counter</span>()</span>
+<span class="ln">    values = store.<span class="tok-f">get_online_features</span>(</span>
+<span class="ln">        features=FEATURES,</span>
+<span class="ln">        entity_rows=[{<span class="tok-s">&quot;card_id&quot;</span>: txn.card_id, <span class="tok-s">&quot;merchant_id&quot;</span>: txn.merchant_id, <span class="tok-s">&quot;device_id&quot;</span>: txn.device_id}],</span>
+<span class="ln">    ).<span class="tok-f">to_dict</span>()</span>
+<span class="ln"></span>
+<span class="ln">    row = [txn.amount_usd, txn.km_from_last_txn] + [values[name][<span class="tok-n">0</span>] <span class="tok-k">or</span> <span class="tok-n">0.0</span> <span class="tok-k">for</span> name <span class="tok-k">in</span> NAMES]</span>
+<span class="ln">    risk = <span class="tok-f">float</span>(model.<span class="tok-f">predict</span>(xgb.<span class="tok-f">DMatrix</span>([row], feature_names=[<span class="tok-s">&quot;amount_usd&quot;</span>, <span class="tok-s">&quot;km_from_last_txn&quot;</span>, *NAMES]))[<span class="tok-n">0</span>])</span>
+<span class="ln">    decision = <span class="tok-s">&quot;decline&quot;</span> <span class="tok-k">if</span> risk &gt;= <span class="tok-n">0.90</span> <span class="tok-k">else</span> <span class="tok-s">&quot;review&quot;</span> <span class="tok-k">if</span> risk &gt;= <span class="tok-n">0.80</span> <span class="tok-k">else</span> <span class="tok-s">&quot;approve&quot;</span></span>
+<span class="ln"></span>
+<span class="ln">    <span class="tok-k">return</span> {</span>
+<span class="ln">        <span class="tok-s">&quot;txn_id&quot;</span>: txn.txn_id,</span>
+<span class="ln">        <span class="tok-s">&quot;score&quot;</span>: <span class="tok-f">round</span>(risk, <span class="tok-n">4</span>),</span>
+<span class="ln">        <span class="tok-s">&quot;decision&quot;</span>: decision,</span>
+<span class="ln">        <span class="tok-s">&quot;model_version&quot;</span>: <span class="tok-s">&quot;fraud-v14&quot;</span>,</span>
+<span class="ln">        <span class="tok-s">&quot;latency_ms&quot;</span>: <span class="tok-f">round</span>((time.<span class="tok-f">perf_counter</span>() - started) * <span class="tok-n">1000</span>, <span class="tok-n">1</span>),</span>
+<span class="ln">    }</span></code></pre>
+            </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="dash-section" aria-labelledby="notes-title">
+      <div class="ds-container dash-container">
+        <div class="dash-section-head">
+          <h2 class="dash-h2" id="notes-title">Engineering notes</h2>
+        </div>
+        <div class="highlights">
+          <article class="highlight">
+            <h3>The 3 a.m. card-testing attack</h3>
+            <p>At 03:05 a bot started testing stolen card numbers with $1 purchases at one online store. Velocity features flagged the pattern within minutes, the flag rate peaked at 1.9%, and the merchant was rate-limited at 03:41.</p>
+          </article>
+          <article class="highlight">
+            <h3>Model v14 cut false alarms</h3>
+            <p>Retrained on Sep 24 with device features, the model&#x27;s precision rose from about 0.66 to 0.72 at the same recall, which means hundreds fewer false alarms a week for analysts.</p>
+          </article>
+          <article class="highlight">
+            <h3>46 ms at p95</h3>
+            <p>The feature lookup takes about 3 ms and the model about 4 ms; the rest is network and serialisation. The budget for a decision is 100 ms.</p>
+          </article>
+          <article class="highlight">
+            <h3>One late batch, no drama</h3>
+            <p><code>customer_profile</code> features were 26 hours old after an upstream delay. Streaming features carry most of the signal, so scores stayed stable while the batch caught up.</p>
+          </article>
+        </div>
+        <p class="data-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5"/><circle cx="12" cy="7.6" r=".6" fill="currentColor"/></svg><span><strong>About the data.</strong> Every number on this page is sample data from a seeded generator written for this project. It is shaped to behave like a real workload, with daily peaks, late events and the odd incident, but it does not come from any employer or client. Download it as <a href="transactions_5min.csv">transactions_5min.csv</a> or read <a href="data.json">data.json</a>.</span></p>
+      </div>
+    </section>
+
+    <div class="ds-container dash-container">
+      <nav class="dash-pager" aria-label="More projects">
+        <a href="/projects/iac-data-platform/"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg> Previous · 09</span><strong>Infrastructure-as-Code Data Platform</strong></a>
+        <a class="is-next" href="/projects/streaming-lakehouse/"><span>Next · 01 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span><strong>Real-Time Streaming Lakehouse</strong></a>
+      </nav>
+    </div>
+  </main>
+
+  <footer class="contact-page-footer">
+    <div class="ds-container dash-container">
+      <div class="contact-footer-bottom">
+        <div class="footer-meta-group">
+          <div>
+            <p class="footer-meta-label">Version</p>
+            <p class="footer-meta-value"><span data-year>2026</span> © Edition</p>
+          </div>
+        </div>
+        <div class="footer-meta-group">
+          <div>
+            <p class="footer-meta-label">Socials</p>
+            <ul class="footer-socials">
+              <li><a href="https://www.linkedin.com/in/sarun2003" target="_blank" rel="noopener">LinkedIn</a></li>
+              <li><a href="mailto:sarun.shrestha.dev@gmail.com">Email</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/assets/vendor/echarts.custom.min.js?v=5.6.0" defer></script>
+  <script src="/assets/js/dashboard.js?v=20261007-6" defer></script>
+  <script src="/assets/js/main.js?v=20261007-6" defer></script>
+</body>
+</html>

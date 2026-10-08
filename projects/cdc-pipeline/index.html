@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CDC Pipeline: Postgres to Snowflake — Sarun Shrestha</title>
+  <meta name="description" content="Every insert, update and delete in an orders database captured by Debezium, streamed through Kafka and Flink, and queryable in Snowflake within seconds.">
+  <meta name="author" content="Sarun Shrestha">
+  <meta name="theme-color" content="#011013">
+  <meta name="color-scheme" content="dark light">
+  <link rel="canonical" href="https://www.sarunshrestha.com.np/projects/cdc-pipeline/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.sarunshrestha.com.np/projects/cdc-pipeline/">
+  <meta property="og:site_name" content="Sarun Shrestha">
+  <meta property="og:title" content="CDC Pipeline: Postgres to Snowflake — Sarun Shrestha">
+  <meta property="og:description" content="Every insert, update and delete in an orders database captured by Debezium, streamed through Kafka and Flink, and queryable in Snowflake within seconds.">
+  <meta property="og:image" content="https://www.sarunshrestha.com.np/assets/img/projects/cdc-pipeline.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://www.sarunshrestha.com.np/assets/img/projects/cdc-pipeline.jpg">
+
+  <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+  <link rel="preload" href="/assets/fonts/plus-jakarta-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/assets/css/style.css?v=20261007-6">
+  <link rel="stylesheet" href="/assets/css/projects.css?v=20261007-6">
+  <script>
+    /* No intro greeting on this page; fall back to the plain page if the main script never starts. */
+    (function () {
+      var h = document.documentElement;
+      h.classList.remove('no-js');
+      h.classList.add('js', 'skip-loader');
+      setTimeout(function () {
+        if (!h.classList.contains('app-ready')) { h.classList.remove('js'); h.classList.add('no-js'); }
+      }, 6000);
+    })();
+  </script>
+</head>
+<body class="dash-page">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="noise-overlay" aria-hidden="true"></div>
+
+  <header class="ds-nav">
+    <a class="ds-logo" href="/" aria-label="Sarun Shrestha, home">
+      <span class="ds-logo-mark" aria-hidden="true">©</span>
+      <span class="ds-logo-text">Sarun Shrestha</span>
+    </a>
+    <nav aria-label="Primary">
+      <ul class="ds-nav-links">
+        <li><a class="ds-nav-link" href="/#about">About</a></li>
+        <li><a class="ds-nav-link is-active" href="/projects/">Projects</a></li>
+        <li><a class="ds-nav-link" href="/#experience">Experience</a></li>
+        <li><a class="ds-nav-link" href="/#skills">Skills</a></li>
+        <li><a class="ds-nav-link" href="/contact/">Contact</a></li>
+        <li>
+          <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="side-menu">
+            <span class="menu-toggle-icon" aria-hidden="true"></span>Menu
+          </button>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="side-menu-overlay" data-menu-close></div>
+  <aside class="side-menu" id="side-menu" role="dialog" aria-modal="true" aria-label="Menu">
+    <button class="side-menu-close" type="button" data-menu-close>
+      Close
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>
+    </button>
+    <p class="side-menu-label">Navigation</p>
+    <nav aria-label="Menu">
+      <ul>
+        <li><a class="side-menu-nav-link" href="/">Home</a></li>
+        <li><a class="side-menu-nav-link" href="/#about">About</a></li>
+        <li><a class="side-menu-nav-link is-active" href="/projects/">Projects</a></li>
+        <li><a class="side-menu-nav-link" href="/#experience">Experience</a></li>
+        <li><a class="side-menu-nav-link" href="/#skills">Skills</a></li>
+        <li><a class="side-menu-nav-link" href="/contact/">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="side-menu-socials">
+      <p class="side-menu-label">Socials</p>
+      <ul class="side-menu-social-links">
+        <li><a href="https://www.linkedin.com/in/sarun2003" target="_blank" rel="noopener">LinkedIn</a></li>
+        <li><a href="mailto:sarun.shrestha.dev@gmail.com">Email</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main id="main">
+    <section class="dash-hero" aria-labelledby="dash-title">
+      <div class="ds-container dash-container">
+        <nav class="dash-crumbs" aria-label="Breadcrumb">
+          <a href="/">Home</a><span aria-hidden="true">/</span><a href="/projects/">Projects</a><span aria-hidden="true">/</span><span aria-current="page">CDC Pipeline</span>
+        </nav>
+        <p class="dash-eyebrow">Project 03 · Change data capture</p>
+        <h1 class="dash-title" id="dash-title">CDC Pipeline: Postgres to Snowflake</h1>
+        <p class="dash-summary">The order service writes to PostgreSQL. Debezium reads the database&#x27;s write-ahead log through logical replication, so every insert, update and delete becomes a Kafka event without touching the application or querying its tables. A Flink job flattens and cleans the changes while keeping them in order per row, Snowpipe Streaming lands them in Snowflake within seconds, and Dynamic Tables merge them into copies of the source tables that stay in sync row for row.</p>
+        <ul class="dash-stack" aria-label="Tech stack"><li>PostgreSQL</li><li>Debezium</li><li>Apache Kafka</li><li>Apache Flink</li><li>Snowflake</li></ul>
+        <div class="dash-meta">
+          <span class="dash-badge"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 1.8h4M6.6 1.8v4.1L2.7 12.6a1.1 1.1 0 0 0 1 1.6h8.6a1.1 1.1 0 0 0 1-1.6L9.4 5.9V1.8"/><path d="M4.6 9.6h6.8"/></svg>Sample data</span>
+          <span class="dash-window">Tuesday, Oct 6, 2026 · 24 hours, US Central</span>
+          <a class="pill pill--sm" href="change_events_5min.csv" download><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M5 19.5h14"/></svg>Download data (CSV)</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="dash-body" data-dashboard data-src="data.json" aria-label="Dashboard">
+      <div class="ds-container dash-container">
+        <noscript><p class="dash-noscript">The charts need JavaScript. The same numbers are in <a href="change_events_5min.csv">change_events_5min.csv</a> and <a href="data.json">data.json</a>.</p></noscript>
+        <div class="dash-kpis" data-kpis></div>
+        <div class="dash-grid">
+          <article class="dash-panel span-8" aria-labelledby="p-lag">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-lag">Replication lag</h3>
+                <p class="dash-panel-sub">Commit in PostgreSQL to change row in Snowflake, p50 and p95</p>
+              </div>
+            <button class="dash-toggle" type="button" data-toggle aria-pressed="false" hidden><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="1.5" y="2" width="9" height="8" rx="1.2"/><path d="M1.5 5h9M1.5 7.6h9M5 5v5"/></svg>Table</button>
+            </header>
+            <div class="dash-chart" data-chart="lag" style="height:290px"></div>
+          </article>
+          <article class="dash-panel span-4" aria-labelledby="p-tables">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-tables">Changes by table</h3>
+                <p class="dash-panel-sub">Change events per source table today</p>
+              </div>
+            <button class="dash-toggle" type="button" data-toggle aria-pressed="false" hidden><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="1.5" y="2" width="9" height="8" rx="1.2"/><path d="M1.5 5h9M1.5 7.6h9M5 5v5"/></svg>Table</button>
+            </header>
+            <div class="dash-chart" data-chart="tables" style="height:290px"></div>
+          </article>
+          <article class="dash-panel span-7" aria-labelledby="p-ops">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-ops">Change operations per hour</h3>
+                <p class="dash-panel-sub">Inserts, updates and deletes</p>
+              </div>
+            <button class="dash-toggle" type="button" data-toggle aria-pressed="false" hidden><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="1.5" y="2" width="9" height="8" rx="1.2"/><path d="M1.5 5h9M1.5 7.6h9M5 5v5"/></svg>Table</button>
+            </header>
+            <div class="dash-chart" data-chart="ops" style="height:280px"></div>
+          </article>
+          <article class="dash-panel span-5" aria-labelledby="p-components">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-components">Pipeline components</h3>
+                <p class="dash-panel-sub">State at 23:59</p>
+              </div>
+            </header>
+            <div class="dash-table-wrap" data-table="components"></div>
+          </article>
+          <article class="dash-panel span-6" aria-labelledby="p-recon">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-recon">Source vs target row counts</h3>
+                <p class="dash-panel-sub">Checked every 15 minutes. The 3 inventory rows in flight matched at 00:01.</p>
+              </div>
+            </header>
+            <div class="dash-table-wrap" data-table="recon"></div>
+          </article>
+          <article class="dash-panel span-6" aria-labelledby="p-schema">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-schema">Schema changes today</h3>
+                <p class="dash-panel-sub">New columns land in RAW on their own</p>
+              </div>
+            </header>
+            <div class="dash-table-wrap" data-table="schema"></div>
+          </article>
+          <article class="dash-panel span-12" aria-labelledby="p-events">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-events">Latest change events</h3>
+                <p class="dash-panel-sub">The last ten changes committed on Oct 6</p>
+              </div>
+            </header>
+            <div class="dash-table-wrap" data-table="events"></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="dash-section" aria-labelledby="how-title">
+      <div class="ds-container dash-container">
+        <div class="dash-section-head">
+          <h2 class="dash-h2" id="how-title">How it works</h2>
+          <p class="dash-section-note">Log-based capture: the source database never sees an extra query.</p>
+        </div>
+        <ol class="flow">
+          <li class="flow-step">
+            <p class="flow-stage">01 · Source</p>
+            <p class="flow-tech">PostgreSQL 16</p>
+            <p class="flow-detail">The order service&#x27;s database. Logical replication with the <code>pgoutput</code> plugin; one publication covers the 12 tables.</p>
+          </li>
+          <li class="flow-step">
+            <p class="flow-stage">02 · Capture</p>
+            <p class="flow-tech">Debezium on Kafka Connect</p>
+            <p class="flow-detail">Takes an initial snapshot, then reads the write-ahead log and emits every insert, update and delete with its LSN.</p>
+          </li>
+          <li class="flow-step">
+            <p class="flow-stage">03 · Transport</p>
+            <p class="flow-tech">Apache Kafka</p>
+            <p class="flow-detail">One topic per table, keyed by primary key so changes to a row stay in order. Each event carries the row before and after.</p>
+          </li>
+          <li class="flow-step">
+            <p class="flow-stage">04 · Normalize</p>
+            <p class="flow-tech">Apache Flink</p>
+            <p class="flow-detail">Reads all twelve topics and keeps what the merge needs: key, operation, LSN, commit time and the row, written exactly once.</p>
+          </li>
+          <li class="flow-step">
+            <p class="flow-stage">05 · Land</p>
+            <p class="flow-tech">Snowpipe Streaming</p>
+            <p class="flow-detail">The Snowflake Kafka connector appends every change to <code>RAW.CHANGES</code> within seconds.</p>
+          </li>
+          <li class="flow-step">
+            <p class="flow-stage">06 · Merge</p>
+            <p class="flow-tech">Snowflake Dynamic Tables</p>
+            <p class="flow-detail">One per source table: the newest version of each row, deleted rows removed, refreshed every minute.</p>
+          </li>
+        </ol>
+        <ul class="steps">
+          <li><strong>No load on the source.</strong> Debezium reads the WAL instead of polling tables, so the order service sees no extra queries. A heartbeat keeps the replication slot moving when tables are quiet.</li>
+          <li><strong>Order per key.</strong> Topics are partitioned by primary key and every change carries its LSN, so the merge always keeps the newest version, even if a batch arrives late.</li>
+          <li><strong>Deletes are real.</strong> A delete arrives with <code>op = &#x27;d&#x27;</code> and the merge removes the row, so Snowflake never keeps rows the source has deleted.</li>
+          <li><strong>Trust, then verify.</strong> Every 15 minutes a job compares row counts and a hash of key columns between PostgreSQL and Snowflake. That feeds the reconciliation table.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="dash-section" aria-labelledby="model-title">
+      <div class="ds-container dash-container">
+        <div class="dash-section-head">
+          <h2 class="dash-h2" id="model-title">Data model</h2>
+          <p class="dash-section-note">The same order row at three points: the Debezium event in Kafka, the change row in Snowflake, and the merged table.</p>
+        </div>
+        <div class="model-grid">
+          <article class="model-card">
+            <div class="model-card-head"><code>pg.public.orders</code><span>Kafka topic · Debezium event (JSON)</span></div>
+            <dl class="model-cols">
+              <div><dt><code>before / after</code><span class="model-type">struct</span></dt><dd>Row before and after the change; <code>before</code> is null for inserts</dd></div>
+              <div><dt><code>op</code><span class="model-type">string</span></dt><dd><code>c</code> insert, <code>u</code> update, <code>d</code> delete, <code>r</code> snapshot read</dd></div>
+              <div><dt><code>source.lsn</code><span class="model-type">bigint</span></dt><dd>Position in the write-ahead log</dd></div>
+              <div><dt><code>source.ts_ms</code><span class="model-type">bigint</span></dt><dd>Commit time in PostgreSQL</dd></div>
+              <div><dt><code>ts_ms</code><span class="model-type">bigint</span></dt><dd>When Debezium processed the change</dd></div>
+            </dl>
+          </article>
+          <article class="model-card">
+            <div class="model-card-head"><code>RAW.CHANGES</code><span>Snowflake table · append-only, all 12 tables</span></div>
+            <dl class="model-cols">
+              <div><dt><code>record_content:table_name / pk</code><span class="model-type">variant</span></dt><dd>Source table and primary key</dd></div>
+              <div><dt><code>record_content:op / is_deleted</code><span class="model-type">variant</span></dt><dd>What happened to the row</dd></div>
+              <div><dt><code>record_content:lsn</code><span class="model-type">variant</span></dt><dd>Orders the changes to one row</dd></div>
+              <div><dt><code>record_content:committed_ms</code><span class="model-type">variant</span></dt><dd>Commit time in PostgreSQL, epoch ms</dd></div>
+              <div><dt><code>record_content:row_json</code><span class="model-type">variant</span></dt><dd>The whole row as JSON, so new columns arrive automatically</dd></div>
+              <div><dt><code>record_metadata</code><span class="model-type">variant</span></dt><dd>Kafka topic, partition, offset and connector push time</dd></div>
+            </dl>
+          </article>
+          <article class="model-card">
+            <div class="model-card-head"><code>CORE.ORDERS</code><span>Dynamic table · target lag 1 minute</span></div>
+            <dl class="model-cols">
+              <div><dt><code>order_id</code><span class="model-type">number</span></dt><dd>One row per live order</dd></div>
+              <div><dt><code>customer_id</code><span class="model-type">number</span></dt><dd>Customer</dd></div>
+              <div><dt><code>status</code><span class="model-type">varchar</span></dt><dd>Latest status</dd></div>
+              <div><dt><code>total_usd</code><span class="model-type">number(12,2)</span></dt><dd>Order total</dd></div>
+              <div><dt><code>updated_at / lsn</code><span class="model-type">timestamp_ltz / number</span></dt><dd>Version of the row that is current</dd></div>
+            </dl>
+          </article>
+        </div>
+        <ul class="dataset-files" aria-label="Downloads">
+          <li><a href="change_events_5min.csv" download><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M5 19.5h14"/></svg><span><strong>change_events_5min.csv</strong> Inserts, updates, deletes and replication lag in 5-minute intervals · 288 rows, 7 columns</span></a></li>
+          <li><a href="data.json"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M5 19.5h14"/></svg><span><strong>data.json</strong> Everything this dashboard draws: KPIs, chart series and tables</span></a></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="dash-section" aria-labelledby="code-title">
+      <div class="ds-container dash-container">
+        <div class="dash-section-head">
+          <h2 class="dash-h2" id="code-title">Key code</h2>
+          <p class="dash-section-note">The Debezium connector, the Flink SQL that normalizes changes, and the Snowflake merge.</p>
+        </div>
+        <div class="code-block" data-code-block>
+          <div class="code-bar">
+            <div class="code-tabs" role="tablist" aria-label="Source files">
+              <button class="code-tab" type="button" role="tab" id="tab-cdc-pipeline-0" aria-controls="code-cdc-pipeline-0" aria-selected="true" tabindex="0">debezium-orders-pg.json</button>
+              <button class="code-tab" type="button" role="tab" id="tab-cdc-pipeline-1" aria-controls="code-cdc-pipeline-1" aria-selected="false" tabindex="-1">normalize_changes.sql</button>
+              <button class="code-tab" type="button" role="tab" id="tab-cdc-pipeline-2" aria-controls="code-cdc-pipeline-2" aria-selected="false" tabindex="-1">core_orders.sql</button>
+            </div>
+            <button class="code-copy" type="button" data-copy hidden><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8" rx="1.6"/><path d="M10.5 5.5V3.6a1.1 1.1 0 0 0-1.1-1.1H3.6a1.1 1.1 0 0 0-1.1 1.1v5.8a1.1 1.1 0 0 0 1.1 1.1h1.9"/></svg><span>Copy</span></button>
+          </div>
+          <div class="code-panel" role="tabpanel" id="code-cdc-pipeline-0" aria-labelledby="tab-cdc-pipeline-0" tabindex="0">
+              <p class="code-panel-caption">Kafka Connect configuration for the Debezium PostgreSQL source connector. A heartbeat keeps the replication slot advancing on quiet tables.</p>
+              <pre><code class="lang-json"><span class="ln">{</span>
+<span class="ln">  <span class="tok-p">&quot;name&quot;</span>: <span class="tok-s">&quot;debezium-orders-pg&quot;</span>,</span>
+<span class="ln">  <span class="tok-p">&quot;config&quot;</span>: {</span>
+<span class="ln">    <span class="tok-p">&quot;connector.class&quot;</span>: <span class="tok-s">&quot;io.debezium.connector.postgresql.PostgresConnector&quot;</span>,</span>
+<span class="ln">    <span class="tok-p">&quot;tasks.max&quot;</span>: <span class="tok-s">&quot;1&quot;</span>,</span>
+<span class="ln">    <span class="tok-p">&quot;database.hostname&quot;</span>: <span class="tok-s">&quot;orders-db.internal&quot;</span>,</span>
+<span class="ln">    <span class="tok-p">&quot;database.port&quot;</span>: <span class="tok-s">&quot;5432&quot;</span>,</span>
+<span class="ln">    <span class="tok-p">&quot;database.user&quot;</span>: <span class="tok-s">&quot;debezium&quot;</span>,</span>
+<span class="ln">    <span class="tok-p">&quot;database.password&quot;</span>: <span class="tok-s">&quot;${secrets:orders-db/debezium-password}&quot;</span>,</span>
+<span class="ln">    <span class="tok-p">&quot;database.dbname&quot;</span>: <span class="tok-s">&quot;orders&quot;</span>,</span>
+<span class="ln">    <span class="tok-p">&quot;topic.prefix&quot;</span>: <span class="tok-s">&quot;pg&quot;</span>,</span>
+<span class="ln">    <span class="tok-p">&quot;plugin.name&quot;</span>: <span class="tok-s">&quot;pgoutput&quot;</span>,</span>
+<span class="ln">    <span class="tok-p">&quot;slot.name&quot;</span>: <span class="tok-s">&quot;debezium_orders&quot;</span>,</span>
+<span class="ln">    <span class="tok-p">&quot;publication.name&quot;</span>: <span class="tok-s">&quot;dbz_orders&quot;</span>,</span>
+<span class="ln">    <span class="tok-p">&quot;publication.autocreate.mode&quot;</span>: <span class="tok-s">&quot;disabled&quot;</span>,</span>
+<span class="ln">    <span class="tok-p">&quot;table.include.list&quot;</span>: <span class="tok-s">&quot;public.orders,public.order_items,public.payments,public.shipments,public.inventory,public.prices,public.customers,public.addresses,public.returns,public.promotions,public.products,public.carriers&quot;</span>,</span>
+<span class="ln">    <span class="tok-p">&quot;snapshot.mode&quot;</span>: <span class="tok-s">&quot;initial&quot;</span>,</span>
+<span class="ln">    <span class="tok-p">&quot;heartbeat.interval.ms&quot;</span>: <span class="tok-s">&quot;10000&quot;</span>,</span>
+<span class="ln">    <span class="tok-p">&quot;decimal.handling.mode&quot;</span>: <span class="tok-s">&quot;string&quot;</span>,</span>
+<span class="ln">    <span class="tok-p">&quot;time.precision.mode&quot;</span>: <span class="tok-s">&quot;connect&quot;</span>,</span>
+<span class="ln">    <span class="tok-p">&quot;tombstones.on.delete&quot;</span>: <span class="tok-s">&quot;false&quot;</span>,</span>
+<span class="ln">    <span class="tok-p">&quot;key.converter&quot;</span>: <span class="tok-s">&quot;org.apache.kafka.connect.json.JsonConverter&quot;</span>,</span>
+<span class="ln">    <span class="tok-p">&quot;key.converter.schemas.enable&quot;</span>: <span class="tok-s">&quot;false&quot;</span>,</span>
+<span class="ln">    <span class="tok-p">&quot;value.converter&quot;</span>: <span class="tok-s">&quot;org.apache.kafka.connect.json.JsonConverter&quot;</span>,</span>
+<span class="ln">    <span class="tok-p">&quot;value.converter.schemas.enable&quot;</span>: <span class="tok-s">&quot;false&quot;</span></span>
+<span class="ln">  }</span>
+<span class="ln">}</span></code></pre>
+            </div>
+          <div class="code-panel" role="tabpanel" id="code-cdc-pipeline-1" aria-labelledby="tab-cdc-pipeline-1" tabindex="0" hidden>
+              <p class="code-panel-caption">Flink SQL: one job reads all twelve Debezium topics and writes a single, flat change stream, exactly once.</p>
+              <pre><code class="lang-sql"><span class="ln"><span class="tok-c">-- Debezium events from every table; the row images stay as JSON text</span></span>
+<span class="ln"><span class="tok-k">CREATE</span> <span class="tok-k">TABLE</span> changes_in (</span>
+<span class="ln">  key_json  STRING,</span>
+<span class="ln">  `before`  STRING,</span>
+<span class="ln">  `after`   STRING,</span>
+<span class="ln">  op        STRING,</span>
+<span class="ln">  source    ROW&lt;`<span class="tok-k">table</span>` STRING, lsn BIGINT, ts_ms BIGINT&gt;</span>
+<span class="ln">) <span class="tok-k">WITH</span> (</span>
+<span class="ln">  <span class="tok-s">&#x27;connector&#x27;</span> = <span class="tok-s">&#x27;kafka&#x27;</span>,</span>
+<span class="ln">  <span class="tok-s">&#x27;topic-pattern&#x27;</span> = <span class="tok-s">&#x27;pg\.public\..*&#x27;</span>,</span>
+<span class="ln">  <span class="tok-s">&#x27;properties.bootstrap.servers&#x27;</span> = <span class="tok-s">&#x27;kafka:9092&#x27;</span>,</span>
+<span class="ln">  <span class="tok-s">&#x27;properties.group.id&#x27;</span> = <span class="tok-s">&#x27;flink-cdc-normalize&#x27;</span>,</span>
+<span class="ln">  <span class="tok-s">&#x27;scan.startup.mode&#x27;</span> = <span class="tok-s">&#x27;group-offsets&#x27;</span>,</span>
+<span class="ln">  <span class="tok-s">&#x27;properties.auto.offset.reset&#x27;</span> = <span class="tok-s">&#x27;earliest&#x27;</span>,</span>
+<span class="ln">  <span class="tok-s">&#x27;key.format&#x27;</span> = <span class="tok-s">&#x27;raw&#x27;</span>,</span>
+<span class="ln">  <span class="tok-s">&#x27;key.fields&#x27;</span> = <span class="tok-s">&#x27;key_json&#x27;</span>,</span>
+<span class="ln">  <span class="tok-s">&#x27;value.format&#x27;</span> = <span class="tok-s">&#x27;json&#x27;</span>,</span>
+<span class="ln">  <span class="tok-s">&#x27;value.fields-include&#x27;</span> = <span class="tok-s">&#x27;EXCEPT_KEY&#x27;</span></span>
+<span class="ln">);</span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-c">-- One flat record per change. Keyed by table + primary key, so a row&#x27;s changes stay in order.</span></span>
+<span class="ln"><span class="tok-k">CREATE</span> <span class="tok-k">TABLE</span> changes_out (</span>
+<span class="ln">  pk            STRING,</span>
+<span class="ln">  table_name    STRING,</span>
+<span class="ln">  op            STRING,</span>
+<span class="ln">  is_deleted    BOOLEAN,</span>
+<span class="ln">  lsn           BIGINT,</span>
+<span class="ln">  committed_ms  BIGINT,</span>
+<span class="ln">  row_json      STRING</span>
+<span class="ln">) <span class="tok-k">WITH</span> (</span>
+<span class="ln">  <span class="tok-s">&#x27;connector&#x27;</span> = <span class="tok-s">&#x27;kafka&#x27;</span>,</span>
+<span class="ln">  <span class="tok-s">&#x27;topic&#x27;</span> = <span class="tok-s">&#x27;cdc.changes&#x27;</span>,</span>
+<span class="ln">  <span class="tok-s">&#x27;properties.bootstrap.servers&#x27;</span> = <span class="tok-s">&#x27;kafka:9092&#x27;</span>,</span>
+<span class="ln">  <span class="tok-s">&#x27;key.format&#x27;</span> = <span class="tok-s">&#x27;raw&#x27;</span>,</span>
+<span class="ln">  <span class="tok-s">&#x27;key.fields&#x27;</span> = <span class="tok-s">&#x27;pk&#x27;</span>,</span>
+<span class="ln">  <span class="tok-s">&#x27;value.format&#x27;</span> = <span class="tok-s">&#x27;json&#x27;</span>,</span>
+<span class="ln">  <span class="tok-s">&#x27;value.fields-include&#x27;</span> = <span class="tok-s">&#x27;EXCEPT_KEY&#x27;</span>,</span>
+<span class="ln">  <span class="tok-s">&#x27;sink.delivery-guarantee&#x27;</span> = <span class="tok-s">&#x27;exactly-once&#x27;</span>,</span>
+<span class="ln">  <span class="tok-s">&#x27;sink.transactional-id-prefix&#x27;</span> = <span class="tok-s">&#x27;cdc-changes&#x27;</span></span>
+<span class="ln">);</span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-k">INSERT</span> <span class="tok-k">INTO</span> changes_out</span>
+<span class="ln"><span class="tok-k">SELECT</span></span>
+<span class="ln">  <span class="tok-f">CONCAT</span>(source.`<span class="tok-k">table</span>`, <span class="tok-s">&#x27;:&#x27;</span>, key_json),</span>
+<span class="ln">  source.`<span class="tok-k">table</span>`,</span>
+<span class="ln">  op,</span>
+<span class="ln">  op = <span class="tok-s">&#x27;d&#x27;</span>,</span>
+<span class="ln">  source.lsn,</span>
+<span class="ln">  source.ts_ms,</span>
+<span class="ln">  <span class="tok-f">COALESCE</span>(`after`, `before`)   <span class="tok-c">-- deletes carry the key in the before image</span></span>
+<span class="ln"><span class="tok-k">FROM</span> changes_in</span>
+<span class="ln"><span class="tok-k">WHERE</span> op <span class="tok-k">IN</span> (<span class="tok-s">&#x27;c&#x27;</span>, <span class="tok-s">&#x27;u&#x27;</span>, <span class="tok-s">&#x27;d&#x27;</span>, <span class="tok-s">&#x27;r&#x27;</span>);</span></code></pre>
+            </div>
+          <div class="code-panel" role="tabpanel" id="code-cdc-pipeline-2" aria-labelledby="tab-cdc-pipeline-2" tabindex="0" hidden>
+              <p class="code-panel-caption">Snowflake: a dynamic table keeps the newest version of each order and removes deleted ones. The view feeds the lag chart.</p>
+              <pre><code class="lang-sql"><span class="ln"><span class="tok-k">CREATE</span> <span class="tok-k">OR</span> <span class="tok-k">REPLACE</span> DYNAMIC <span class="tok-k">TABLE</span> core.orders</span>
+<span class="ln">  TARGET_LAG = <span class="tok-s">&#x27;1 minute&#x27;</span></span>
+<span class="ln">  <span class="tok-k">WAREHOUSE</span> = cdc_wh</span>
+<span class="ln"><span class="tok-k">AS</span></span>
+<span class="ln"><span class="tok-k">WITH</span> parsed <span class="tok-k">AS</span> (</span>
+<span class="ln">  <span class="tok-k">SELECT</span></span>
+<span class="ln">    record_content:lsn::NUMBER                  <span class="tok-k">AS</span> lsn,</span>
+<span class="ln">    record_content:is_deleted::BOOLEAN          <span class="tok-k">AS</span> is_deleted,</span>
+<span class="ln">    <span class="tok-f">PARSE_JSON</span>(record_content:row_json::STRING) <span class="tok-k">AS</span> r</span>
+<span class="ln">  <span class="tok-k">FROM</span> raw.changes</span>
+<span class="ln">  <span class="tok-k">WHERE</span> record_content:table_name::STRING = <span class="tok-s">&#x27;orders&#x27;</span></span>
+<span class="ln">),</span>
+<span class="ln">latest <span class="tok-k">AS</span> (</span>
+<span class="ln">  <span class="tok-k">SELECT</span> *</span>
+<span class="ln">  <span class="tok-k">FROM</span> parsed</span>
+<span class="ln">  <span class="tok-k">QUALIFY</span> <span class="tok-k">ROW_NUMBER</span>() <span class="tok-k">OVER</span> (<span class="tok-k">PARTITION</span> <span class="tok-k">BY</span> r:order_id::NUMBER <span class="tok-k">ORDER</span> <span class="tok-k">BY</span> lsn <span class="tok-k">DESC</span>) = <span class="tok-n">1</span></span>
+<span class="ln">)</span>
+<span class="ln"><span class="tok-k">SELECT</span></span>
+<span class="ln">  r:order_id::NUMBER                         <span class="tok-k">AS</span> order_id,</span>
+<span class="ln">  r:customer_id::NUMBER                      <span class="tok-k">AS</span> customer_id,</span>
+<span class="ln">  r:status::VARCHAR                          <span class="tok-k">AS</span> status,</span>
+<span class="ln">  r:total_usd::<span class="tok-f">NUMBER</span>(<span class="tok-n">12</span>, <span class="tok-n">2</span>)                 <span class="tok-k">AS</span> total_usd,</span>
+<span class="ln">  r:promo_code::VARCHAR                      <span class="tok-k">AS</span> promo_code,   <span class="tok-c">-- new on Oct 6, already in RAW</span></span>
+<span class="ln">  <span class="tok-f">TO_TIMESTAMP_LTZ</span>(r:updated_at::NUMBER, <span class="tok-n">3</span>)  <span class="tok-k">AS</span> updated_at,</span>
+<span class="ln">  lsn</span>
+<span class="ln"><span class="tok-k">FROM</span> latest</span>
+<span class="ln"><span class="tok-k">WHERE</span> <span class="tok-k">NOT</span> is_deleted;</span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-c">-- Commit in PostgreSQL to arrival in Snowflake, per 5 minutes</span></span>
+<span class="ln"><span class="tok-k">CREATE</span> <span class="tok-k">OR</span> <span class="tok-k">REPLACE</span> <span class="tok-k">VIEW</span> monitoring.cdc_lag_5min <span class="tok-k">AS</span></span>
+<span class="ln"><span class="tok-k">SELECT</span></span>
+<span class="ln">  <span class="tok-f">TIME_SLICE</span>(<span class="tok-f">TO_TIMESTAMP_LTZ</span>(record_content:committed_ms::NUMBER, <span class="tok-n">3</span>), <span class="tok-n">5</span>, <span class="tok-s">&#x27;MINUTE&#x27;</span>) <span class="tok-k">AS</span> interval_start,</span>
+<span class="ln">  <span class="tok-f">COUNT</span>(*) <span class="tok-k">AS</span> changes,</span>
+<span class="ln">  <span class="tok-f">APPROX_PERCENTILE</span>(record_metadata:SnowflakeConnectorPushTime::NUMBER</span>
+<span class="ln">                    - record_content:committed_ms::NUMBER, <span class="tok-n">0.50</span>) / <span class="tok-n">1000</span> <span class="tok-k">AS</span> lag_p50_s,</span>
+<span class="ln">  <span class="tok-f">APPROX_PERCENTILE</span>(record_metadata:SnowflakeConnectorPushTime::NUMBER</span>
+<span class="ln">                    - record_content:committed_ms::NUMBER, <span class="tok-n">0.95</span>) / <span class="tok-n">1000</span> <span class="tok-k">AS</span> lag_p95_s</span>
+<span class="ln"><span class="tok-k">FROM</span> raw.changes</span>
+<span class="ln"><span class="tok-k">GROUP</span> <span class="tok-k">BY</span> <span class="tok-n">1</span>;</span></code></pre>
+            </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="dash-section" aria-labelledby="notes-title">
+      <div class="ds-container dash-container">
+        <div class="dash-section-head">
+          <h2 class="dash-h2" id="notes-title">Engineering notes</h2>
+        </div>
+        <div class="highlights">
+          <article class="highlight">
+            <h3>The 2 a.m. bulk update</h3>
+            <p>A nightly job rewrote 1.2 million prices in one transaction. Throughput peaked near 1,400 events a second, p95 lag reached 7.9 s and drained within 15 minutes. The SLA held.</p>
+          </article>
+          <article class="highlight">
+            <h3>A restart nobody noticed</h3>
+            <p>At 14:32 the Debezium task restarted after a network blip. It resumed from the last LSN it had confirmed to PostgreSQL, so nothing was lost and the merge ignored the few replayed events.</p>
+          </article>
+          <article class="highlight">
+            <h3>Schema changes without a deploy</h3>
+            <p>Each change carries the whole row as JSON, so <code>promo_code</code>, a wider <code>carrier_code</code> and <code>marketing_opt_in</code> reached <code>RAW.CHANGES</code> the moment they existed in PostgreSQL. Exposing <code>promo_code</code> in <code>CORE.ORDERS</code> took one line.</p>
+          </article>
+          <article class="highlight">
+            <h3>The WAL stays small</h3>
+            <p>The replication slot holds about 200 MB of write-ahead log. An alert fires at 5 GB, long before a stuck consumer could fill the source database&#x27;s disk.</p>
+          </article>
+        </div>
+        <p class="data-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5"/><circle cx="12" cy="7.6" r=".6" fill="currentColor"/></svg><span><strong>About the data.</strong> Every number on this page is sample data from a seeded generator written for this project. It is shaped to behave like a real workload, with daily peaks, late events and the odd incident, but it does not come from any employer or client. Download it as <a href="change_events_5min.csv">change_events_5min.csv</a> or read <a href="data.json">data.json</a>.</span></p>
+      </div>
+    </section>
+
+    <div class="ds-container dash-container">
+      <nav class="dash-pager" aria-label="More projects">
+        <a href="/projects/medallion-lakehouse/"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg> Previous · 02</span><strong>Data Lakehouse with Medallion Architecture</strong></a>
+        <a class="is-next" href="/projects/etl-orchestration-cicd/"><span>Next · 04 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span><strong>ETL with Orchestration and CI/CD</strong></a>
+      </nav>
+    </div>
+  </main>
+
+  <footer class="contact-page-footer">
+    <div class="ds-container dash-container">
+      <div class="contact-footer-bottom">
+        <div class="footer-meta-group">
+          <div>
+            <p class="footer-meta-label">Version</p>
+            <p class="footer-meta-value"><span data-year>2026</span> © Edition</p>
+          </div>
+        </div>
+        <div class="footer-meta-group">
+          <div>
+            <p class="footer-meta-label">Socials</p>
+            <ul class="footer-socials">
+              <li><a href="https://www.linkedin.com/in/sarun2003" target="_blank" rel="noopener">LinkedIn</a></li>
+              <li><a href="mailto:sarun.shrestha.dev@gmail.com">Email</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/assets/vendor/echarts.custom.min.js?v=5.6.0" defer></script>
+  <script src="/assets/js/dashboard.js?v=20261007-6" defer></script>
+  <script src="/assets/js/main.js?v=20261007-6" defer></script>
+</body>
+</html>

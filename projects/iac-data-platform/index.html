@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Infrastructure-as-Code Data Platform — Sarun Shrestha</title>
+  <meta name="description" content="A complete lakehouse, from the network to the dashboards, defined in Terraform and Helm on Kubernetes and rebuilt from nothing in under 20 minutes.">
+  <meta name="author" content="Sarun Shrestha">
+  <meta name="theme-color" content="#011013">
+  <meta name="color-scheme" content="dark light">
+  <link rel="canonical" href="https://www.sarunshrestha.com.np/projects/iac-data-platform/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.sarunshrestha.com.np/projects/iac-data-platform/">
+  <meta property="og:site_name" content="Sarun Shrestha">
+  <meta property="og:title" content="Infrastructure-as-Code Data Platform — Sarun Shrestha">
+  <meta property="og:description" content="A complete lakehouse, from the network to the dashboards, defined in Terraform and Helm on Kubernetes and rebuilt from nothing in under 20 minutes.">
+  <meta property="og:image" content="https://www.sarunshrestha.com.np/assets/img/projects/iac-data-platform.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://www.sarunshrestha.com.np/assets/img/projects/iac-data-platform.jpg">
+
+  <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+  <link rel="preload" href="/assets/fonts/plus-jakarta-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/assets/css/style.css?v=20261007-6">
+  <link rel="stylesheet" href="/assets/css/projects.css?v=20261007-6">
+  <script>
+    /* No intro greeting on this page; fall back to the plain page if the main script never starts. */
+    (function () {
+      var h = document.documentElement;
+      h.classList.remove('no-js');
+      h.classList.add('js', 'skip-loader');
+      setTimeout(function () {
+        if (!h.classList.contains('app-ready')) { h.classList.remove('js'); h.classList.add('no-js'); }
+      }, 6000);
+    })();
+  </script>
+</head>
+<body class="dash-page">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="noise-overlay" aria-hidden="true"></div>
+
+  <header class="ds-nav">
+    <a class="ds-logo" href="/" aria-label="Sarun Shrestha, home">
+      <span class="ds-logo-mark" aria-hidden="true">©</span>
+      <span class="ds-logo-text">Sarun Shrestha</span>
+    </a>
+    <nav aria-label="Primary">
+      <ul class="ds-nav-links">
+        <li><a class="ds-nav-link" href="/#about">About</a></li>
+        <li><a class="ds-nav-link is-active" href="/projects/">Projects</a></li>
+        <li><a class="ds-nav-link" href="/#experience">Experience</a></li>
+        <li><a class="ds-nav-link" href="/#skills">Skills</a></li>
+        <li><a class="ds-nav-link" href="/contact/">Contact</a></li>
+        <li>
+          <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="side-menu">
+            <span class="menu-toggle-icon" aria-hidden="true"></span>Menu
+          </button>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="side-menu-overlay" data-menu-close></div>
+  <aside class="side-menu" id="side-menu" role="dialog" aria-modal="true" aria-label="Menu">
+    <button class="side-menu-close" type="button" data-menu-close>
+      Close
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>
+    </button>
+    <p class="side-menu-label">Navigation</p>
+    <nav aria-label="Menu">
+      <ul>
+        <li><a class="side-menu-nav-link" href="/">Home</a></li>
+        <li><a class="side-menu-nav-link" href="/#about">About</a></li>
+        <li><a class="side-menu-nav-link is-active" href="/projects/">Projects</a></li>
+        <li><a class="side-menu-nav-link" href="/#experience">Experience</a></li>
+        <li><a class="side-menu-nav-link" href="/#skills">Skills</a></li>
+        <li><a class="side-menu-nav-link" href="/contact/">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="side-menu-socials">
+      <p class="side-menu-label">Socials</p>
+      <ul class="side-menu-social-links">
+        <li><a href="https://www.linkedin.com/in/sarun2003" target="_blank" rel="noopener">LinkedIn</a></li>
+        <li><a href="mailto:sarun.shrestha.dev@gmail.com">Email</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main id="main">
+    <section class="dash-hero" aria-labelledby="dash-title">
+      <div class="ds-container dash-container">
+        <nav class="dash-crumbs" aria-label="Breadcrumb">
+          <a href="/">Home</a><span aria-hidden="true">/</span><a href="/projects/">Projects</a><span aria-hidden="true">/</span><span aria-current="page">IaC Data Platform</span>
+        </nav>
+        <p class="dash-eyebrow">Project 09 · Infrastructure as code</p>
+        <h1 class="dash-title" id="dash-title">Infrastructure-as-Code Data Platform</h1>
+        <p class="dash-summary">Every piece of this platform is code. Terraform creates the network, a Kubernetes cluster, object storage and a PostgreSQL database. Helm releases, also managed by Terraform, install an Apache Iceberg REST catalog backed by that database, Trino for SQL, the Spark operator for jobs, Airflow for scheduling, and Prometheus and Grafana for monitoring. The same modules build dev, staging and prod at different sizes, so a new environment is a pull request and about 18 minutes of <code>terraform apply</code>. Spark and Airflow run from Docker images pinned by digest.</p>
+        <ul class="dash-stack" aria-label="Tech stack"><li>Terraform</li><li>Docker</li><li>Kubernetes</li><li>Helm</li><li>Apache Iceberg</li><li>PostgreSQL</li><li>Grafana</li></ul>
+        <div class="dash-meta">
+          <span class="dash-badge"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 1.8h4M6.6 1.8v4.1L2.7 12.6a1.1 1.1 0 0 0 1 1.6h8.6a1.1 1.1 0 0 0 1-1.6L9.4 5.9V1.8"/><path d="M4.6 9.6h6.8"/></svg>Sample data</span>
+          <span class="dash-window">Last 30 days · Sep 7 – Oct 6, 2026</span>
+          <a class="pill pill--sm" href="terraform_applies.csv" download><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M5 19.5h14"/></svg>Download data (CSV)</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="dash-body" data-dashboard data-src="data.json" aria-label="Dashboard">
+      <div class="ds-container dash-container">
+        <noscript><p class="dash-noscript">The charts need JavaScript. The same numbers are in <a href="terraform_applies.csv">terraform_applies.csv</a> and <a href="data.json">data.json</a>.</p></noscript>
+        <div class="dash-kpis" data-kpis></div>
+        <div class="dash-grid">
+          <article class="dash-panel span-7" aria-labelledby="p-resources">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-resources">Resources by module and environment</h3>
+                <p class="dash-panel-sub">Everything Terraform manages</p>
+              </div>
+            <button class="dash-toggle" type="button" data-toggle aria-pressed="false" hidden><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="1.5" y="2" width="9" height="8" rx="1.2"/><path d="M1.5 5h9M1.5 7.6h9M5 5v5"/></svg>Table</button>
+            </header>
+            <div class="dash-chart" data-chart="resources" style="height:320px"></div>
+          </article>
+          <article class="dash-panel span-5" aria-labelledby="p-budget">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-budget">Error budget used, 30 days</h3>
+                <p class="dash-panel-sub">SLO 99.9% for each service</p>
+              </div>
+            <button class="dash-toggle" type="button" data-toggle aria-pressed="false" hidden><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="1.5" y="2" width="9" height="8" rx="1.2"/><path d="M1.5 5h9M1.5 7.6h9M5 5v5"/></svg>Table</button>
+            </header>
+            <div class="dash-chart dash-chart--html" data-chart="budget"></div>
+          </article>
+          <article class="dash-panel span-8" aria-labelledby="p-utilization">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-utilization">Cluster utilisation, prod</h3>
+                <p class="dash-panel-sub">CPU and memory requested, hourly, last 7 days</p>
+              </div>
+            <button class="dash-toggle" type="button" data-toggle aria-pressed="false" hidden><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="1.5" y="2" width="9" height="8" rx="1.2"/><path d="M1.5 5h9M1.5 7.6h9M5 5v5"/></svg>Table</button>
+            </header>
+            <div class="dash-chart" data-chart="utilization" style="height:270px"></div>
+          </article>
+          <article class="dash-panel span-4" aria-labelledby="p-applies">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-applies">Size of recent applies</h3>
+                <p class="dash-panel-sub">Resources changed by the last 20 applies; red failed</p>
+              </div>
+            <button class="dash-toggle" type="button" data-toggle aria-pressed="false" hidden><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="1.5" y="2" width="9" height="8" rx="1.2"/><path d="M1.5 5h9M1.5 7.6h9M5 5v5"/></svg>Table</button>
+            </header>
+            <div class="dash-chart" data-chart="applies" style="height:270px"></div>
+          </article>
+          <article class="dash-panel span-7" aria-labelledby="p-pods">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-pods">Workloads, prod</h3>
+                <p class="dash-panel-sub">State at 23:59 on Oct 6</p>
+              </div>
+            </header>
+            <div class="dash-table-wrap" data-table="pods"></div>
+          </article>
+          <article class="dash-panel span-5" aria-labelledby="p-recent">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-recent">Latest applies</h3>
+                <p class="dash-panel-sub">From CI, newest first</p>
+              </div>
+            </header>
+            <div class="dash-table-wrap" data-table="recent"></div>
+          </article>
+          <article class="dash-panel span-12" aria-labelledby="p-catalog">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-catalog">Tables in the Iceberg REST catalog</h3>
+                <p class="dash-panel-sub">Prod warehouse</p>
+              </div>
+            </header>
+            <div class="dash-table-wrap" data-table="catalog"></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="dash-section" aria-labelledby="how-title">
+      <div class="ds-container dash-container">
+        <div class="dash-section-head">
+          <h2 class="dash-h2" id="how-title">How it works</h2>
+          <p class="dash-section-note">Three layers, all in one repository: infrastructure, platform services and the images they run.</p>
+        </div>
+        <ol class="flow">
+          <li class="flow-step">
+            <p class="flow-stage">01 · Network &amp; cluster</p>
+            <p class="flow-tech">Terraform: VPC + EKS</p>
+            <p class="flow-detail">Private subnets in three zones and an EKS cluster with on-demand nodes for services and spot nodes for Spark.</p>
+          </li>
+          <li class="flow-step">
+            <p class="flow-stage">02 · Storage &amp; state</p>
+            <p class="flow-tech">Terraform: S3 + RDS</p>
+            <p class="flow-detail">A versioned S3 warehouse bucket and PostgreSQL for the Iceberg catalog and Airflow&#x27;s metadata.</p>
+          </li>
+          <li class="flow-step">
+            <p class="flow-stage">03 · Platform services</p>
+            <p class="flow-tech">Helm, via Terraform</p>
+            <p class="flow-detail">Iceberg REST catalog, Trino, the Spark operator and Airflow, each a Helm release with values per environment.</p>
+          </li>
+          <li class="flow-step">
+            <p class="flow-stage">04 · Images</p>
+            <p class="flow-tech">Docker</p>
+            <p class="flow-detail">Spark and Airflow images built in CI, scanned, and pinned by digest in the Helm values.</p>
+          </li>
+          <li class="flow-step">
+            <p class="flow-stage">05 · Observe</p>
+            <p class="flow-tech">Prometheus + Grafana</p>
+            <p class="flow-detail">Cluster, service and SLO dashboards provisioned as code, with alerts on error-budget burn.</p>
+          </li>
+          <li class="flow-step">
+            <p class="flow-stage">06 · Promote</p>
+            <p class="flow-tech">Pull requests</p>
+            <p class="flow-detail">Plans are reviewed on every PR; applies run from CI with remote state and locking.</p>
+          </li>
+        </ol>
+        <ul class="steps">
+          <li><strong>One set of modules, three sizes.</strong> Environments differ only in a tfvars file: node counts, instance sizes, replicas and retention. Staging really is a smaller prod.</li>
+          <li><strong>State is shared and locked.</strong> Remote state lives in S3 with a DynamoDB lock, one workspace per environment. Nobody applies from a laptop.</li>
+          <li><strong>Rebuilding is rehearsed.</strong> Once a month CI destroys dev and recreates it from nothing, then runs smoke tests that query Iceberg through Trino. The last run took 18 minutes.</li>
+          <li><strong>Drift is a bug.</strong> A nightly plan runs against every environment. Any difference opens an issue; this month two hand edits were found and moved into code.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="dash-section" aria-labelledby="model-title">
+      <div class="ds-container dash-container">
+        <div class="dash-section-head">
+          <h2 class="dash-h2" id="model-title">Data model</h2>
+          <p class="dash-section-note">The catalog&#x27;s own state lives in PostgreSQL; environments differ only in their settings.</p>
+        </div>
+        <div class="model-grid">
+          <article class="model-card">
+            <div class="model-card-head"><code>iceberg_tables</code><span>PostgreSQL · behind the Iceberg REST catalog</span></div>
+            <dl class="model-cols">
+              <div><dt><code>catalog_name</code><span class="model-type">varchar</span></dt><dd>Catalog the table belongs to</dd></div>
+              <div><dt><code>table_namespace</code><span class="model-type">varchar</span></dt><dd>For example <code>analytics</code></dd></div>
+              <div><dt><code>table_name</code><span class="model-type">varchar</span></dt><dd>For example <code>orders</code></dd></div>
+              <div><dt><code>metadata_location</code><span class="model-type">varchar</span></dt><dd>Current metadata file in S3; a commit swaps it atomically</dd></div>
+              <div><dt><code>previous_metadata_location</code><span class="model-type">varchar</span></dt><dd>The one before, for safe concurrent commits</dd></div>
+            </dl>
+          </article>
+          <article class="model-card">
+            <div class="model-card-head"><code>environments/*.tfvars</code><span>Settings that differ per environment</span></div>
+            <dl class="model-cols">
+              <div><dt><code>service_nodes</code><span class="model-type">number</span></dt><dd>dev 2 · staging 2 · prod 4</dd></div>
+              <div><dt><code>spark_max_nodes</code><span class="model-type">number</span></dt><dd>Spot node limit: dev 4 · staging 6 · prod 20</dd></div>
+              <div><dt><code>rds_instance_class</code><span class="model-type">string</span></dt><dd><code>db.t4g.medium</code> in dev and staging, <code>db.r6g.large</code> in prod</dd></div>
+              <div><dt><code>trino_workers</code><span class="model-type">number</span></dt><dd>dev 1 · staging 2 · prod 4</dd></div>
+              <div><dt><code>backup_retention_days</code><span class="model-type">number</span></dt><dd>dev 1 · staging 7 · prod 30</dd></div>
+            </dl>
+          </article>
+          <article class="model-card">
+            <div class="model-card-head"><code>terraform_applies</code><span>From CI logs · the CSV download</span></div>
+            <dl class="model-cols">
+              <div><dt><code>applied_at</code><span class="model-type">timestamp</span></dt><dd>When the apply finished</dd></div>
+              <div><dt><code>environment</code><span class="model-type">string</span></dt><dd><code>dev</code>, <code>staging</code> or <code>prod</code></dd></div>
+              <div><dt><code>pull_request</code><span class="model-type">string</span></dt><dd>PR that triggered it</dd></div>
+              <div><dt><code>added / changed / destroyed</code><span class="model-type">int</span></dt><dd>Resources in the plan</dd></div>
+              <div><dt><code>duration_s / result</code><span class="model-type">int / string</span></dt><dd>How long it took and how it ended</dd></div>
+            </dl>
+          </article>
+        </div>
+        <ul class="dataset-files" aria-label="Downloads">
+          <li><a href="terraform_applies.csv" download><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M5 19.5h14"/></svg><span><strong>terraform_applies.csv</strong> Every Terraform apply in the last 30 days, with its changes, duration and result · 34 rows, 8 columns</span></a></li>
+          <li><a href="data.json"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M5 19.5h14"/></svg><span><strong>data.json</strong> Everything this dashboard draws: KPIs, chart series and tables</span></a></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="dash-section" aria-labelledby="code-title">
+      <div class="ds-container dash-container">
+        <div class="dash-section-head">
+          <h2 class="dash-h2" id="code-title">Key code</h2>
+          <p class="dash-section-note">The root Terraform module, the Helm releases for the lakehouse, and the Spark image.</p>
+        </div>
+        <div class="code-block" data-code-block>
+          <div class="code-bar">
+            <div class="code-tabs" role="tablist" aria-label="Source files">
+              <button class="code-tab" type="button" role="tab" id="tab-iac-data-platform-0" aria-controls="code-iac-data-platform-0" aria-selected="true" tabindex="0">main.tf</button>
+              <button class="code-tab" type="button" role="tab" id="tab-iac-data-platform-1" aria-controls="code-iac-data-platform-1" aria-selected="false" tabindex="-1">modules/platform/helm.tf</button>
+              <button class="code-tab" type="button" role="tab" id="tab-iac-data-platform-2" aria-controls="code-iac-data-platform-2" aria-selected="false" tabindex="-1">spark/Dockerfile</button>
+            </div>
+            <button class="code-copy" type="button" data-copy hidden><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8" rx="1.6"/><path d="M10.5 5.5V3.6a1.1 1.1 0 0 0-1.1-1.1H3.6a1.1 1.1 0 0 0-1.1 1.1v5.8a1.1 1.1 0 0 0 1.1 1.1h1.9"/></svg><span>Copy</span></button>
+          </div>
+          <div class="code-panel" role="tabpanel" id="code-iac-data-platform-0" aria-labelledby="tab-iac-data-platform-0" tabindex="0">
+              <p class="code-panel-caption">Root module: network, cluster, storage, database and the platform services, all parameterised by environment.</p>
+              <pre><code class="lang-hcl"><span class="ln"><span class="tok-k">terraform</span> {</span>
+<span class="ln">  <span class="tok-p">required_version</span> = <span class="tok-s">&quot;&gt;= 1.8&quot;</span></span>
+<span class="ln">  required_providers {</span>
+<span class="ln">    <span class="tok-p">aws</span>  = { source = <span class="tok-s">&quot;hashicorp/aws&quot;</span>, version = <span class="tok-s">&quot;~&gt; 5.60&quot;</span> }</span>
+<span class="ln">    <span class="tok-p">helm</span> = { source = <span class="tok-s">&quot;hashicorp/helm&quot;</span>, version = <span class="tok-s">&quot;~&gt; 2.15&quot;</span> }</span>
+<span class="ln">  }</span>
+<span class="ln">  backend <span class="tok-s">&quot;s3&quot;</span> {</span>
+<span class="ln">    <span class="tok-p">bucket</span>         = <span class="tok-s">&quot;dataplatform-tf-state&quot;</span></span>
+<span class="ln">    <span class="tok-p">key</span>            = <span class="tok-s">&quot;platform/terraform.tfstate&quot;</span>   <span class="tok-c"># one workspace per environment</span></span>
+<span class="ln">    <span class="tok-p">region</span>         = <span class="tok-s">&quot;us-east-1&quot;</span></span>
+<span class="ln">    <span class="tok-p">dynamodb_table</span> = <span class="tok-s">&quot;dataplatform-tf-locks&quot;</span></span>
+<span class="ln">    <span class="tok-p">encrypt</span>        = <span class="tok-k">true</span></span>
+<span class="ln">  }</span>
+<span class="ln">}</span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-k">locals</span> {</span>
+<span class="ln">  <span class="tok-p">name</span> = <span class="tok-s">&quot;dp-${terraform.workspace}&quot;</span></span>
+<span class="ln">}</span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-k">module</span> <span class="tok-s">&quot;network&quot;</span> {</span>
+<span class="ln">  <span class="tok-p">source</span>     = <span class="tok-s">&quot;./modules/network&quot;</span></span>
+<span class="ln">  <span class="tok-p">name</span>       = local.name</span>
+<span class="ln">  <span class="tok-p">cidr_block</span> = var.vpc_cidr</span>
+<span class="ln">  <span class="tok-p">azs</span>        = [<span class="tok-s">&quot;us-east-1a&quot;</span>, <span class="tok-s">&quot;us-east-1b&quot;</span>, <span class="tok-s">&quot;us-east-1c&quot;</span>]</span>
+<span class="ln">}</span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-k">module</span> <span class="tok-s">&quot;eks&quot;</span> {</span>
+<span class="ln">  <span class="tok-p">source</span>          = <span class="tok-s">&quot;terraform-aws-modules/eks/aws&quot;</span></span>
+<span class="ln">  <span class="tok-p">version</span>         = <span class="tok-s">&quot;~&gt; 20.24&quot;</span></span>
+<span class="ln">  <span class="tok-p">cluster_name</span>    = local.name</span>
+<span class="ln">  <span class="tok-p">cluster_version</span> = <span class="tok-s">&quot;1.31&quot;</span></span>
+<span class="ln">  <span class="tok-p">vpc_id</span>          = <span class="tok-k">module</span>.network.vpc_id</span>
+<span class="ln">  <span class="tok-p">subnet_ids</span>      = <span class="tok-k">module</span>.network.private_subnet_ids</span>
+<span class="ln"></span>
+<span class="ln">  <span class="tok-p">eks_managed_node_groups</span> = {</span>
+<span class="ln">    <span class="tok-p">services</span> = {</span>
+<span class="ln">      <span class="tok-p">instance_types</span> = [var.service_instance_type]</span>
+<span class="ln">      <span class="tok-p">min_size</span>       = var.service_nodes</span>
+<span class="ln">      <span class="tok-p">max_size</span>       = var.service_nodes + <span class="tok-n">2</span></span>
+<span class="ln">      <span class="tok-p">desired_size</span>   = var.service_nodes</span>
+<span class="ln">    }</span>
+<span class="ln">    <span class="tok-p">spark</span> = {</span>
+<span class="ln">      <span class="tok-p">capacity_type</span>  = <span class="tok-s">&quot;SPOT&quot;</span></span>
+<span class="ln">      <span class="tok-p">instance_types</span> = [<span class="tok-s">&quot;r6i.2xlarge&quot;</span>, <span class="tok-s">&quot;r6a.2xlarge&quot;</span>, <span class="tok-s">&quot;r5.2xlarge&quot;</span>]</span>
+<span class="ln">      <span class="tok-p">min_size</span>       = <span class="tok-n">0</span></span>
+<span class="ln">      <span class="tok-p">max_size</span>       = var.spark_max_nodes</span>
+<span class="ln">      <span class="tok-p">desired_size</span>   = <span class="tok-n">0</span></span>
+<span class="ln">      <span class="tok-p">labels</span>         = { workload = <span class="tok-s">&quot;spark&quot;</span> }</span>
+<span class="ln">      <span class="tok-p">taints</span> = {</span>
+<span class="ln">        <span class="tok-p">spark</span> = { key = <span class="tok-s">&quot;workload&quot;</span>, value = <span class="tok-s">&quot;spark&quot;</span>, effect = <span class="tok-s">&quot;NO_SCHEDULE&quot;</span> }</span>
+<span class="ln">      }</span>
+<span class="ln">    }</span>
+<span class="ln">  }</span>
+<span class="ln">}</span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-k">module</span> <span class="tok-s">&quot;warehouse&quot;</span> {</span>
+<span class="ln">  <span class="tok-p">source</span>      = <span class="tok-s">&quot;./modules/storage&quot;</span></span>
+<span class="ln">  <span class="tok-p">bucket_name</span> = <span class="tok-s">&quot;${local.name}-warehouse&quot;</span></span>
+<span class="ln">  <span class="tok-p">versioning</span>  = <span class="tok-k">true</span></span>
+<span class="ln">}</span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-k">module</span> <span class="tok-s">&quot;catalog_db&quot;</span> {</span>
+<span class="ln">  <span class="tok-p">source</span>                = <span class="tok-s">&quot;./modules/postgres&quot;</span></span>
+<span class="ln">  <span class="tok-p">identifier</span>            = <span class="tok-s">&quot;${local.name}-catalog&quot;</span></span>
+<span class="ln">  <span class="tok-p">instance_class</span>        = var.rds_instance_class</span>
+<span class="ln">  <span class="tok-p">subnet_ids</span>            = <span class="tok-k">module</span>.network.private_subnet_ids</span>
+<span class="ln">  <span class="tok-p">allowed_sg_ids</span>        = [<span class="tok-k">module</span>.eks.node_security_group_id]</span>
+<span class="ln">  <span class="tok-p">backup_retention_days</span> = var.backup_retention_days</span>
+<span class="ln">}</span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-k">module</span> <span class="tok-s">&quot;platform&quot;</span> {</span>
+<span class="ln">  <span class="tok-p">source</span>        = <span class="tok-s">&quot;./modules/platform&quot;</span>   <span class="tok-c"># Helm releases, see helm.tf</span></span>
+<span class="ln">  <span class="tok-p">environment</span>   = <span class="tok-k">terraform</span>.workspace</span>
+<span class="ln">  <span class="tok-p">warehouse_uri</span> = <span class="tok-s">&quot;s3://${module.warehouse.bucket_name}/warehouse&quot;</span></span>
+<span class="ln">  <span class="tok-p">catalog_db</span>    = <span class="tok-k">module</span>.catalog_db.connection</span>
+<span class="ln">  <span class="tok-p">trino_workers</span> = var.trino_workers</span>
+<span class="ln">  <span class="tok-p">image_digests</span> = var.image_digests</span>
+<span class="ln">}</span></code></pre>
+            </div>
+          <div class="code-panel" role="tabpanel" id="code-iac-data-platform-1" aria-labelledby="tab-iac-data-platform-1" tabindex="0" hidden>
+              <p class="code-panel-caption">The lakehouse services as Helm releases. Trino depends on the catalog, so it is installed after it.</p>
+              <pre><code class="lang-hcl"><span class="ln"><span class="tok-k">resource</span> <span class="tok-s">&quot;helm_release&quot;</span> <span class="tok-s">&quot;iceberg_rest&quot;</span> {</span>
+<span class="ln">  <span class="tok-p">name</span>             = <span class="tok-s">&quot;iceberg-rest&quot;</span></span>
+<span class="ln">  <span class="tok-p">namespace</span>        = <span class="tok-s">&quot;lakehouse&quot;</span></span>
+<span class="ln">  <span class="tok-p">create_namespace</span> = <span class="tok-k">true</span></span>
+<span class="ln">  <span class="tok-p">repository</span>       = <span class="tok-s">&quot;oci://registry.example.com/charts&quot;</span></span>
+<span class="ln">  <span class="tok-p">chart</span>            = <span class="tok-s">&quot;iceberg-rest-catalog&quot;</span></span>
+<span class="ln">  <span class="tok-p">version</span>          = <span class="tok-s">&quot;0.4.2&quot;</span></span>
+<span class="ln"></span>
+<span class="ln">  <span class="tok-p">values</span> = [<span class="tok-f">templatefile</span>(<span class="tok-s">&quot;${path.module}/values/iceberg-rest.yaml&quot;</span>, {</span>
+<span class="ln">    <span class="tok-p">warehouse</span> = var.warehouse_uri</span>
+<span class="ln">    <span class="tok-p">jdbc_url</span>  = <span class="tok-s">&quot;jdbc:postgresql://${var.catalog_db.host}:5432/${var.catalog_db.database}&quot;</span></span>
+<span class="ln">    <span class="tok-p">image</span>     = <span class="tok-s">&quot;registry.example.com/iceberg-rest@${var.image_digests.iceberg_rest}&quot;</span></span>
+<span class="ln">  })]</span>
+<span class="ln"></span>
+<span class="ln">  set_sensitive {</span>
+<span class="ln">    <span class="tok-p">name</span>  = <span class="tok-s">&quot;catalog.jdbc.password&quot;</span></span>
+<span class="ln">    <span class="tok-p">value</span> = var.catalog_db.password</span>
+<span class="ln">  }</span>
+<span class="ln">}</span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-k">resource</span> <span class="tok-s">&quot;helm_release&quot;</span> <span class="tok-s">&quot;trino&quot;</span> {</span>
+<span class="ln">  <span class="tok-p">name</span>       = <span class="tok-s">&quot;trino&quot;</span></span>
+<span class="ln">  <span class="tok-p">namespace</span>  = <span class="tok-s">&quot;lakehouse&quot;</span></span>
+<span class="ln">  <span class="tok-p">repository</span> = <span class="tok-s">&quot;https://trinodb.github.io/charts&quot;</span></span>
+<span class="ln">  <span class="tok-p">chart</span>      = <span class="tok-s">&quot;trino&quot;</span></span>
+<span class="ln">  <span class="tok-p">version</span>    = <span class="tok-s">&quot;0.30.0&quot;</span></span>
+<span class="ln"></span>
+<span class="ln">  <span class="tok-p">values</span> = [<span class="tok-f">templatefile</span>(<span class="tok-s">&quot;${path.module}/values/trino.yaml&quot;</span>, {</span>
+<span class="ln">    <span class="tok-p">workers</span>          = var.trino_workers</span>
+<span class="ln">    <span class="tok-p">iceberg_rest_uri</span> = <span class="tok-s">&quot;http://iceberg-rest.lakehouse.svc:8181&quot;</span></span>
+<span class="ln">    <span class="tok-p">warehouse</span>        = var.warehouse_uri</span>
+<span class="ln">  })]</span>
+<span class="ln"></span>
+<span class="ln">  <span class="tok-p">depends_on</span> = [helm_release.iceberg_rest]</span>
+<span class="ln">}</span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-k">resource</span> <span class="tok-s">&quot;helm_release&quot;</span> <span class="tok-s">&quot;spark_operator&quot;</span> {</span>
+<span class="ln">  <span class="tok-p">name</span>             = <span class="tok-s">&quot;spark-operator&quot;</span></span>
+<span class="ln">  <span class="tok-p">namespace</span>        = <span class="tok-s">&quot;spark&quot;</span></span>
+<span class="ln">  <span class="tok-p">create_namespace</span> = <span class="tok-k">true</span></span>
+<span class="ln">  <span class="tok-p">repository</span>       = <span class="tok-s">&quot;https://kubeflow.github.io/spark-operator&quot;</span></span>
+<span class="ln">  <span class="tok-p">chart</span>            = <span class="tok-s">&quot;spark-operator&quot;</span></span>
+<span class="ln">  <span class="tok-p">version</span>          = <span class="tok-s">&quot;2.0.2&quot;</span></span>
+<span class="ln"></span>
+<span class="ln">  set {</span>
+<span class="ln">    <span class="tok-p">name</span>  = <span class="tok-s">&quot;spark.jobNamespaces[0]&quot;</span></span>
+<span class="ln">    <span class="tok-p">value</span> = <span class="tok-s">&quot;spark&quot;</span></span>
+<span class="ln">  }</span>
+<span class="ln">}</span></code></pre>
+            </div>
+          <div class="code-panel" role="tabpanel" id="code-iac-data-platform-2" aria-labelledby="tab-iac-data-platform-2" tabindex="0" hidden>
+              <p class="code-panel-caption">The Spark image used by every job: Spark 3.5 plus the Iceberg runtime and AWS bundle, pinned versions only.</p>
+              <pre><code class="lang-docker"><span class="ln"><span class="tok-c"># Spark 3.5 with Iceberg and S3 support, for jobs run by the Spark operator</span></span>
+<span class="ln"><span class="tok-k">FROM</span> apache/spark:3.5.3-scala2.12-java17-python3-ubuntu</span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-k">ARG</span> ICEBERG_VERSION=1.6.1</span>
+<span class="ln"><span class="tok-k">ARG</span> MAVEN=https://repo1.maven.org/maven2/org/apache/iceberg</span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-k">USER</span> root</span>
+<span class="ln"><span class="tok-k">ADD</span> <span class="tok-p">--chmod</span>=644 <span class="tok-n">${MAVEN}</span>/iceberg-spark-runtime-3.5_2.12/<span class="tok-n">${ICEBERG_VERSION}</span>/iceberg-spark-runtime-3.5_2.12-<span class="tok-n">${ICEBERG_VERSION}</span>.jar /opt/spark/jars/</span>
+<span class="ln"><span class="tok-k">ADD</span> <span class="tok-p">--chmod</span>=644 <span class="tok-n">${MAVEN}</span>/iceberg-aws-bundle/<span class="tok-n">${ICEBERG_VERSION}</span>/iceberg-aws-bundle-<span class="tok-n">${ICEBERG_VERSION}</span>.jar /opt/spark/jars/</span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-k">COPY</span> requirements.txt /tmp/requirements.txt</span>
+<span class="ln"><span class="tok-k">RUN</span> pip install --no-cache-dir -r /tmp/requirements.txt &amp;&amp; rm /tmp/requirements.txt</span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-k">COPY</span> jobs/ /opt/spark/work-dir/jobs/</span>
+<span class="ln"><span class="tok-k">USER</span> spark</span></code></pre>
+            </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="dash-section" aria-labelledby="notes-title">
+      <div class="ds-container dash-container">
+        <div class="dash-section-head">
+          <h2 class="dash-h2" id="notes-title">Engineering notes</h2>
+        </div>
+        <div class="highlights">
+          <article class="highlight">
+            <h3>A rebuild drill every month</h3>
+            <p>On Sep 28 CI destroyed dev and recreated it from nothing in 18 minutes. Smoke tests then created an Iceberg table, wrote to it with Spark and read it back through Trino.</p>
+          </article>
+          <article class="highlight">
+            <h3>The one failed apply</h3>
+            <p>PR #296 failed in staging when AWS refused more spot vCPUs. Terraform had recorded what it already created, so after the quota was raised the re-run only added the rest.</p>
+          </article>
+          <article class="highlight">
+            <h3>Airflow is spending its budget</h3>
+            <p>The Airflow scheduler restarted four times after hitting its memory limit, using about 78% of its monthly error budget. The limit is raised in the next PR.</p>
+          </article>
+          <article class="highlight">
+            <h3>Spot for Spark, on-demand for services</h3>
+            <p>Spark runs on spot nodes behind a taint, so catalog and query services never land there. Nightly jobs cost about 65% less than on on-demand nodes.</p>
+          </article>
+        </div>
+        <p class="data-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5"/><circle cx="12" cy="7.6" r=".6" fill="currentColor"/></svg><span><strong>About the data.</strong> Every number on this page is sample data from a seeded generator written for this project. It is shaped to behave like a real workload, with daily peaks, late events and the odd incident, but it does not come from any employer or client. Download it as <a href="terraform_applies.csv">terraform_applies.csv</a> or read <a href="data.json">data.json</a>.</span></p>
+      </div>
+    </section>
+
+    <div class="ds-container dash-container">
+      <nav class="dash-pager" aria-label="More projects">
+        <a href="/projects/rag-data-pipeline/"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg> Previous · 08</span><strong>RAG Data Pipeline</strong></a>
+        <a class="is-next" href="/projects/fraud-detection-streaming/"><span>Next · 10 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span><strong>Real-Time Fraud Detection Pipeline</strong></a>
+      </nav>
+    </div>
+  </main>
+
+  <footer class="contact-page-footer">
+    <div class="ds-container dash-container">
+      <div class="contact-footer-bottom">
+        <div class="footer-meta-group">
+          <div>
+            <p class="footer-meta-label">Version</p>
+            <p class="footer-meta-value"><span data-year>2026</span> © Edition</p>
+          </div>
+        </div>
+        <div class="footer-meta-group">
+          <div>
+            <p class="footer-meta-label">Socials</p>
+            <ul class="footer-socials">
+              <li><a href="https://www.linkedin.com/in/sarun2003" target="_blank" rel="noopener">LinkedIn</a></li>
+              <li><a href="mailto:sarun.shrestha.dev@gmail.com">Email</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/assets/vendor/echarts.custom.min.js?v=5.6.0" defer></script>
+  <script src="/assets/js/dashboard.js?v=20261007-6" defer></script>
+  <script src="/assets/js/main.js?v=20261007-6" defer></script>
+</body>
+</html>

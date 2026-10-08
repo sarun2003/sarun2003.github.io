@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Data Quality and Observability Platform — Sarun Shrestha</title>
+  <meta name="description" content="Freshness SLAs, volume anomaly detection, schema checks and a dead-letter queue across 148 tables, with every incident routed to the team that owns the data.">
+  <meta name="author" content="Sarun Shrestha">
+  <meta name="theme-color" content="#011013">
+  <meta name="color-scheme" content="dark light">
+  <link rel="canonical" href="https://www.sarunshrestha.com.np/projects/data-quality-observability/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.sarunshrestha.com.np/projects/data-quality-observability/">
+  <meta property="og:site_name" content="Sarun Shrestha">
+  <meta property="og:title" content="Data Quality and Observability Platform — Sarun Shrestha">
+  <meta property="og:description" content="Freshness SLAs, volume anomaly detection, schema checks and a dead-letter queue across 148 tables, with every incident routed to the team that owns the data.">
+  <meta property="og:image" content="https://www.sarunshrestha.com.np/assets/img/projects/data-quality-observability.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://www.sarunshrestha.com.np/assets/img/projects/data-quality-observability.jpg">
+
+  <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+  <link rel="preload" href="/assets/fonts/plus-jakarta-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/assets/css/style.css?v=20261007-6">
+  <link rel="stylesheet" href="/assets/css/projects.css?v=20261007-6">
+  <script>
+    /* No intro greeting on this page; fall back to the plain page if the main script never starts. */
+    (function () {
+      var h = document.documentElement;
+      h.classList.remove('no-js');
+      h.classList.add('js', 'skip-loader');
+      setTimeout(function () {
+        if (!h.classList.contains('app-ready')) { h.classList.remove('js'); h.classList.add('no-js'); }
+      }, 6000);
+    })();
+  </script>
+</head>
+<body class="dash-page">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="noise-overlay" aria-hidden="true"></div>
+
+  <header class="ds-nav">
+    <a class="ds-logo" href="/" aria-label="Sarun Shrestha, home">
+      <span class="ds-logo-mark" aria-hidden="true">©</span>
+      <span class="ds-logo-text">Sarun Shrestha</span>
+    </a>
+    <nav aria-label="Primary">
+      <ul class="ds-nav-links">
+        <li><a class="ds-nav-link" href="/#about">About</a></li>
+        <li><a class="ds-nav-link is-active" href="/projects/">Projects</a></li>
+        <li><a class="ds-nav-link" href="/#experience">Experience</a></li>
+        <li><a class="ds-nav-link" href="/#skills">Skills</a></li>
+        <li><a class="ds-nav-link" href="/contact/">Contact</a></li>
+        <li>
+          <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="side-menu">
+            <span class="menu-toggle-icon" aria-hidden="true"></span>Menu
+          </button>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="side-menu-overlay" data-menu-close></div>
+  <aside class="side-menu" id="side-menu" role="dialog" aria-modal="true" aria-label="Menu">
+    <button class="side-menu-close" type="button" data-menu-close>
+      Close
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>
+    </button>
+    <p class="side-menu-label">Navigation</p>
+    <nav aria-label="Menu">
+      <ul>
+        <li><a class="side-menu-nav-link" href="/">Home</a></li>
+        <li><a class="side-menu-nav-link" href="/#about">About</a></li>
+        <li><a class="side-menu-nav-link is-active" href="/projects/">Projects</a></li>
+        <li><a class="side-menu-nav-link" href="/#experience">Experience</a></li>
+        <li><a class="side-menu-nav-link" href="/#skills">Skills</a></li>
+        <li><a class="side-menu-nav-link" href="/contact/">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="side-menu-socials">
+      <p class="side-menu-label">Socials</p>
+      <ul class="side-menu-social-links">
+        <li><a href="https://www.linkedin.com/in/sarun2003" target="_blank" rel="noopener">LinkedIn</a></li>
+        <li><a href="mailto:sarun.shrestha.dev@gmail.com">Email</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main id="main">
+    <section class="dash-hero" aria-labelledby="dash-title">
+      <div class="ds-container dash-container">
+        <nav class="dash-crumbs" aria-label="Breadcrumb">
+          <a href="/">Home</a><span aria-hidden="true">/</span><a href="/projects/">Projects</a><span aria-hidden="true">/</span><span aria-current="page">Data Quality Platform</span>
+        </nav>
+        <p class="dash-eyebrow">Project 05 · Data quality</p>
+        <h1 class="dash-title" id="dash-title">Data Quality and Observability Platform</h1>
+        <p class="dash-summary">Bad data is cheaper to catch at the door than in a board deck. This platform watches 148 tables across the warehouse and the lake. Great Expectations suites validate each batch inside the PySpark job that writes it, Monte Carlo learns every table&#x27;s normal freshness and volume and flags anomalies no rule anticipated, and records that cannot be parsed go to a dead-letter queue instead of disappearing. All results land in one metrics store that Grafana and this dashboard read, and incidents go to the owning team with the failing rows attached.</p>
+        <ul class="dash-stack" aria-label="Tech stack"><li>Great Expectations</li><li>PySpark</li><li>Monte Carlo</li><li>Prometheus</li><li>Grafana</li></ul>
+        <div class="dash-meta">
+          <span class="dash-badge"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 1.8h4M6.6 1.8v4.1L2.7 12.6a1.1 1.1 0 0 0 1 1.6h8.6a1.1 1.1 0 0 0 1-1.6L9.4 5.9V1.8"/><path d="M4.6 9.6h6.8"/></svg>Sample data</span>
+          <span class="dash-window">Last 30 days · Sep 7 – Oct 6, 2026</span>
+          <a class="pill pill--sm" href="check_results_daily.csv" download><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M5 19.5h14"/></svg>Download data (CSV)</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="dash-body" data-dashboard data-src="data.json" aria-label="Dashboard">
+      <div class="ds-container dash-container">
+        <noscript><p class="dash-noscript">The charts need JavaScript. The same numbers are in <a href="check_results_daily.csv">check_results_daily.csv</a> and <a href="data.json">data.json</a>.</p></noscript>
+        <div class="dash-kpis" data-kpis></div>
+        <div class="dash-grid">
+          <article class="dash-panel span-8" aria-labelledby="p-volume">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-volume">Volume vs expected: analytics.fct_orders</h3>
+                <p class="dash-panel-sub">Rows loaded per hour, last 7 days, with the learned expected range</p>
+              </div>
+            <button class="dash-toggle" type="button" data-toggle aria-pressed="false" hidden><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="1.5" y="2" width="9" height="8" rx="1.2"/><path d="M1.5 5h9M1.5 7.6h9M5 5v5"/></svg>Table</button>
+            </header>
+            <div class="dash-chart" data-chart="volume" style="height:380px"></div>
+          </article>
+          <article class="dash-panel span-4" aria-labelledby="p-freshness">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-freshness">Freshness against SLA</h3>
+                <p class="dash-panel-sub">Time since last update. The white mark is each table&#x27;s SLA.</p>
+              </div>
+            <button class="dash-toggle" type="button" data-toggle aria-pressed="false" hidden><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="1.5" y="2" width="9" height="8" rx="1.2"/><path d="M1.5 5h9M1.5 7.6h9M5 5v5"/></svg>Table</button>
+            </header>
+            <div class="dash-chart dash-chart--html" data-chart="freshness"></div>
+          </article>
+          <article class="dash-panel span-7" aria-labelledby="p-failures">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-failures">Failed checks per day</h3>
+                <p class="dash-panel-sub">By quality dimension</p>
+              </div>
+            <button class="dash-toggle" type="button" data-toggle aria-pressed="false" hidden><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="1.5" y="2" width="9" height="8" rx="1.2"/><path d="M1.5 5h9M1.5 7.6h9M5 5v5"/></svg>Table</button>
+            </header>
+            <div class="dash-chart" data-chart="failures" style="height:290px"></div>
+          </article>
+          <article class="dash-panel span-5" aria-labelledby="p-dlq">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-dlq">Dead-letter queue by reason</h3>
+                <p class="dash-panel-sub">Records rejected in the last 30 days</p>
+              </div>
+            <button class="dash-toggle" type="button" data-toggle aria-pressed="false" hidden><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="1.5" y="2" width="9" height="8" rx="1.2"/><path d="M1.5 5h9M1.5 7.6h9M5 5v5"/></svg>Table</button>
+            </header>
+            <div class="dash-chart" data-chart="dlq" style="height:290px"></div>
+          </article>
+          <article class="dash-panel span-12" aria-labelledby="p-incidents">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-incidents">Incidents</h3>
+                <p class="dash-panel-sub">Opened automatically from checks and anomaly monitors</p>
+              </div>
+            </header>
+            <div class="dash-table-wrap" data-table="incidents"></div>
+          </article>
+          <article class="dash-panel span-12" aria-labelledby="p-suites">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-suites">Great Expectations suites</h3>
+                <p class="dash-panel-sub">Critical suites block the write when they fail</p>
+              </div>
+            </header>
+            <div class="dash-table-wrap" data-table="suites"></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="dash-section" aria-labelledby="how-title">
+      <div class="ds-container dash-container">
+        <div class="dash-section-head">
+          <h2 class="dash-h2" id="how-title">How it works</h2>
+          <p class="dash-section-note">Rules for what we know can break, learning for what we don&#x27;t, and a home for every rejected record.</p>
+        </div>
+        <ol class="flow">
+          <li class="flow-step">
+            <p class="flow-stage">01 · Validate on write</p>
+            <p class="flow-tech">Great Expectations + PySpark</p>
+            <p class="flow-detail">Each batch is checked before it is published: nulls, ranges, uniqueness, row counts. Critical suites block the write.</p>
+          </li>
+          <li class="flow-step">
+            <p class="flow-stage">02 · Route bad records</p>
+            <p class="flow-tech">Dead-letter queue</p>
+            <p class="flow-detail">Records that fail parsing or a contract go to a Kafka DLQ topic with the reason attached, so nothing disappears.</p>
+          </li>
+          <li class="flow-step">
+            <p class="flow-stage">03 · Learn normal</p>
+            <p class="flow-tech">Monte Carlo</p>
+            <p class="flow-detail">Learns each table&#x27;s usual freshness, volume and schema, and flags changes nobody wrote a rule for.</p>
+          </li>
+          <li class="flow-step">
+            <p class="flow-stage">04 · Measure</p>
+            <p class="flow-tech">Prometheus</p>
+            <p class="flow-detail">Check results, table ages and DLQ counts become metrics labelled with the table and its owner.</p>
+          </li>
+          <li class="flow-step">
+            <p class="flow-stage">05 · Alert</p>
+            <p class="flow-tech">Grafana</p>
+            <p class="flow-detail">Freshness SLAs alert the owning team&#x27;s channel with a runbook link; dashboards per domain.</p>
+          </li>
+          <li class="flow-step">
+            <p class="flow-stage">06 · Respond</p>
+            <p class="flow-tech">Incidents</p>
+            <p class="flow-detail">Each alert opens an incident with the failing rows, the lineage and the reports downstream.</p>
+          </li>
+        </ol>
+        <ul class="steps">
+          <li><strong>Contracts at the producer.</strong> Critical suites run inside the job that writes the data, so a failure stops publication instead of paging someone after the numbers are already wrong.</li>
+          <li><strong>Rules plus learning.</strong> Hand-written checks cover what we know can break; anomaly monitors cover the rest, like the Oct 2 volume drop that no rule anticipated.</li>
+          <li><strong>Nothing silently dropped.</strong> Every rejected record lands in the DLQ with its reason, topic and offset. A daily job reports counts by producer and replays records once they are fixed.</li>
+          <li><strong>Owners, not channels.</strong> Every table has an owning team in its metadata, so alerts reach the people who can fix the problem, with a runbook link.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="dash-section" aria-labelledby="model-title">
+      <div class="ds-container dash-container">
+        <div class="dash-section-head">
+          <h2 class="dash-h2" id="model-title">Data model</h2>
+          <p class="dash-section-note">Check results and rejected records are data too: both are tables with an owner and a retention policy.</p>
+        </div>
+        <div class="model-grid">
+          <article class="model-card">
+            <div class="model-card-head"><code>dq.check_results</code><span>Iceberg table · one row per check run</span></div>
+            <dl class="model-cols">
+              <div><dt><code>run_id</code><span class="model-type">string</span></dt><dd>Validation run</dd></div>
+              <div><dt><code>table_name / owner</code><span class="model-type">string</span></dt><dd>Table checked and the team that owns it</dd></div>
+              <div><dt><code>check_name / dimension</code><span class="model-type">string</span></dt><dd>For example <code>order_id_unique</code>, Uniqueness</dd></div>
+              <div><dt><code>passed</code><span class="model-type">boolean</span></dt><dd>Result</dd></div>
+              <div><dt><code>observed_value / threshold</code><span class="model-type">double</span></dt><dd>What was measured and the limit</dd></div>
+              <div><dt><code>run_ts</code><span class="model-type">timestamp</span></dt><dd>When the check ran</dd></div>
+            </dl>
+          </article>
+          <article class="model-card">
+            <div class="model-card-head"><code>dlq.records</code><span>Kafka topic, mirrored to a table</span></div>
+            <dl class="model-cols">
+              <div><dt><code>source_topic / partition / offset</code><span class="model-type">string / int / bigint</span></dt><dd>Exactly where the record came from</dd></div>
+              <div><dt><code>reason</code><span class="model-type">string</span></dt><dd>Why it was rejected</dd></div>
+              <div><dt><code>producer</code><span class="model-type">string</span></dt><dd>App or service that sent it</dd></div>
+              <div><dt><code>payload</code><span class="model-type">string</span></dt><dd>The original record, untouched</dd></div>
+              <div><dt><code>rejected_at</code><span class="model-type">timestamp</span></dt><dd>When it was routed to the DLQ</dd></div>
+            </dl>
+          </article>
+          <article class="model-card">
+            <div class="model-card-head"><code>check_results_daily</code><span>Aggregate · the CSV download</span></div>
+            <dl class="model-cols">
+              <div><dt><code>date</code><span class="model-type">date</span></dt><dd>Day</dd></div>
+              <div><dt><code>dimension</code><span class="model-type">string</span></dt><dd>Validity, Freshness, Volume, Distribution, Uniqueness or Schema</dd></div>
+              <div><dt><code>checks_run / checks_failed</code><span class="model-type">int</span></dt><dd>Counts for the day</dd></div>
+              <div><dt><code>pass_rate</code><span class="model-type">double</span></dt><dd>Share of checks that passed</dd></div>
+            </dl>
+          </article>
+        </div>
+        <ul class="dataset-files" aria-label="Downloads">
+          <li><a href="check_results_daily.csv" download><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M5 19.5h14"/></svg><span><strong>check_results_daily.csv</strong> Checks run and failed per day for each quality dimension · 180 rows, 5 columns</span></a></li>
+          <li><a href="data.json"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M5 19.5h14"/></svg><span><strong>data.json</strong> Everything this dashboard draws: KPIs, chart series and tables</span></a></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="dash-section" aria-labelledby="code-title">
+      <div class="ds-container dash-container">
+        <div class="dash-section-head">
+          <h2 class="dash-h2" id="code-title">Key code</h2>
+          <p class="dash-section-note">Validation inside the write path, the dead-letter routing, and the freshness alert rule.</p>
+        </div>
+        <div class="code-block" data-code-block>
+          <div class="code-bar">
+            <div class="code-tabs" role="tablist" aria-label="Source files">
+              <button class="code-tab" type="button" role="tab" id="tab-data-quality-observability-0" aria-controls="code-data-quality-observability-0" aria-selected="true" tabindex="0">validate_orders.py</button>
+              <button class="code-tab" type="button" role="tab" id="tab-data-quality-observability-1" aria-controls="code-data-quality-observability-1" aria-selected="false" tabindex="-1">route_to_dlq.py</button>
+              <button class="code-tab" type="button" role="tab" id="tab-data-quality-observability-2" aria-controls="code-data-quality-observability-2" aria-selected="false" tabindex="-1">freshness-rules.yml</button>
+            </div>
+            <button class="code-copy" type="button" data-copy hidden><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8" rx="1.6"/><path d="M10.5 5.5V3.6a1.1 1.1 0 0 0-1.1-1.1H3.6a1.1 1.1 0 0 0-1.1 1.1v5.8a1.1 1.1 0 0 0 1.1 1.1h1.9"/></svg><span>Copy</span></button>
+          </div>
+          <div class="code-panel" role="tabpanel" id="code-data-quality-observability-0" aria-labelledby="tab-data-quality-observability-0" tabindex="0">
+              <p class="code-panel-caption">Runs the critical suite on each batch inside the PySpark job. Failing batches go to quarantine; results become metrics.</p>
+              <pre><code class="lang-python"><span class="ln"><span class="tok-k">import</span> great_expectations <span class="tok-k">as</span> gx</span>
+<span class="ln"><span class="tok-k">import</span> great_expectations.expectations <span class="tok-k">as</span> gxe</span>
+<span class="ln"><span class="tok-k">from</span> prometheus_client <span class="tok-k">import</span> CollectorRegistry, Gauge, push_to_gateway</span>
+<span class="ln"><span class="tok-k">from</span> pyspark.sql <span class="tok-k">import</span> functions <span class="tok-k">as</span> F</span>
+<span class="ln"></span>
+<span class="ln">context = gx.<span class="tok-f">get_context</span>(mode=<span class="tok-s">&quot;file&quot;</span>, project_root_dir=<span class="tok-s">&quot;gx&quot;</span>)</span>
+<span class="ln"></span>
+<span class="ln">suite = context.suites.<span class="tok-f">add_or_update</span>(gx.<span class="tok-f">ExpectationSuite</span>(</span>
+<span class="ln">    name=<span class="tok-s">&quot;orders.critical&quot;</span>,</span>
+<span class="ln">    expectations=[</span>
+<span class="ln">        gxe.<span class="tok-f">ExpectColumnValuesToNotBeNull</span>(column=<span class="tok-s">&quot;order_id&quot;</span>),</span>
+<span class="ln">        gxe.<span class="tok-f">ExpectColumnValuesToBeUnique</span>(column=<span class="tok-s">&quot;order_id&quot;</span>),</span>
+<span class="ln">        gxe.<span class="tok-f">ExpectColumnValuesToBeBetween</span>(column=<span class="tok-s">&quot;total_usd&quot;</span>, min_value=<span class="tok-n">0</span>, max_value=50_000),</span>
+<span class="ln">        gxe.<span class="tok-f">ExpectColumnValuesToBeInSet</span>(column=<span class="tok-s">&quot;status&quot;</span>, value_set=[<span class="tok-s">&quot;placed&quot;</span>, <span class="tok-s">&quot;paid&quot;</span>, <span class="tok-s">&quot;shipped&quot;</span>, <span class="tok-s">&quot;cancelled&quot;</span>]),</span>
+<span class="ln">        gxe.<span class="tok-f">ExpectTableRowCountToBeBetween</span>(min_value=1_000, max_value=2_000_000),</span>
+<span class="ln">    ],</span>
+<span class="ln">))</span>
+<span class="ln"></span>
+<span class="ln">batch_def = (</span>
+<span class="ln">    context.data_sources.<span class="tok-f">add_or_update_spark</span>(name=<span class="tok-s">&quot;spark&quot;</span>)</span>
+<span class="ln">    .<span class="tok-f">add_dataframe_asset</span>(name=<span class="tok-s">&quot;orders_batch&quot;</span>)</span>
+<span class="ln">    .<span class="tok-f">add_batch_definition_whole_dataframe</span>(<span class="tok-s">&quot;per_run&quot;</span>)</span>
+<span class="ln">)</span>
+<span class="ln">validation = context.validation_definitions.<span class="tok-f">add_or_update</span>(</span>
+<span class="ln">    gx.<span class="tok-f">ValidationDefinition</span>(name=<span class="tok-s">&quot;orders.critical&quot;</span>, data=batch_def, suite=suite)</span>
+<span class="ln">)</span>
+<span class="ln"></span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-k">def</span> <span class="tok-f">publish_if_valid</span>(df, run_id: str) -&gt; bool:</span>
+<span class="ln">    result = validation.<span class="tok-f">run</span>(batch_parameters={<span class="tok-s">&quot;dataframe&quot;</span>: df})</span>
+<span class="ln"></span>
+<span class="ln">    registry = <span class="tok-f">CollectorRegistry</span>()</span>
+<span class="ln">    passed = <span class="tok-f">Gauge</span>(<span class="tok-s">&quot;dq_checks_passed&quot;</span>, <span class="tok-s">&quot;Checks passed&quot;</span>, [<span class="tok-s">&quot;table&quot;</span>, <span class="tok-s">&quot;suite&quot;</span>], registry=registry)</span>
+<span class="ln">    failed = <span class="tok-f">Gauge</span>(<span class="tok-s">&quot;dq_checks_failed&quot;</span>, <span class="tok-s">&quot;Checks failed&quot;</span>, [<span class="tok-s">&quot;table&quot;</span>, <span class="tok-s">&quot;suite&quot;</span>], registry=registry)</span>
+<span class="ln">    stats = result.statistics</span>
+<span class="ln">    passed.<span class="tok-f">labels</span>(<span class="tok-s">&quot;analytics.fct_orders&quot;</span>, <span class="tok-s">&quot;orders.critical&quot;</span>).<span class="tok-f">set</span>(stats[<span class="tok-s">&quot;successful_expectations&quot;</span>])</span>
+<span class="ln">    failed.<span class="tok-f">labels</span>(<span class="tok-s">&quot;analytics.fct_orders&quot;</span>, <span class="tok-s">&quot;orders.critical&quot;</span>).<span class="tok-f">set</span>(stats[<span class="tok-s">&quot;unsuccessful_expectations&quot;</span>])</span>
+<span class="ln">    <span class="tok-f">push_to_gateway</span>(<span class="tok-s">&quot;pushgateway:9091&quot;</span>, job=<span class="tok-s">&quot;dq-orders&quot;</span>, registry=registry)</span>
+<span class="ln"></span>
+<span class="ln">    <span class="tok-k">if</span> result.success:</span>
+<span class="ln">        df.<span class="tok-f">writeTo</span>(<span class="tok-s">&quot;lake.analytics.fct_orders&quot;</span>).<span class="tok-f">append</span>()</span>
+<span class="ln">        <span class="tok-k">return</span> <span class="tok-k">True</span></span>
+<span class="ln"></span>
+<span class="ln">    <span class="tok-c"># Keep the batch for inspection and replay; downstream readers never see it.</span></span>
+<span class="ln">    df.<span class="tok-f">withColumn</span>(<span class="tok-s">&quot;run_id&quot;</span>, F.<span class="tok-f">lit</span>(run_id)).<span class="tok-f">writeTo</span>(<span class="tok-s">&quot;lake.quarantine.fct_orders&quot;</span>).<span class="tok-f">append</span>()</span>
+<span class="ln">    <span class="tok-k">return</span> <span class="tok-k">False</span></span></code></pre>
+            </div>
+          <div class="code-panel" role="tabpanel" id="code-data-quality-observability-1" aria-labelledby="tab-data-quality-observability-1" tabindex="0" hidden>
+              <p class="code-panel-caption">Structured Streaming: valid events continue, anything that cannot be parsed or breaks the contract goes to the DLQ with a reason.</p>
+              <pre><code class="lang-python"><span class="ln"><span class="tok-k">from</span> pyspark.sql <span class="tok-k">import</span> functions <span class="tok-k">as</span> F</span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-k">from</span> schemas <span class="tok-k">import</span> ORDER_EVENT  <span class="tok-c"># the contract, plus a _corrupt_record string field</span></span>
+<span class="ln"></span>
+<span class="ln">raw = (</span>
+<span class="ln">    spark.readStream.<span class="tok-f">format</span>(<span class="tok-s">&quot;kafka&quot;</span>)</span>
+<span class="ln">    .<span class="tok-f">option</span>(<span class="tok-s">&quot;kafka.bootstrap.servers&quot;</span>, <span class="tok-s">&quot;kafka:9092&quot;</span>)</span>
+<span class="ln">    .<span class="tok-f">option</span>(<span class="tok-s">&quot;subscribe&quot;</span>, <span class="tok-s">&quot;orders.events&quot;</span>)</span>
+<span class="ln">    .<span class="tok-f">load</span>()</span>
+<span class="ln">    .<span class="tok-f">select</span>(<span class="tok-s">&quot;topic&quot;</span>, <span class="tok-s">&quot;partition&quot;</span>, <span class="tok-s">&quot;offset&quot;</span>, F.<span class="tok-f">col</span>(<span class="tok-s">&quot;value&quot;</span>).<span class="tok-f">cast</span>(<span class="tok-s">&quot;string&quot;</span>).<span class="tok-f">alias</span>(<span class="tok-s">&quot;payload&quot;</span>))</span>
+<span class="ln">)</span>
+<span class="ln"></span>
+<span class="ln">checked = (</span>
+<span class="ln">    raw.<span class="tok-f">withColumn</span>(<span class="tok-s">&quot;e&quot;</span>, F.<span class="tok-f">from_json</span>(<span class="tok-s">&quot;payload&quot;</span>, ORDER_EVENT,</span>
+<span class="ln">                                    {<span class="tok-s">&quot;mode&quot;</span>: <span class="tok-s">&quot;PERMISSIVE&quot;</span>, <span class="tok-s">&quot;columnNameOfCorruptRecord&quot;</span>: <span class="tok-s">&quot;_corrupt_record&quot;</span>}))</span>
+<span class="ln">    .<span class="tok-f">withColumn</span>(<span class="tok-s">&quot;reason&quot;</span>,</span>
+<span class="ln">        F.<span class="tok-f">when</span>(F.<span class="tok-f">length</span>(<span class="tok-s">&quot;payload&quot;</span>) &gt; 512_000, <span class="tok-s">&quot;Payload too large&quot;</span>)</span>
+<span class="ln">         .<span class="tok-f">when</span>(F.<span class="tok-f">col</span>(<span class="tok-s">&quot;e._corrupt_record&quot;</span>).<span class="tok-f">isNotNull</span>(), <span class="tok-s">&quot;Not valid JSON&quot;</span>)</span>
+<span class="ln">         .<span class="tok-f">when</span>(F.<span class="tok-f">col</span>(<span class="tok-s">&quot;e.order_id&quot;</span>).<span class="tok-f">isNull</span>() | F.<span class="tok-f">col</span>(<span class="tok-s">&quot;e.status&quot;</span>).<span class="tok-f">isNull</span>(), <span class="tok-s">&quot;Missing required field&quot;</span>)</span>
+<span class="ln">         .<span class="tok-f">when</span>(F.<span class="tok-f">col</span>(<span class="tok-s">&quot;e.event_ts&quot;</span>).<span class="tok-f">isNull</span>(), <span class="tok-s">&quot;Invalid timestamp&quot;</span>)</span>
+<span class="ln">         .<span class="tok-f">when</span>(~F.<span class="tok-f">col</span>(<span class="tok-s">&quot;e.status&quot;</span>).<span class="tok-f">isin</span>(<span class="tok-s">&quot;placed&quot;</span>, <span class="tok-s">&quot;paid&quot;</span>, <span class="tok-s">&quot;shipped&quot;</span>, <span class="tok-s">&quot;cancelled&quot;</span>), <span class="tok-s">&quot;Unknown enum value&quot;</span>))</span>
+<span class="ln">)</span>
+<span class="ln"></span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-k">def</span> <span class="tok-f">route</span>(batch, batch_id):</span>
+<span class="ln">    batch.<span class="tok-f">persist</span>()</span>
+<span class="ln">    (batch.<span class="tok-f">where</span>(<span class="tok-s">&quot;reason IS NULL&quot;</span>).<span class="tok-f">select</span>(<span class="tok-s">&quot;e.*&quot;</span>).<span class="tok-f">drop</span>(<span class="tok-s">&quot;_corrupt_record&quot;</span>)</span>
+<span class="ln">          .<span class="tok-f">writeTo</span>(<span class="tok-s">&quot;lake.staging.order_events&quot;</span>).<span class="tok-f">append</span>())</span>
+<span class="ln">    (batch.<span class="tok-f">where</span>(<span class="tok-s">&quot;reason IS NOT NULL&quot;</span>)</span>
+<span class="ln">          .<span class="tok-f">select</span>(</span>
+<span class="ln">              F.<span class="tok-f">col</span>(<span class="tok-s">&quot;payload&quot;</span>).<span class="tok-f">alias</span>(<span class="tok-s">&quot;value&quot;</span>),</span>
+<span class="ln">              F.<span class="tok-f">array</span>(</span>
+<span class="ln">                  F.<span class="tok-f">struct</span>(F.<span class="tok-f">lit</span>(<span class="tok-s">&quot;reason&quot;</span>).<span class="tok-f">alias</span>(<span class="tok-s">&quot;key&quot;</span>), F.<span class="tok-f">col</span>(<span class="tok-s">&quot;reason&quot;</span>).<span class="tok-f">cast</span>(<span class="tok-s">&quot;binary&quot;</span>).<span class="tok-f">alias</span>(<span class="tok-s">&quot;value&quot;</span>)),</span>
+<span class="ln">                  F.<span class="tok-f">struct</span>(F.<span class="tok-f">lit</span>(<span class="tok-s">&quot;source&quot;</span>).<span class="tok-f">alias</span>(<span class="tok-s">&quot;key&quot;</span>),</span>
+<span class="ln">                           F.<span class="tok-f">concat_ws</span>(<span class="tok-s">&quot;:&quot;</span>, <span class="tok-s">&quot;topic&quot;</span>, <span class="tok-s">&quot;partition&quot;</span>, <span class="tok-s">&quot;offset&quot;</span>).<span class="tok-f">cast</span>(<span class="tok-s">&quot;binary&quot;</span>).<span class="tok-f">alias</span>(<span class="tok-s">&quot;value&quot;</span>)),</span>
+<span class="ln">              ).<span class="tok-f">alias</span>(<span class="tok-s">&quot;headers&quot;</span>))</span>
+<span class="ln">          .write.<span class="tok-f">format</span>(<span class="tok-s">&quot;kafka&quot;</span>)</span>
+<span class="ln">          .<span class="tok-f">option</span>(<span class="tok-s">&quot;kafka.bootstrap.servers&quot;</span>, <span class="tok-s">&quot;kafka:9092&quot;</span>)</span>
+<span class="ln">          .<span class="tok-f">option</span>(<span class="tok-s">&quot;topic&quot;</span>, <span class="tok-s">&quot;dlq.orders.events&quot;</span>)</span>
+<span class="ln">          .<span class="tok-f">option</span>(<span class="tok-s">&quot;includeHeaders&quot;</span>, <span class="tok-s">&quot;true&quot;</span>)</span>
+<span class="ln">          .<span class="tok-f">save</span>())</span>
+<span class="ln">    batch.<span class="tok-f">unpersist</span>()</span>
+<span class="ln"></span>
+<span class="ln"></span>
+<span class="ln">(checked.writeStream.<span class="tok-f">foreachBatch</span>(route)</span>
+<span class="ln">    .<span class="tok-f">option</span>(<span class="tok-s">&quot;checkpointLocation&quot;</span>, <span class="tok-s">&quot;s3://lake/checkpoints/order_events&quot;</span>)</span>
+<span class="ln">    .<span class="tok-f">trigger</span>(processingTime=<span class="tok-s">&quot;30 seconds&quot;</span>)</span>
+<span class="ln">    .<span class="tok-f">start</span>())</span></code></pre>
+            </div>
+          <div class="code-panel" role="tabpanel" id="code-data-quality-observability-2" aria-labelledby="tab-data-quality-observability-2" tabindex="0" hidden>
+              <p class="code-panel-caption">Prometheus alerting rule behind the freshness meters: fires when a table is older than its own SLA.</p>
+              <pre><code class="lang-yaml"><span class="ln"><span class="tok-p">groups</span>:</span>
+<span class="ln">  - <span class="tok-p">name</span>: data-freshness</span>
+<span class="ln">    <span class="tok-p">rules</span>:</span>
+<span class="ln">      - <span class="tok-p">record</span>: dq:table_age_seconds</span>
+<span class="ln">        <span class="tok-p">expr</span>: time() - dq_table_last_loaded_timestamp_seconds</span>
+<span class="ln"></span>
+<span class="ln">      - <span class="tok-p">alert</span>: TableFreshnessSLABreached</span>
+<span class="ln">        <span class="tok-p">expr</span>: dq:table_age_seconds &gt; on (table) dq_table_freshness_sla_seconds</span>
+<span class="ln">        <span class="tok-p">for</span>: 5m</span>
+<span class="ln">        <span class="tok-p">labels</span>:</span>
+<span class="ln">          <span class="tok-p">severity</span>: critical</span>
+<span class="ln">        <span class="tok-p">annotations</span>:</span>
+<span class="ln">          <span class="tok-p">summary</span>: <span class="tok-s">&quot;{{ $labels.table }} has not loaded for {{ $value | humanizeDuration }}&quot;</span></span>
+<span class="ln">          <span class="tok-p">owner</span>: <span class="tok-s">&quot;{{ $labels.owner }}&quot;</span></span>
+<span class="ln">          <span class="tok-p">runbook_url</span>: <span class="tok-s">&quot;https://runbooks.example.com/data/freshness&quot;</span></span>
+<span class="ln"></span>
+<span class="ln">      - <span class="tok-p">alert</span>: TableFreshnessNearSLA</span>
+<span class="ln">        <span class="tok-p">expr</span>: dq:table_age_seconds &gt; on (table) (<span class="tok-n">0.8</span> * dq_table_freshness_sla_seconds)</span>
+<span class="ln">        <span class="tok-p">for</span>: 10m</span>
+<span class="ln">        <span class="tok-p">labels</span>:</span>
+<span class="ln">          <span class="tok-p">severity</span>: warning</span></code></pre>
+            </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="dash-section" aria-labelledby="notes-title">
+      <div class="ds-container dash-container">
+        <div class="dash-section-head">
+          <h2 class="dash-h2" id="notes-title">Engineering notes</h2>
+        </div>
+        <div class="highlights">
+          <article class="highlight">
+            <h3>Caught before the dashboards were</h3>
+            <p>At noon on Oct 2 an upstream API outage cut hourly order volume by about 80%. The anomaly monitor opened INC-2286 six minutes later, before anyone looked at a report, and a backfill closed it in three hours.</p>
+          </article>
+          <article class="highlight">
+            <h3>A duplicate load, not a sales spike</h3>
+            <p>At 14:00 on Oct 5, volume jumped 95%. The <code>order_id</code> uniqueness check showed a retried batch had loaded twice; it was removed before finance saw inflated numbers.</p>
+          </article>
+          <article class="highlight">
+            <h3>Detection got faster</h3>
+            <p>Mean time to detect fell from 9 to 7 minutes after freshness checks for critical tables moved from hourly to every 10 minutes.</p>
+          </article>
+          <article class="highlight">
+            <h3>The DLQ is a to-do list</h3>
+            <p>Of 48K rejected records, 38% were schema mismatches from one mobile app version. It was fixed in the next release and 17K records were replayed.</p>
+          </article>
+        </div>
+        <p class="data-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5"/><circle cx="12" cy="7.6" r=".6" fill="currentColor"/></svg><span><strong>About the data.</strong> Every number on this page is sample data from a seeded generator written for this project. It is shaped to behave like a real workload, with daily peaks, late events and the odd incident, but it does not come from any employer or client. Download it as <a href="check_results_daily.csv">check_results_daily.csv</a> or read <a href="data.json">data.json</a>.</span></p>
+      </div>
+    </section>
+
+    <div class="ds-container dash-container">
+      <nav class="dash-pager" aria-label="More projects">
+        <a href="/projects/etl-orchestration-cicd/"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg> Previous · 04</span><strong>ETL with Orchestration and CI/CD</strong></a>
+        <a class="is-next" href="/projects/unified-streaming-batch/"><span>Next · 06 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span><strong>Unified Streaming and Batch Pipeline</strong></a>
+      </nav>
+    </div>
+  </main>
+
+  <footer class="contact-page-footer">
+    <div class="ds-container dash-container">
+      <div class="contact-footer-bottom">
+        <div class="footer-meta-group">
+          <div>
+            <p class="footer-meta-label">Version</p>
+            <p class="footer-meta-value"><span data-year>2026</span> © Edition</p>
+          </div>
+        </div>
+        <div class="footer-meta-group">
+          <div>
+            <p class="footer-meta-label">Socials</p>
+            <ul class="footer-socials">
+              <li><a href="https://www.linkedin.com/in/sarun2003" target="_blank" rel="noopener">LinkedIn</a></li>
+              <li><a href="mailto:sarun.shrestha.dev@gmail.com">Email</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/assets/vendor/echarts.custom.min.js?v=5.6.0" defer></script>
+  <script src="/assets/js/dashboard.js?v=20261007-6" defer></script>
+  <script src="/assets/js/main.js?v=20261007-6" defer></script>
+</body>
+</html>

@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Unified Streaming and Batch Pipeline — Sarun Shrestha</title>
+  <meta name="description" content="Web and mobile clickstream processed in real time by Flink and recomputed nightly by Spark, both writing the same Apache Iceberg tables so the numbers agree.">
+  <meta name="author" content="Sarun Shrestha">
+  <meta name="theme-color" content="#011013">
+  <meta name="color-scheme" content="dark light">
+  <link rel="canonical" href="https://www.sarunshrestha.com.np/projects/unified-streaming-batch/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.sarunshrestha.com.np/projects/unified-streaming-batch/">
+  <meta property="og:site_name" content="Sarun Shrestha">
+  <meta property="og:title" content="Unified Streaming and Batch Pipeline — Sarun Shrestha">
+  <meta property="og:description" content="Web and mobile clickstream processed in real time by Flink and recomputed nightly by Spark, both writing the same Apache Iceberg tables so the numbers agree.">
+  <meta property="og:image" content="https://www.sarunshrestha.com.np/assets/img/projects/unified-streaming-batch.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://www.sarunshrestha.com.np/assets/img/projects/unified-streaming-batch.jpg">
+
+  <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+  <link rel="preload" href="/assets/fonts/plus-jakarta-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/assets/css/style.css?v=20261007-6">
+  <link rel="stylesheet" href="/assets/css/projects.css?v=20261007-6">
+  <script>
+    /* No intro greeting on this page; fall back to the plain page if the main script never starts. */
+    (function () {
+      var h = document.documentElement;
+      h.classList.remove('no-js');
+      h.classList.add('js', 'skip-loader');
+      setTimeout(function () {
+        if (!h.classList.contains('app-ready')) { h.classList.remove('js'); h.classList.add('no-js'); }
+      }, 6000);
+    })();
+  </script>
+</head>
+<body class="dash-page">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="noise-overlay" aria-hidden="true"></div>
+
+  <header class="ds-nav">
+    <a class="ds-logo" href="/" aria-label="Sarun Shrestha, home">
+      <span class="ds-logo-mark" aria-hidden="true">©</span>
+      <span class="ds-logo-text">Sarun Shrestha</span>
+    </a>
+    <nav aria-label="Primary">
+      <ul class="ds-nav-links">
+        <li><a class="ds-nav-link" href="/#about">About</a></li>
+        <li><a class="ds-nav-link is-active" href="/projects/">Projects</a></li>
+        <li><a class="ds-nav-link" href="/#experience">Experience</a></li>
+        <li><a class="ds-nav-link" href="/#skills">Skills</a></li>
+        <li><a class="ds-nav-link" href="/contact/">Contact</a></li>
+        <li>
+          <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="side-menu">
+            <span class="menu-toggle-icon" aria-hidden="true"></span>Menu
+          </button>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="side-menu-overlay" data-menu-close></div>
+  <aside class="side-menu" id="side-menu" role="dialog" aria-modal="true" aria-label="Menu">
+    <button class="side-menu-close" type="button" data-menu-close>
+      Close
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>
+    </button>
+    <p class="side-menu-label">Navigation</p>
+    <nav aria-label="Menu">
+      <ul>
+        <li><a class="side-menu-nav-link" href="/">Home</a></li>
+        <li><a class="side-menu-nav-link" href="/#about">About</a></li>
+        <li><a class="side-menu-nav-link is-active" href="/projects/">Projects</a></li>
+        <li><a class="side-menu-nav-link" href="/#experience">Experience</a></li>
+        <li><a class="side-menu-nav-link" href="/#skills">Skills</a></li>
+        <li><a class="side-menu-nav-link" href="/contact/">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="side-menu-socials">
+      <p class="side-menu-label">Socials</p>
+      <ul class="side-menu-social-links">
+        <li><a href="https://www.linkedin.com/in/sarun2003" target="_blank" rel="noopener">LinkedIn</a></li>
+        <li><a href="mailto:sarun.shrestha.dev@gmail.com">Email</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main id="main">
+    <section class="dash-hero" aria-labelledby="dash-title">
+      <div class="ds-container dash-container">
+        <nav class="dash-crumbs" aria-label="Breadcrumb">
+          <a href="/">Home</a><span aria-hidden="true">/</span><a href="/projects/">Projects</a><span aria-hidden="true">/</span><span aria-current="page">Streaming + Batch</span>
+        </nav>
+        <p class="dash-eyebrow">Project 06 · Streaming + batch</p>
+        <h1 class="dash-title" id="dash-title">Unified Streaming and Batch Pipeline</h1>
+        <p class="dash-summary">Web events arrive through Kafka and mobile app events through Amazon Kinesis. A Flink job deduplicates and sessionizes both streams in real time and writes events and sessions to Apache Iceberg, so product dashboards run a few seconds behind users. Every night a Spark job recomputes the previous day from the raw events, including the ones that arrived late, and atomically replaces those partitions of the same tables. One set of tables, one definition of a session, and two engines that check each other.</p>
+        <ul class="dash-stack" aria-label="Tech stack"><li>Apache Kafka</li><li>Amazon Kinesis</li><li>Apache Flink</li><li>Apache Iceberg</li><li>Apache Spark</li></ul>
+        <div class="dash-meta">
+          <span class="dash-badge"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 1.8h4M6.6 1.8v4.1L2.7 12.6a1.1 1.1 0 0 0 1 1.6h8.6a1.1 1.1 0 0 0 1-1.6L9.4 5.9V1.8"/><path d="M4.6 9.6h6.8"/></svg>Sample data</span>
+          <span class="dash-window">Tuesday, Oct 6, 2026 · reconciliation over the last 14 days</span>
+          <a class="pill pill--sm" href="events_hourly.csv" download><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M5 19.5h14"/></svg>Download data (CSV)</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="dash-body" data-dashboard data-src="data.json" aria-label="Dashboard">
+      <div class="ds-container dash-container">
+        <noscript><p class="dash-noscript">The charts need JavaScript. The same numbers are in <a href="events_hourly.csv">events_hourly.csv</a> and <a href="data.json">data.json</a>.</p></noscript>
+        <div class="dash-kpis" data-kpis></div>
+        <div class="dash-grid">
+          <article class="dash-panel span-8" aria-labelledby="p-events">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-events">Events per hour</h3>
+                <p class="dash-panel-sub">Oct 6, by source</p>
+              </div>
+            <button class="dash-toggle" type="button" data-toggle aria-pressed="false" hidden><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="1.5" y="2" width="9" height="8" rx="1.2"/><path d="M1.5 5h9M1.5 7.6h9M5 5v5"/></svg>Table</button>
+            </header>
+            <div class="dash-chart" data-chart="events" style="height:290px"></div>
+          </article>
+          <article class="dash-panel span-4" aria-labelledby="p-funnel">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-funnel">Purchase funnel</h3>
+                <p class="dash-panel-sub">Sessions reaching each step, Oct 6</p>
+              </div>
+            <button class="dash-toggle" type="button" data-toggle aria-pressed="false" hidden><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="1.5" y="2" width="9" height="8" rx="1.2"/><path d="M1.5 5h9M1.5 7.6h9M5 5v5"/></svg>Table</button>
+            </header>
+            <div class="dash-chart" data-chart="funnel" style="height:290px"></div>
+          </article>
+          <article class="dash-panel span-6" aria-labelledby="p-recon">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-recon">Stream vs batch difference</h3>
+                <p class="dash-panel-sub">Session counts per day; the nightly batch is the reference</p>
+              </div>
+            <button class="dash-toggle" type="button" data-toggle aria-pressed="false" hidden><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="1.5" y="2" width="9" height="8" rx="1.2"/><path d="M1.5 5h9M1.5 7.6h9M5 5v5"/></svg>Table</button>
+            </header>
+            <div class="dash-chart" data-chart="recon" style="height:260px"></div>
+          </article>
+          <article class="dash-panel span-6" aria-labelledby="p-lateness">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-lateness">How late events arrive</h3>
+                <p class="dash-panel-sub">Delay from event time to arrival, log scale</p>
+              </div>
+            <button class="dash-toggle" type="button" data-toggle aria-pressed="false" hidden><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="1.5" y="2" width="9" height="8" rx="1.2"/><path d="M1.5 5h9M1.5 7.6h9M5 5v5"/></svg>Table</button>
+            </header>
+            <div class="dash-chart" data-chart="lateness" style="height:260px"></div>
+          </article>
+          <article class="dash-panel span-5" aria-labelledby="p-channels">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-channels">Sessions by channel</h3>
+                <p class="dash-panel-sub">Oct 6</p>
+              </div>
+            <button class="dash-toggle" type="button" data-toggle aria-pressed="false" hidden><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="1.5" y="2" width="9" height="8" rx="1.2"/><path d="M1.5 5h9M1.5 7.6h9M5 5v5"/></svg>Table</button>
+            </header>
+            <div class="dash-chart" data-chart="channels" style="height:300px"></div>
+          </article>
+          <article class="dash-panel span-7" aria-labelledby="p-pages">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-pages">Top pages</h3>
+                <p class="dash-panel-sub">Oct 6, web and app combined</p>
+              </div>
+            </header>
+            <div class="dash-table-wrap" data-table="pages"></div>
+          </article>
+          <article class="dash-panel span-12" aria-labelledby="p-jobs">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-jobs">Jobs</h3>
+                <p class="dash-panel-sub">State at 02:30 on Oct 7</p>
+              </div>
+            </header>
+            <div class="dash-table-wrap" data-table="jobs"></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="dash-section" aria-labelledby="how-title">
+      <div class="ds-container dash-container">
+        <div class="dash-section-head">
+          <h2 class="dash-h2" id="how-title">How it works</h2>
+          <p class="dash-section-note">The stream is fast, the batch is complete, and both write the same tables.</p>
+        </div>
+        <ol class="flow">
+          <li class="flow-step">
+            <p class="flow-stage">01 · Collect</p>
+            <p class="flow-tech">Web and mobile SDKs</p>
+            <p class="flow-detail">Page views, searches, cart changes and purchases, each with a client event id and timestamp.</p>
+          </li>
+          <li class="flow-step">
+            <p class="flow-stage">02 · Ingest</p>
+            <p class="flow-tech">Kafka · Kinesis</p>
+            <p class="flow-detail">Web events land in Kafka. The mobile backend already runs on AWS, so app events arrive through Kinesis.</p>
+          </li>
+          <li class="flow-step">
+            <p class="flow-stage">03 · Stream</p>
+            <p class="flow-tech">Apache Flink</p>
+            <p class="flow-detail">Reads both streams, drops duplicates by event id, groups events into sessions with a 30-minute gap and commits every 30 s.</p>
+          </li>
+          <li class="flow-step">
+            <p class="flow-stage">04 · Store</p>
+            <p class="flow-tech">Apache Iceberg</p>
+            <p class="flow-detail">One set of tables for both engines: events, sessions and funnel steps, partitioned by day.</p>
+          </li>
+          <li class="flow-step">
+            <p class="flow-stage">05 · Recompute</p>
+            <p class="flow-tech">Apache Spark, nightly</p>
+            <p class="flow-detail">Rebuilds yesterday from raw events, late arrivals included, and replaces just those partitions.</p>
+          </li>
+          <li class="flow-step">
+            <p class="flow-stage">06 · Reconcile</p>
+            <p class="flow-tech">Spark SQL</p>
+            <p class="flow-detail">Compares the streaming and batch results per day and alerts above 0.1%.</p>
+          </li>
+        </ol>
+        <ul class="steps">
+          <li><strong>One definition of a session.</strong> Both engines use the same rules: dedupe on <code>event_id</code>, a 30-minute inactivity gap and the same session id, so on-time data gives the same answer in Flink and Spark.</li>
+          <li><strong>Late data is expected.</strong> Flink&#x27;s watermark waits 5 minutes. Anything later is still stored in the raw events table within seconds, and the nightly recompute adds it to sessions.</li>
+          <li><strong>Replace, don&#x27;t append.</strong> The batch job uses Iceberg&#x27;s dynamic partition overwrite, so a recomputed day replaces the old one in a single commit. Readers see either the old day or the new one, never a mix.</li>
+          <li><strong>The engines check each other.</strong> A daily job compares counts by day and platform, using Iceberg time travel to read the streaming result from before the overwrite.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="dash-section" aria-labelledby="model-title">
+      <div class="ds-container dash-container">
+        <div class="dash-section-head">
+          <h2 class="dash-h2" id="model-title">Data model</h2>
+          <p class="dash-section-note">Both engines write these Iceberg tables. The CSV download is the hourly rollup for the last 14 days.</p>
+        </div>
+        <div class="model-grid">
+          <article class="model-card">
+            <div class="model-card-head"><code>clickstream.events</code><span>Iceberg · appended by Flink · days(event_ts)</span></div>
+            <dl class="model-cols">
+              <div><dt><code>event_id</code><span class="model-type">string</span></dt><dd>Client-generated id; duplicates are dropped</dd></div>
+              <div><dt><code>anonymous_id / user_id</code><span class="model-type">string</span></dt><dd>Device id, and the account id once known</dd></div>
+              <div><dt><code>platform / source</code><span class="model-type">string</span></dt><dd><code>web</code> or <code>ios</code>/<code>android</code>; <code>kafka</code> or <code>kinesis</code></dd></div>
+              <div><dt><code>event_type</code><span class="model-type">string</span></dt><dd><code>page_view</code>, <code>search</code>, <code>add_to_cart</code>, <code>purchase</code> and others</dd></div>
+              <div><dt><code>page</code><span class="model-type">string</span></dt><dd>Route template, for example <code>/p/{product}</code></dd></div>
+              <div><dt><code>event_ts / ingest_ts</code><span class="model-type">timestamp</span></dt><dd>When it happened and when it arrived</dd></div>
+            </dl>
+          </article>
+          <article class="model-card">
+            <div class="model-card-head"><code>clickstream.sessions</code><span>Iceberg · Flink writes, Spark replaces nightly</span></div>
+            <dl class="model-cols">
+              <div><dt><code>session_id</code><span class="model-type">string</span></dt><dd>md5 of <code>anonymous_id</code> and the session start</dd></div>
+              <div><dt><code>anonymous_id</code><span class="model-type">string</span></dt><dd>Device</dd></div>
+              <div><dt><code>platform / channel</code><span class="model-type">string</span></dt><dd>Where the session happened and how it started</dd></div>
+              <div><dt><code>started_at / ended_at</code><span class="model-type">timestamp</span></dt><dd>First event, and last event plus the 30-minute gap</dd></div>
+              <div><dt><code>events / page_views</code><span class="model-type">int</span></dt><dd>Activity in the session</dd></div>
+              <div><dt><code>converted</code><span class="model-type">boolean</span></dt><dd>True when the session has a purchase</dd></div>
+            </dl>
+          </article>
+          <article class="model-card">
+            <div class="model-card-head"><code>events_hourly</code><span>Rollup · the CSV download</span></div>
+            <dl class="model-cols">
+              <div><dt><code>hour_start</code><span class="model-type">timestamp</span></dt><dd>Hour, US Central</dd></div>
+              <div><dt><code>web_events / mobile_events</code><span class="model-type">bigint</span></dt><dd>Events by source</dd></div>
+              <div><dt><code>sessions / purchases</code><span class="model-type">bigint</span></dt><dd>Sessions started and purchases made</dd></div>
+              <div><dt><code>late_events</code><span class="model-type">bigint</span></dt><dd>Events that arrived after the watermark</dd></div>
+            </dl>
+          </article>
+        </div>
+        <ul class="dataset-files" aria-label="Downloads">
+          <li><a href="events_hourly.csv" download><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M5 19.5h14"/></svg><span><strong>events_hourly.csv</strong> Web and mobile events, sessions, purchases and late events per hour for 14 days · 336 rows, 6 columns</span></a></li>
+          <li><a href="data.json"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M5 19.5h14"/></svg><span><strong>data.json</strong> Everything this dashboard draws: KPIs, chart series and tables</span></a></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="dash-section" aria-labelledby="code-title">
+      <div class="ds-container dash-container">
+        <div class="dash-section-head">
+          <h2 class="dash-h2" id="code-title">Key code</h2>
+          <p class="dash-section-note">The Flink sessionization job, the nightly Spark recompute, and the query that reconciles them.</p>
+        </div>
+        <div class="code-block" data-code-block>
+          <div class="code-bar">
+            <div class="code-tabs" role="tablist" aria-label="Source files">
+              <button class="code-tab" type="button" role="tab" id="tab-unified-streaming-batch-0" aria-controls="code-unified-streaming-batch-0" aria-selected="true" tabindex="0">sessionize.sql</button>
+              <button class="code-tab" type="button" role="tab" id="tab-unified-streaming-batch-1" aria-controls="code-unified-streaming-batch-1" aria-selected="false" tabindex="-1">recompute_day.py</button>
+              <button class="code-tab" type="button" role="tab" id="tab-unified-streaming-batch-2" aria-controls="code-unified-streaming-batch-2" aria-selected="false" tabindex="-1">reconcile.sql</button>
+            </div>
+            <button class="code-copy" type="button" data-copy hidden><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8" rx="1.6"/><path d="M10.5 5.5V3.6a1.1 1.1 0 0 0-1.1-1.1H3.6a1.1 1.1 0 0 0-1.1 1.1v5.8a1.1 1.1 0 0 0 1.1 1.1h1.9"/></svg><span>Copy</span></button>
+          </div>
+          <div class="code-panel" role="tabpanel" id="code-unified-streaming-batch-0" aria-labelledby="tab-unified-streaming-batch-0" tabindex="0">
+              <p class="code-panel-caption">Flink SQL: both sources unioned, deduplicated by <code>event_id</code>, and grouped into sessions with a 30-minute gap.</p>
+              <pre><code class="lang-sql"><span class="ln"><span class="tok-k">CREATE</span> CATALOG lake <span class="tok-k">WITH</span> (</span>
+<span class="ln">  <span class="tok-s">&#x27;type&#x27;</span> = <span class="tok-s">&#x27;iceberg&#x27;</span>,</span>
+<span class="ln">  <span class="tok-s">&#x27;catalog-impl&#x27;</span> = <span class="tok-s">&#x27;org.apache.iceberg.aws.glue.GlueCatalog&#x27;</span>,</span>
+<span class="ln">  <span class="tok-s">&#x27;io-impl&#x27;</span> = <span class="tok-s">&#x27;org.apache.iceberg.aws.s3.S3FileIO&#x27;</span>,</span>
+<span class="ln">  <span class="tok-s">&#x27;warehouse&#x27;</span> = <span class="tok-s">&#x27;s3://clickstream-lake/warehouse&#x27;</span></span>
+<span class="ln">);</span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-k">CREATE</span> TEMPORARY <span class="tok-k">TABLE</span> web_events (</span>
+<span class="ln">  event_id STRING, anonymous_id STRING, user_id STRING, event_type STRING, page STRING,</span>
+<span class="ln">  event_ts <span class="tok-f">TIMESTAMP_LTZ</span>(<span class="tok-n">3</span>),</span>
+<span class="ln">  WATERMARK FOR event_ts <span class="tok-k">AS</span> event_ts - <span class="tok-k">INTERVAL</span> <span class="tok-s">&#x27;5&#x27;</span> MINUTE</span>
+<span class="ln">) <span class="tok-k">WITH</span> (</span>
+<span class="ln">  <span class="tok-s">&#x27;connector&#x27;</span> = <span class="tok-s">&#x27;kafka&#x27;</span>,</span>
+<span class="ln">  <span class="tok-s">&#x27;topic&#x27;</span> = <span class="tok-s">&#x27;web.events&#x27;</span>,</span>
+<span class="ln">  <span class="tok-s">&#x27;properties.bootstrap.servers&#x27;</span> = <span class="tok-s">&#x27;kafka:9092&#x27;</span>,</span>
+<span class="ln">  <span class="tok-s">&#x27;properties.group.id&#x27;</span> = <span class="tok-s">&#x27;flink-sessionize&#x27;</span>,</span>
+<span class="ln">  <span class="tok-s">&#x27;scan.startup.mode&#x27;</span> = <span class="tok-s">&#x27;group-offsets&#x27;</span>,</span>
+<span class="ln">  <span class="tok-s">&#x27;properties.auto.offset.reset&#x27;</span> = <span class="tok-s">&#x27;latest&#x27;</span>,</span>
+<span class="ln">  <span class="tok-s">&#x27;format&#x27;</span> = <span class="tok-s">&#x27;json&#x27;</span></span>
+<span class="ln">);</span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-k">CREATE</span> TEMPORARY <span class="tok-k">TABLE</span> mobile_events (</span>
+<span class="ln">  event_id STRING, anonymous_id STRING, user_id STRING, event_type STRING, page STRING, os STRING,</span>
+<span class="ln">  event_ts <span class="tok-f">TIMESTAMP_LTZ</span>(<span class="tok-n">3</span>),</span>
+<span class="ln">  WATERMARK FOR event_ts <span class="tok-k">AS</span> event_ts - <span class="tok-k">INTERVAL</span> <span class="tok-s">&#x27;5&#x27;</span> MINUTE</span>
+<span class="ln">) <span class="tok-k">WITH</span> (</span>
+<span class="ln">  <span class="tok-s">&#x27;connector&#x27;</span> = <span class="tok-s">&#x27;kinesis&#x27;</span>,</span>
+<span class="ln">  <span class="tok-s">&#x27;stream.arn&#x27;</span> = <span class="tok-s">&#x27;arn:aws:kinesis:us-east-1:111122223333:stream/mobile-events&#x27;</span>,</span>
+<span class="ln">  <span class="tok-s">&#x27;aws.region&#x27;</span> = <span class="tok-s">&#x27;us-east-1&#x27;</span>,</span>
+<span class="ln">  <span class="tok-s">&#x27;source.init.position&#x27;</span> = <span class="tok-s">&#x27;LATEST&#x27;</span>,</span>
+<span class="ln">  <span class="tok-s">&#x27;format&#x27;</span> = <span class="tok-s">&#x27;json&#x27;</span></span>
+<span class="ln">);</span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-c">-- keep the first copy of each event (state expires after an hour)</span></span>
+<span class="ln"><span class="tok-k">SET</span> <span class="tok-s">&#x27;table.exec.state.ttl&#x27;</span> = <span class="tok-s">&#x27;1 h&#x27;</span>;</span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-k">CREATE</span> TEMPORARY <span class="tok-k">VIEW</span> all_events <span class="tok-k">AS</span></span>
+<span class="ln"><span class="tok-k">SELECT</span> * <span class="tok-k">FROM</span> (</span>
+<span class="ln">  <span class="tok-k">SELECT</span> *, <span class="tok-k">ROW_NUMBER</span>() <span class="tok-k">OVER</span> (<span class="tok-k">PARTITION</span> <span class="tok-k">BY</span> event_id <span class="tok-k">ORDER</span> <span class="tok-k">BY</span> proc_time) <span class="tok-k">AS</span> rn</span>
+<span class="ln">  <span class="tok-k">FROM</span> (</span>
+<span class="ln">    <span class="tok-k">SELECT</span> event_id, anonymous_id, user_id, event_type, page, <span class="tok-s">&#x27;web&#x27;</span> <span class="tok-k">AS</span> platform, event_ts, <span class="tok-f">PROCTIME</span>() <span class="tok-k">AS</span> proc_time <span class="tok-k">FROM</span> web_events</span>
+<span class="ln">    <span class="tok-k">UNION</span> <span class="tok-k">ALL</span></span>
+<span class="ln">    <span class="tok-k">SELECT</span> event_id, anonymous_id, user_id, event_type, page, os <span class="tok-k">AS</span> platform, event_ts, <span class="tok-f">PROCTIME</span>() <span class="tok-k">AS</span> proc_time <span class="tok-k">FROM</span> mobile_events</span>
+<span class="ln">  )</span>
+<span class="ln">) <span class="tok-k">WHERE</span> rn = <span class="tok-n">1</span>;</span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-k">INSERT</span> <span class="tok-k">INTO</span> lake.clickstream.sessions</span>
+<span class="ln"><span class="tok-k">SELECT</span></span>
+<span class="ln">  <span class="tok-f">MD5</span>(<span class="tok-f">CONCAT</span>(anonymous_id, <span class="tok-s">&#x27;|&#x27;</span>, <span class="tok-f">DATE_FORMAT</span>(window_start, <span class="tok-s">&#x27;yyyy-MM-dd HH:mm:ss.SSS&#x27;</span>))) <span class="tok-k">AS</span> session_id,</span>
+<span class="ln">  anonymous_id,</span>
+<span class="ln">  <span class="tok-f">FIRST_VALUE</span>(platform)                                <span class="tok-k">AS</span> platform,</span>
+<span class="ln">  window_start                                         <span class="tok-k">AS</span> started_at,</span>
+<span class="ln">  window_end                                           <span class="tok-k">AS</span> ended_at,</span>
+<span class="ln">  <span class="tok-f">COUNT</span>(*)                                             <span class="tok-k">AS</span> events,</span>
+<span class="ln">  <span class="tok-f">COUNT</span>(*) FILTER (<span class="tok-k">WHERE</span> event_type = <span class="tok-s">&#x27;page_view&#x27;</span>)     <span class="tok-k">AS</span> page_views,</span>
+<span class="ln">  <span class="tok-f">MAX</span>(<span class="tok-k">CASE</span> <span class="tok-k">WHEN</span> event_type = <span class="tok-s">&#x27;purchase&#x27;</span> <span class="tok-k">THEN</span> <span class="tok-n">1</span> <span class="tok-k">ELSE</span> <span class="tok-n">0</span> <span class="tok-k">END</span>) = <span class="tok-n">1</span> <span class="tok-k">AS</span> converted</span>
+<span class="ln"><span class="tok-k">FROM</span> <span class="tok-k">TABLE</span>(</span>
+<span class="ln">  <span class="tok-f">SESSION</span>(<span class="tok-k">TABLE</span> all_events <span class="tok-k">PARTITION</span> <span class="tok-k">BY</span> anonymous_id, <span class="tok-f">DESCRIPTOR</span>(event_ts), <span class="tok-k">INTERVAL</span> <span class="tok-s">&#x27;30&#x27;</span> MINUTES)</span>
+<span class="ln">)</span>
+<span class="ln"><span class="tok-k">GROUP</span> <span class="tok-k">BY</span> window_start, window_end, anonymous_id;</span></code></pre>
+            </div>
+          <div class="code-panel" role="tabpanel" id="code-unified-streaming-batch-1" aria-labelledby="tab-unified-streaming-batch-1" tabindex="0" hidden>
+              <p class="code-panel-caption">Spark, nightly: rebuild one day of sessions from raw events, late arrivals included, and replace that day in one commit.</p>
+              <pre><code class="lang-python"><span class="ln"><span class="tok-s">&quot;&quot;&quot;Recompute sessions for one day from raw events. Usage: recompute_day.py 2026-10-06&quot;&quot;&quot;</span></span>
+<span class="ln"><span class="tok-k">import</span> sys</span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-k">from</span> pyspark.sql <span class="tok-k">import</span> SparkSession, Window, functions <span class="tok-k">as</span> F</span>
+<span class="ln"></span>
+<span class="ln">day = sys.argv[<span class="tok-n">1</span>]</span>
+<span class="ln">spark = SparkSession.builder.<span class="tok-f">appName</span>(<span class="tok-s">f&quot;recompute-sessions-{day}&quot;</span>).<span class="tok-f">getOrCreate</span>()</span>
+<span class="ln">spark.conf.<span class="tok-f">set</span>(<span class="tok-s">&quot;spark.sql.sources.partitionOverwriteMode&quot;</span>, <span class="tok-s">&quot;dynamic&quot;</span>)</span>
+<span class="ln"></span>
+<span class="ln">events = (</span>
+<span class="ln">    spark.<span class="tok-f">table</span>(<span class="tok-s">&quot;lake.clickstream.events&quot;</span>)</span>
+<span class="ln">    .<span class="tok-f">where</span>(F.<span class="tok-f">to_date</span>(<span class="tok-s">&quot;event_ts&quot;</span>) == F.<span class="tok-f">lit</span>(day))</span>
+<span class="ln">    .<span class="tok-f">dropDuplicates</span>([<span class="tok-s">&quot;event_id&quot;</span>])</span>
+<span class="ln">)</span>
+<span class="ln"></span>
+<span class="ln">by_device = Window.<span class="tok-f">partitionBy</span>(<span class="tok-s">&quot;anonymous_id&quot;</span>).<span class="tok-f">orderBy</span>(<span class="tok-s">&quot;event_ts&quot;</span>)</span>
+<span class="ln">gap_s = F.<span class="tok-f">col</span>(<span class="tok-s">&quot;event_ts&quot;</span>).<span class="tok-f">cast</span>(<span class="tok-s">&quot;long&quot;</span>) - F.<span class="tok-f">lag</span>(F.<span class="tok-f">col</span>(<span class="tok-s">&quot;event_ts&quot;</span>).<span class="tok-f">cast</span>(<span class="tok-s">&quot;long&quot;</span>)).<span class="tok-f">over</span>(by_device)</span>
+<span class="ln"></span>
+<span class="ln">sessions = (</span>
+<span class="ln">    events</span>
+<span class="ln">    .<span class="tok-f">withColumn</span>(<span class="tok-s">&quot;is_new&quot;</span>, F.<span class="tok-f">when</span>(gap_s.<span class="tok-f">isNull</span>() | (gap_s &gt;= <span class="tok-n">30</span> * <span class="tok-n">60</span>), <span class="tok-n">1</span>).<span class="tok-f">otherwise</span>(<span class="tok-n">0</span>))</span>
+<span class="ln">    .<span class="tok-f">withColumn</span>(<span class="tok-s">&quot;session_n&quot;</span>, F.<span class="tok-f">sum</span>(<span class="tok-s">&quot;is_new&quot;</span>).<span class="tok-f">over</span>(by_device))</span>
+<span class="ln">    .<span class="tok-f">groupBy</span>(<span class="tok-s">&quot;anonymous_id&quot;</span>, <span class="tok-s">&quot;session_n&quot;</span>)</span>
+<span class="ln">    .<span class="tok-f">agg</span>(</span>
+<span class="ln">        F.<span class="tok-f">min</span>(<span class="tok-s">&quot;event_ts&quot;</span>).<span class="tok-f">alias</span>(<span class="tok-s">&quot;started_at&quot;</span>),</span>
+<span class="ln">        F.<span class="tok-f">max</span>(<span class="tok-s">&quot;event_ts&quot;</span>).<span class="tok-f">alias</span>(<span class="tok-s">&quot;last_event_at&quot;</span>),</span>
+<span class="ln">        F.<span class="tok-f">first</span>(<span class="tok-s">&quot;platform&quot;</span>, ignorenulls=<span class="tok-k">True</span>).<span class="tok-f">alias</span>(<span class="tok-s">&quot;platform&quot;</span>),</span>
+<span class="ln">        F.<span class="tok-f">count</span>(<span class="tok-s">&quot;*&quot;</span>).<span class="tok-f">alias</span>(<span class="tok-s">&quot;events&quot;</span>),</span>
+<span class="ln">        F.<span class="tok-f">count</span>(F.<span class="tok-f">when</span>(F.<span class="tok-f">col</span>(<span class="tok-s">&quot;event_type&quot;</span>) == <span class="tok-s">&quot;page_view&quot;</span>, <span class="tok-n">1</span>)).<span class="tok-f">alias</span>(<span class="tok-s">&quot;page_views&quot;</span>),</span>
+<span class="ln">        F.<span class="tok-f">max</span>(F.<span class="tok-f">col</span>(<span class="tok-s">&quot;event_type&quot;</span>) == <span class="tok-s">&quot;purchase&quot;</span>).<span class="tok-f">alias</span>(<span class="tok-s">&quot;converted&quot;</span>),</span>
+<span class="ln">    )</span>
+<span class="ln">    <span class="tok-c"># same id and end time as the streaming job</span></span>
+<span class="ln">    .<span class="tok-f">withColumn</span>(<span class="tok-s">&quot;session_id&quot;</span>, F.<span class="tok-f">md5</span>(F.<span class="tok-f">concat_ws</span>(<span class="tok-s">&quot;|&quot;</span>, <span class="tok-s">&quot;anonymous_id&quot;</span>, F.<span class="tok-f">date_format</span>(<span class="tok-s">&quot;started_at&quot;</span>, <span class="tok-s">&quot;yyyy-MM-dd HH:mm:ss.SSS&quot;</span>))))</span>
+<span class="ln">    .<span class="tok-f">withColumn</span>(<span class="tok-s">&quot;ended_at&quot;</span>, F.<span class="tok-f">col</span>(<span class="tok-s">&quot;last_event_at&quot;</span>) + F.<span class="tok-f">expr</span>(<span class="tok-s">&quot;INTERVAL 30 MINUTES&quot;</span>))</span>
+<span class="ln">    .<span class="tok-f">select</span>(<span class="tok-s">&quot;session_id&quot;</span>, <span class="tok-s">&quot;anonymous_id&quot;</span>, <span class="tok-s">&quot;platform&quot;</span>, <span class="tok-s">&quot;started_at&quot;</span>, <span class="tok-s">&quot;ended_at&quot;</span>, <span class="tok-s">&quot;events&quot;</span>, <span class="tok-s">&quot;page_views&quot;</span>, <span class="tok-s">&quot;converted&quot;</span>)</span>
+<span class="ln">)</span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-c"># Replaces only the partitions present in `sessions` (this day), atomically.</span></span>
+<span class="ln">sessions.<span class="tok-f">writeTo</span>(<span class="tok-s">&quot;lake.clickstream.sessions&quot;</span>).<span class="tok-f">overwritePartitions</span>()</span></code></pre>
+            </div>
+          <div class="code-panel" role="tabpanel" id="code-unified-streaming-batch-2" aria-labelledby="tab-unified-streaming-batch-2" tabindex="0" hidden>
+              <p class="code-panel-caption">Spark SQL with Iceberg time travel: the streaming result (before the overwrite) against the batch result (now).</p>
+              <pre><code class="lang-sql"><span class="ln"><span class="tok-k">WITH</span> <span class="tok-k">stream</span> <span class="tok-k">AS</span> (</span>
+<span class="ln">  <span class="tok-k">SELECT</span> platform, <span class="tok-f">count</span>(*) <span class="tok-k">AS</span> sessions</span>
+<span class="ln">  <span class="tok-k">FROM</span> lake.clickstream.sessions TIMESTAMP <span class="tok-k">AS</span> OF <span class="tok-s">&#x27;2026-10-07 01:39:00&#x27;</span></span>
+<span class="ln">  <span class="tok-k">WHERE</span> started_at &gt;= <span class="tok-s">&#x27;2026-10-06&#x27;</span> <span class="tok-k">AND</span> started_at &lt; <span class="tok-s">&#x27;2026-10-07&#x27;</span></span>
+<span class="ln">  <span class="tok-k">GROUP</span> <span class="tok-k">BY</span> platform</span>
+<span class="ln">),</span>
+<span class="ln">batch <span class="tok-k">AS</span> (</span>
+<span class="ln">  <span class="tok-k">SELECT</span> platform, <span class="tok-f">count</span>(*) <span class="tok-k">AS</span> sessions</span>
+<span class="ln">  <span class="tok-k">FROM</span> lake.clickstream.sessions</span>
+<span class="ln">  <span class="tok-k">WHERE</span> started_at &gt;= <span class="tok-s">&#x27;2026-10-06&#x27;</span> <span class="tok-k">AND</span> started_at &lt; <span class="tok-s">&#x27;2026-10-07&#x27;</span></span>
+<span class="ln">  <span class="tok-k">GROUP</span> <span class="tok-k">BY</span> platform</span>
+<span class="ln">)</span>
+<span class="ln"><span class="tok-k">SELECT</span></span>
+<span class="ln">  b.platform,</span>
+<span class="ln">  s.sessions                                               <span class="tok-k">AS</span> stream_sessions,</span>
+<span class="ln">  b.sessions                                               <span class="tok-k">AS</span> batch_sessions,</span>
+<span class="ln">  <span class="tok-f">round</span>(<span class="tok-f">abs</span>(b.sessions - s.sessions) / b.sessions, <span class="tok-n">5</span>)      <span class="tok-k">AS</span> difference,</span>
+<span class="ln">  <span class="tok-f">abs</span>(b.sessions - s.sessions) / b.sessions &gt; <span class="tok-n">0.001</span>        <span class="tok-k">AS</span> over_limit</span>
+<span class="ln"><span class="tok-k">FROM</span> batch <span class="tok-k">AS</span> b</span>
+<span class="ln"><span class="tok-k">JOIN</span> <span class="tok-k">stream</span> <span class="tok-k">AS</span> s <span class="tok-k">USING</span> (platform)</span>
+<span class="ln"><span class="tok-k">ORDER</span> <span class="tok-k">BY</span> difference <span class="tok-k">DESC</span>;</span></code></pre>
+            </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="dash-section" aria-labelledby="notes-title">
+      <div class="ds-container dash-container">
+        <div class="dash-section-head">
+          <h2 class="dash-h2" id="notes-title">Engineering notes</h2>
+        </div>
+        <div class="highlights">
+          <article class="highlight">
+            <h3>The Sep 30 upgrade</h3>
+            <p>Flink was upgraded and restarted from a savepoint. Nine minutes of mobile events were processed after their sessions had closed, so the streaming count for that day was 0.14% low until the nightly recompute corrected it.</p>
+          </article>
+          <article class="highlight">
+            <h3>Late, not lost</h3>
+            <p>About 0.8% of events arrive after the 5-minute watermark, mostly from mobile apps that were offline. They are in the raw events table within seconds and in sessions after the nightly run.</p>
+          </article>
+          <article class="highlight">
+            <h3>Seconds behind users</h3>
+            <p>Product dashboards read sessions about 4 seconds behind real time at p95, instead of waiting for a nightly job.</p>
+          </article>
+          <article class="highlight">
+            <h3>Cheap to reprocess</h3>
+            <p>Recomputing one day takes about 38 minutes. A month-long backfill runs as one job per day, in parallel, and each day lands as its own commit.</p>
+          </article>
+        </div>
+        <p class="data-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5"/><circle cx="12" cy="7.6" r=".6" fill="currentColor"/></svg><span><strong>About the data.</strong> Every number on this page is sample data from a seeded generator written for this project. It is shaped to behave like a real workload, with daily peaks, late events and the odd incident, but it does not come from any employer or client. Download it as <a href="events_hourly.csv">events_hourly.csv</a> or read <a href="data.json">data.json</a>.</span></p>
+      </div>
+    </section>
+
+    <div class="ds-container dash-container">
+      <nav class="dash-pager" aria-label="More projects">
+        <a href="/projects/data-quality-observability/"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg> Previous · 05</span><strong>Data Quality and Observability Platform</strong></a>
+        <a class="is-next" href="/projects/serverless-aws-pipeline/"><span>Next · 07 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span><strong>Serverless Data Pipeline on AWS</strong></a>
+      </nav>
+    </div>
+  </main>
+
+  <footer class="contact-page-footer">
+    <div class="ds-container dash-container">
+      <div class="contact-footer-bottom">
+        <div class="footer-meta-group">
+          <div>
+            <p class="footer-meta-label">Version</p>
+            <p class="footer-meta-value"><span data-year>2026</span> © Edition</p>
+          </div>
+        </div>
+        <div class="footer-meta-group">
+          <div>
+            <p class="footer-meta-label">Socials</p>
+            <ul class="footer-socials">
+              <li><a href="https://www.linkedin.com/in/sarun2003" target="_blank" rel="noopener">LinkedIn</a></li>
+              <li><a href="mailto:sarun.shrestha.dev@gmail.com">Email</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/assets/vendor/echarts.custom.min.js?v=5.6.0" defer></script>
+  <script src="/assets/js/dashboard.js?v=20261007-6" defer></script>
+  <script src="/assets/js/main.js?v=20261007-6" defer></script>
+</body>
+</html>

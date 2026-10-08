@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ETL with Orchestration and CI/CD — Sarun Shrestha</title>
+  <meta name="description" content="A subscription-revenue warehouse built with Airflow and dbt on Snowflake, tested and deployed through GitHub Actions, with Terraform managing every Snowflake object.">
+  <meta name="author" content="Sarun Shrestha">
+  <meta name="theme-color" content="#011013">
+  <meta name="color-scheme" content="dark light">
+  <link rel="canonical" href="https://www.sarunshrestha.com.np/projects/etl-orchestration-cicd/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.sarunshrestha.com.np/projects/etl-orchestration-cicd/">
+  <meta property="og:site_name" content="Sarun Shrestha">
+  <meta property="og:title" content="ETL with Orchestration and CI/CD — Sarun Shrestha">
+  <meta property="og:description" content="A subscription-revenue warehouse built with Airflow and dbt on Snowflake, tested and deployed through GitHub Actions, with Terraform managing every Snowflake object.">
+  <meta property="og:image" content="https://www.sarunshrestha.com.np/assets/img/projects/etl-orchestration-cicd.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://www.sarunshrestha.com.np/assets/img/projects/etl-orchestration-cicd.jpg">
+
+  <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+  <link rel="preload" href="/assets/fonts/plus-jakarta-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/assets/css/style.css?v=20261007-6">
+  <link rel="stylesheet" href="/assets/css/projects.css?v=20261007-6">
+  <script>
+    /* No intro greeting on this page; fall back to the plain page if the main script never starts. */
+    (function () {
+      var h = document.documentElement;
+      h.classList.remove('no-js');
+      h.classList.add('js', 'skip-loader');
+      setTimeout(function () {
+        if (!h.classList.contains('app-ready')) { h.classList.remove('js'); h.classList.add('no-js'); }
+      }, 6000);
+    })();
+  </script>
+</head>
+<body class="dash-page">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="noise-overlay" aria-hidden="true"></div>
+
+  <header class="ds-nav">
+    <a class="ds-logo" href="/" aria-label="Sarun Shrestha, home">
+      <span class="ds-logo-mark" aria-hidden="true">©</span>
+      <span class="ds-logo-text">Sarun Shrestha</span>
+    </a>
+    <nav aria-label="Primary">
+      <ul class="ds-nav-links">
+        <li><a class="ds-nav-link" href="/#about">About</a></li>
+        <li><a class="ds-nav-link is-active" href="/projects/">Projects</a></li>
+        <li><a class="ds-nav-link" href="/#experience">Experience</a></li>
+        <li><a class="ds-nav-link" href="/#skills">Skills</a></li>
+        <li><a class="ds-nav-link" href="/contact/">Contact</a></li>
+        <li>
+          <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="side-menu">
+            <span class="menu-toggle-icon" aria-hidden="true"></span>Menu
+          </button>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="side-menu-overlay" data-menu-close></div>
+  <aside class="side-menu" id="side-menu" role="dialog" aria-modal="true" aria-label="Menu">
+    <button class="side-menu-close" type="button" data-menu-close>
+      Close
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>
+    </button>
+    <p class="side-menu-label">Navigation</p>
+    <nav aria-label="Menu">
+      <ul>
+        <li><a class="side-menu-nav-link" href="/">Home</a></li>
+        <li><a class="side-menu-nav-link" href="/#about">About</a></li>
+        <li><a class="side-menu-nav-link is-active" href="/projects/">Projects</a></li>
+        <li><a class="side-menu-nav-link" href="/#experience">Experience</a></li>
+        <li><a class="side-menu-nav-link" href="/#skills">Skills</a></li>
+        <li><a class="side-menu-nav-link" href="/contact/">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="side-menu-socials">
+      <p class="side-menu-label">Socials</p>
+      <ul class="side-menu-social-links">
+        <li><a href="https://www.linkedin.com/in/sarun2003" target="_blank" rel="noopener">LinkedIn</a></li>
+        <li><a href="mailto:sarun.shrestha.dev@gmail.com">Email</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main id="main">
+    <section class="dash-hero" aria-labelledby="dash-title">
+      <div class="ds-container dash-container">
+        <nav class="dash-crumbs" aria-label="Breadcrumb">
+          <a href="/">Home</a><span aria-hidden="true">/</span><a href="/projects/">Projects</a><span aria-hidden="true">/</span><span aria-current="page">ETL + CI/CD</span>
+        </nav>
+        <p class="dash-eyebrow">Project 04 · Orchestration &amp; CI/CD</p>
+        <h1 class="dash-title" id="dash-title">ETL with Orchestration and CI/CD</h1>
+        <p class="dash-summary">Billing, product usage and CRM data are extracted every night and loaded into Snowflake by an Airflow DAG. dbt turns them into tested models, from staging views to a finance mart with monthly recurring revenue and churn. Every change goes through a pull request: CI lints the SQL, builds only the changed models and their children in a throwaway schema and runs their tests, and merging deploys to production. Terraform manages the warehouses, databases, roles and grants, so the platform is reviewed like the code that runs on it.</p>
+        <ul class="dash-stack" aria-label="Tech stack"><li>Apache Airflow</li><li>dbt</li><li>Snowflake</li><li>GitHub Actions</li><li>Terraform</li></ul>
+        <div class="dash-meta">
+          <span class="dash-badge"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 1.8h4M6.6 1.8v4.1L2.7 12.6a1.1 1.1 0 0 0 1 1.6h8.6a1.1 1.1 0 0 0 1-1.6L9.4 5.9V1.8"/><path d="M4.6 9.6h6.8"/></svg>Sample data</span>
+          <span class="dash-window">Last 14 nightly runs · Sep 23 – Oct 6, 2026</span>
+          <a class="pill pill--sm" href="dag_task_runs.csv" download><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M5 19.5h14"/></svg>Download data (CSV)</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="dash-body" data-dashboard data-src="data.json" aria-label="Dashboard">
+      <div class="ds-container dash-container">
+        <noscript><p class="dash-noscript">The charts need JavaScript. The same numbers are in <a href="dag_task_runs.csv">dag_task_runs.csv</a> and <a href="data.json">data.json</a>.</p></noscript>
+        <div class="dash-kpis" data-kpis></div>
+        <div class="dash-grid">
+          <article class="dash-panel span-12" aria-labelledby="p-grid">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-grid">Nightly DAG: task status</h3>
+                <p class="dash-panel-sub"><code>elt_nightly</code>, one column per run, final state of each task</p>
+              </div>
+            <button class="dash-toggle" type="button" data-toggle aria-pressed="false" hidden><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="1.5" y="2" width="9" height="8" rx="1.2"/><path d="M1.5 5h9M1.5 7.6h9M5 5v5"/></svg>Table</button>
+            </header>
+            <div class="dash-chart" data-chart="grid" style="height:340px"></div>
+          </article>
+          <article class="dash-panel span-12" aria-labelledby="p-lineage">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-lineage">dbt lineage</h3>
+                <p class="dash-panel-sub">Sources to the reports that depend on them; amber outlines carry test warnings</p>
+              </div>
+            <button class="dash-toggle" type="button" data-toggle aria-pressed="false" hidden><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="1.5" y="2" width="9" height="8" rx="1.2"/><path d="M1.5 5h9M1.5 7.6h9M5 5v5"/></svg>Table</button>
+            </header>
+            <div class="dash-chart" data-chart="lineage" style="height:360px"></div>
+          </article>
+          <article class="dash-panel span-6" aria-labelledby="p-runtime">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-runtime">Run time per night</h3>
+                <p class="dash-panel-sub">Whole DAG, with the 14-run average. Sep 29 (red) stopped early.</p>
+              </div>
+            <button class="dash-toggle" type="button" data-toggle aria-pressed="false" hidden><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="1.5" y="2" width="9" height="8" rx="1.2"/><path d="M1.5 5h9M1.5 7.6h9M5 5v5"/></svg>Table</button>
+            </header>
+            <div class="dash-chart" data-chart="runtime" style="height:260px"></div>
+          </article>
+          <article class="dash-panel span-6" aria-labelledby="p-mrr">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-mrr">Monthly recurring revenue</h3>
+                <p class="dash-panel-sub">Month-end MRR from <code>fct_mrr</code></p>
+              </div>
+            <button class="dash-toggle" type="button" data-toggle aria-pressed="false" hidden><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="1.5" y="2" width="9" height="8" rx="1.2"/><path d="M1.5 5h9M1.5 7.6h9M5 5v5"/></svg>Table</button>
+            </header>
+            <div class="dash-chart" data-chart="mrr" style="height:260px"></div>
+          </article>
+          <article class="dash-panel span-5" aria-labelledby="p-tests">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-tests">dbt tests, latest run</h3>
+                <p class="dash-panel-sub">Oct 6: 413 of 415 passed, 2 warned</p>
+              </div>
+            </header>
+            <div class="dash-table-wrap" data-table="tests"></div>
+          </article>
+          <article class="dash-panel span-7" aria-labelledby="p-terraform">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-terraform">Snowflake objects in Terraform</h3>
+                <p class="dash-panel-sub">Nightly <code>terraform plan</code> checks for drift</p>
+              </div>
+            </header>
+            <div class="dash-table-wrap" data-table="terraform"></div>
+          </article>
+          <article class="dash-panel span-12" aria-labelledby="p-ci">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-ci">Recent pull requests</h3>
+                <p class="dash-panel-sub">CI checks and production deploys</p>
+              </div>
+            </header>
+            <div class="dash-table-wrap" data-table="ci"></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="dash-section" aria-labelledby="how-title">
+      <div class="ds-container dash-container">
+        <div class="dash-section-head">
+          <h2 class="dash-h2" id="how-title">How it works</h2>
+          <p class="dash-section-note">Code review covers everything: the SQL, the DAG and the infrastructure.</p>
+        </div>
+        <ol class="flow">
+          <li class="flow-step">
+            <p class="flow-stage">01 · Extract</p>
+            <p class="flow-tech">Python tasks on Airflow</p>
+            <p class="flow-detail">Billing API, product events and CRM exports pulled nightly to S3 as JSON, in parallel, with retries and backoff.</p>
+          </li>
+          <li class="flow-step">
+            <p class="flow-stage">02 · Load</p>
+            <p class="flow-tech">Snowflake COPY INTO</p>
+            <p class="flow-detail">Raw tables keep each file&#x27;s rows plus load metadata. Loads are idempotent by file name.</p>
+          </li>
+          <li class="flow-step">
+            <p class="flow-stage">03 · Transform</p>
+            <p class="flow-tech">dbt</p>
+            <p class="flow-detail">64 models, from staging views to incremental marts, with 415 tests and freshness checks on every source.</p>
+          </li>
+          <li class="flow-step">
+            <p class="flow-stage">04 · Orchestrate</p>
+            <p class="flow-tech">Apache Airflow</p>
+            <p class="flow-detail">One nightly DAG with retries for flaky APIs, timeouts on long steps and alerts on failure.</p>
+          </li>
+          <li class="flow-step">
+            <p class="flow-stage">05 · Test &amp; deploy</p>
+            <p class="flow-tech">GitHub Actions</p>
+            <p class="flow-detail">Every pull request lints the SQL and builds only changed models and their children in a throwaway schema.</p>
+          </li>
+          <li class="flow-step">
+            <p class="flow-stage">06 · Provision</p>
+            <p class="flow-tech">Terraform</p>
+            <p class="flow-detail">Warehouses, databases, roles and grants are code, reviewed and applied from the same pipeline.</p>
+          </li>
+        </ol>
+        <ul class="steps">
+          <li><strong>Slim CI.</strong> Pull requests build <code>state:modified+</code> against production&#x27;s manifest and defer everything else to prod, so a typical check takes 6 to 8 minutes instead of a full rebuild.</li>
+          <li><strong>Idempotent loads.</strong> COPY INTO skips files it has already loaded and every run is keyed by its logical date, so reruns and backfills never duplicate rows.</li>
+          <li><strong>Tests that block.</strong> <code>unique</code> and <code>relationships</code> tests fail the build; softer checks only warn. The Sep 29 failure stopped bad numbers before the finance dashboard refreshed.</li>
+          <li><strong>Everything is code.</strong> Terraform owns warehouses, roles and grants. A nightly <code>terraform plan</code> reports drift, like the grant someone changed by hand.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="dash-section" aria-labelledby="model-title">
+      <div class="ds-container dash-container">
+        <div class="dash-section-head">
+          <h2 class="dash-h2" id="model-title">Data model</h2>
+          <p class="dash-section-note">A raw table as loaded, the MRR mart dbt builds from it, and the Airflow task history behind the status grid (the CSV download).</p>
+        </div>
+        <div class="model-grid">
+          <article class="model-card">
+            <div class="model-card-head"><code>raw.billing_invoices</code><span>Snowflake table · loaded by COPY INTO</span></div>
+            <dl class="model-cols">
+              <div><dt><code>payload</code><span class="model-type">variant</span></dt><dd>One invoice as returned by the billing API</dd></div>
+              <div><dt><code>_file_name</code><span class="model-type">varchar</span></dt><dd>Source file in the S3 stage</dd></div>
+              <div><dt><code>_file_row</code><span class="model-type">number</span></dt><dd>Row number within the file</dd></div>
+              <div><dt><code>_loaded_at</code><span class="model-type">timestamp_ltz</span></dt><dd>Load time</dd></div>
+            </dl>
+          </article>
+          <article class="model-card">
+            <div class="model-card-head"><code>marts.fct_mrr</code><span>dbt incremental · merge on month + account</span></div>
+            <dl class="model-cols">
+              <div><dt><code>month</code><span class="model-type">date</span></dt><dd>First day of the month</dd></div>
+              <div><dt><code>account_id</code><span class="model-type">varchar</span></dt><dd>Customer account</dd></div>
+              <div><dt><code>mrr_usd / prev_mrr_usd</code><span class="model-type">number(12,2)</span></dt><dd>MRR this month and last month</dd></div>
+              <div><dt><code>mrr_change_usd</code><span class="model-type">number(12,2)</span></dt><dd>Difference between the two</dd></div>
+              <div><dt><code>movement</code><span class="model-type">varchar</span></dt><dd><code>new</code>, <code>expansion</code>, <code>contraction</code>, <code>churn</code> or <code>flat</code></dd></div>
+            </dl>
+          </article>
+          <article class="model-card">
+            <div class="model-card-head"><code>dag_task_runs</code><span>Airflow task history · the CSV download</span></div>
+            <dl class="model-cols">
+              <div><dt><code>run_date</code><span class="model-type">date</span></dt><dd>Logical date of the nightly run</dd></div>
+              <div><dt><code>task_id</code><span class="model-type">string</span></dt><dd>Task, with the mapped source for extracts</dd></div>
+              <div><dt><code>state</code><span class="model-type">string</span></dt><dd><code>success</code>, <code>failed</code> or <code>upstream_failed</code></dd></div>
+              <div><dt><code>try_number</code><span class="model-type">int</span></dt><dd>2 means the task succeeded on retry</dd></div>
+              <div><dt><code>started_at / duration_s</code><span class="model-type">timestamp / int</span></dt><dd>When it started and how long it ran</dd></div>
+            </dl>
+          </article>
+        </div>
+        <ul class="dataset-files" aria-label="Downloads">
+          <li><a href="dag_task_runs.csv" download><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M5 19.5h14"/></svg><span><strong>dag_task_runs.csv</strong> Every task of the last 14 nightly runs, with state, tries and duration · 126 rows, 6 columns</span></a></li>
+          <li><a href="data.json"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M5 19.5h14"/></svg><span><strong>data.json</strong> Everything this dashboard draws: KPIs, chart series and tables</span></a></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="dash-section" aria-labelledby="code-title">
+      <div class="ds-container dash-container">
+        <div class="dash-section-head">
+          <h2 class="dash-h2" id="code-title">Key code</h2>
+          <p class="dash-section-note">The nightly DAG, the MRR model, the CI workflow and the Terraform for Snowflake.</p>
+        </div>
+        <div class="code-block" data-code-block>
+          <div class="code-bar">
+            <div class="code-tabs" role="tablist" aria-label="Source files">
+              <button class="code-tab" type="button" role="tab" id="tab-etl-orchestration-cicd-0" aria-controls="code-etl-orchestration-cicd-0" aria-selected="true" tabindex="0">elt_nightly.py</button>
+              <button class="code-tab" type="button" role="tab" id="tab-etl-orchestration-cicd-1" aria-controls="code-etl-orchestration-cicd-1" aria-selected="false" tabindex="-1">fct_mrr.sql</button>
+              <button class="code-tab" type="button" role="tab" id="tab-etl-orchestration-cicd-2" aria-controls="code-etl-orchestration-cicd-2" aria-selected="false" tabindex="-1">ci.yml</button>
+              <button class="code-tab" type="button" role="tab" id="tab-etl-orchestration-cicd-3" aria-controls="code-etl-orchestration-cicd-3" aria-selected="false" tabindex="-1">snowflake.tf</button>
+            </div>
+            <button class="code-copy" type="button" data-copy hidden><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8" rx="1.6"/><path d="M10.5 5.5V3.6a1.1 1.1 0 0 0-1.1-1.1H3.6a1.1 1.1 0 0 0-1.1 1.1v5.8a1.1 1.1 0 0 0 1.1 1.1h1.9"/></svg><span>Copy</span></button>
+          </div>
+          <div class="code-panel" role="tabpanel" id="code-etl-orchestration-cicd-0" aria-labelledby="tab-etl-orchestration-cicd-0" tabindex="0">
+              <p class="code-panel-caption">The nightly Airflow DAG. Extracts fan out per source, then load, freshness checks and dbt build run in order.</p>
+              <pre><code class="lang-python"><span class="ln"><span class="tok-s">&quot;&quot;&quot;Nightly ELT: extract to S3, COPY INTO Snowflake, dbt build, publish.&quot;&quot;&quot;</span></span>
+<span class="ln"><span class="tok-k">from</span> datetime <span class="tok-k">import</span> datetime, timedelta</span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-k">from</span> airflow.decorators <span class="tok-k">import</span> dag, task</span>
+<span class="ln"><span class="tok-k">from</span> airflow.operators.bash <span class="tok-k">import</span> BashOperator</span>
+<span class="ln"><span class="tok-k">from</span> airflow.providers.common.sql.operators.sql <span class="tok-k">import</span> SQLExecuteQueryOperator</span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-k">from</span> include.extract <span class="tok-k">import</span> extract_to_s3  <span class="tok-c"># writes JSON files to s3://raw-landing/&lt;source&gt;/&lt;ds&gt;/</span></span>
+<span class="ln"></span>
+<span class="ln">DBT = {<span class="tok-s">&quot;cwd&quot;</span>: <span class="tok-s">&quot;/opt/dbt&quot;</span>, <span class="tok-s">&quot;env&quot;</span>: {<span class="tok-s">&quot;DBT_TARGET&quot;</span>: <span class="tok-s">&quot;prod&quot;</span>}, <span class="tok-s">&quot;append_env&quot;</span>: <span class="tok-k">True</span>}</span>
+<span class="ln"></span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-f">@dag</span>(</span>
+<span class="ln">    schedule=<span class="tok-s">&quot;0 2 * * *&quot;</span>,</span>
+<span class="ln">    start_date=<span class="tok-f">datetime</span>(<span class="tok-n">2026</span>, <span class="tok-n">1</span>, <span class="tok-n">1</span>),</span>
+<span class="ln">    catchup=<span class="tok-k">False</span>,</span>
+<span class="ln">    max_active_runs=<span class="tok-n">1</span>,</span>
+<span class="ln">    dagrun_timeout=<span class="tok-f">timedelta</span>(hours=<span class="tok-n">2</span>),</span>
+<span class="ln">    default_args={<span class="tok-s">&quot;retries&quot;</span>: <span class="tok-n">2</span>, <span class="tok-s">&quot;retry_delay&quot;</span>: <span class="tok-f">timedelta</span>(minutes=<span class="tok-n">5</span>), <span class="tok-s">&quot;retry_exponential_backoff&quot;</span>: <span class="tok-k">True</span>},</span>
+<span class="ln">    tags=[<span class="tok-s">&quot;elt&quot;</span>, <span class="tok-s">&quot;finance&quot;</span>],</span>
+<span class="ln">)</span>
+<span class="ln"><span class="tok-k">def</span> <span class="tok-f">elt_nightly</span>():</span>
+<span class="ln">    <span class="tok-f">@task</span>(pool=<span class="tok-s">&quot;api_extracts&quot;</span>)</span>
+<span class="ln">    <span class="tok-k">def</span> <span class="tok-f">extract</span>(source: str, ds=<span class="tok-k">None</span>) -&gt; str:</span>
+<span class="ln">        <span class="tok-k">return</span> <span class="tok-f">extract_to_s3</span>(source, ds)</span>
+<span class="ln"></span>
+<span class="ln">    files = extract.<span class="tok-f">expand</span>(source=[<span class="tok-s">&quot;billing&quot;</span>, <span class="tok-s">&quot;product_events&quot;</span>, <span class="tok-s">&quot;crm&quot;</span>])</span>
+<span class="ln"></span>
+<span class="ln">    load_raw = <span class="tok-f">SQLExecuteQueryOperator</span>(</span>
+<span class="ln">        task_id=<span class="tok-s">&quot;load_raw&quot;</span>,</span>
+<span class="ln">        conn_id=<span class="tok-s">&quot;snowflake_loader&quot;</span>,</span>
+<span class="ln">        sql=<span class="tok-s">&quot;sql/copy_into_raw.sql&quot;</span>,  <span class="tok-c"># COPY INTO raw.&lt;table&gt; FROM @landing/&lt;source&gt;/{{ ds }}/</span></span>
+<span class="ln">    )</span>
+<span class="ln">    freshness = <span class="tok-f">BashOperator</span>(task_id=<span class="tok-s">&quot;dbt_source_freshness&quot;</span>, bash_command=<span class="tok-s">&quot;dbt source freshness&quot;</span>, **DBT)</span>
+<span class="ln">    staging = <span class="tok-f">BashOperator</span>(task_id=<span class="tok-s">&quot;dbt_build_staging&quot;</span>, bash_command=<span class="tok-s">&quot;dbt build --select staging&quot;</span>, **DBT)</span>
+<span class="ln">    marts = <span class="tok-f">BashOperator</span>(</span>
+<span class="ln">        task_id=<span class="tok-s">&quot;dbt_build_marts&quot;</span>,</span>
+<span class="ln">        bash_command=<span class="tok-s">&quot;dbt build --select intermediate+ --exclude staging&quot;</span>,</span>
+<span class="ln">        execution_timeout=<span class="tok-f">timedelta</span>(hours=<span class="tok-n">1</span>),</span>
+<span class="ln">        **DBT,</span>
+<span class="ln">    )</span>
+<span class="ln">    publish = <span class="tok-f">BashOperator</span>(task_id=<span class="tok-s">&quot;publish_exposures&quot;</span>, bash_command=<span class="tok-s">&quot;python publish_exposures.py&quot;</span>, **DBT)</span>
+<span class="ln"></span>
+<span class="ln">    <span class="tok-f">@task</span></span>
+<span class="ln">    <span class="tok-k">def</span> <span class="tok-f">notify_finance</span>(ds=<span class="tok-k">None</span>):</span>
+<span class="ln">        <span class="tok-k">from</span> include.alerts <span class="tok-k">import</span> post_message</span>
+<span class="ln">        <span class="tok-f">post_message</span>(<span class="tok-s">&quot;#finance-data&quot;</span>, <span class="tok-s">f&quot;Finance mart refreshed for {ds}.&quot;</span>)</span>
+<span class="ln"></span>
+<span class="ln">    files &gt;&gt; load_raw &gt;&gt; freshness &gt;&gt; staging &gt;&gt; marts &gt;&gt; publish &gt;&gt; <span class="tok-f">notify_finance</span>()</span>
+<span class="ln"></span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-f">elt_nightly</span>()</span></code></pre>
+            </div>
+          <div class="code-panel" role="tabpanel" id="code-etl-orchestration-cicd-1" aria-labelledby="tab-etl-orchestration-cicd-1" tabindex="0" hidden>
+              <p class="code-panel-caption">dbt model: MRR per account and month, with every month filled in so churn shows up as a drop to zero.</p>
+              <pre><code class="lang-sql"><span class="ln"><span class="tok-p">{{</span> <span class="tok-f">config</span>(</span>
+<span class="ln">    <span class="tok-k">materialized</span>=<span class="tok-s">&#x27;incremental&#x27;</span>,</span>
+<span class="ln">    incremental_strategy=<span class="tok-s">&#x27;merge&#x27;</span>,</span>
+<span class="ln">    unique_key=[<span class="tok-s">&#x27;month&#x27;</span>, <span class="tok-s">&#x27;account_id&#x27;</span>],</span>
+<span class="ln">    on_schema_change=<span class="tok-s">&#x27;append_new_columns&#x27;</span></span>
+<span class="ln">) <span class="tok-p">}}</span></span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-k">with</span> monthly <span class="tok-k">as</span> (</span>
+<span class="ln">    <span class="tok-k">select</span> account_id, month, <span class="tok-f">sum</span>(mrr_usd) <span class="tok-k">as</span> mrr_usd</span>
+<span class="ln">    <span class="tok-k">from</span> <span class="tok-p">{{</span> <span class="tok-f">ref</span>(<span class="tok-s">&#x27;int_subscription_periods&#x27;</span>) <span class="tok-p">}}</span></span>
+<span class="ln">    <span class="tok-k">group</span> <span class="tok-k">by</span> <span class="tok-n">1</span>, <span class="tok-n">2</span></span>
+<span class="ln">),</span>
+<span class="ln"></span>
+<span class="ln">months <span class="tok-k">as</span> (</span>
+<span class="ln">    <span class="tok-k">select</span> <span class="tok-k">distinct</span> month <span class="tok-k">from</span> <span class="tok-p">{{</span> <span class="tok-f">ref</span>(<span class="tok-s">&#x27;int_subscription_periods&#x27;</span>) <span class="tok-p">}}</span></span>
+<span class="ln">),</span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-c">-- every account in every month from its first month on, so churn appears as zero</span></span>
+<span class="ln">spine <span class="tok-k">as</span> (</span>
+<span class="ln">    <span class="tok-k">select</span> a.account_id, m.month</span>
+<span class="ln">    <span class="tok-k">from</span> (<span class="tok-k">select</span> account_id, <span class="tok-f">min</span>(month) <span class="tok-k">as</span> first_month <span class="tok-k">from</span> monthly <span class="tok-k">group</span> <span class="tok-k">by</span> <span class="tok-n">1</span>) <span class="tok-k">as</span> a</span>
+<span class="ln">    <span class="tok-k">join</span> months <span class="tok-k">as</span> m <span class="tok-k">on</span> m.month &gt;= a.first_month</span>
+<span class="ln">),</span>
+<span class="ln"></span>
+<span class="ln">filled <span class="tok-k">as</span> (</span>
+<span class="ln">    <span class="tok-k">select</span> s.account_id, s.month, <span class="tok-f">coalesce</span>(m.mrr_usd, <span class="tok-n">0</span>) <span class="tok-k">as</span> mrr_usd</span>
+<span class="ln">    <span class="tok-k">from</span> spine <span class="tok-k">as</span> s</span>
+<span class="ln">    <span class="tok-k">left</span> <span class="tok-k">join</span> monthly <span class="tok-k">as</span> m <span class="tok-k">using</span> (account_id, month)</span>
+<span class="ln">),</span>
+<span class="ln"></span>
+<span class="ln">movements <span class="tok-k">as</span> (</span>
+<span class="ln">    <span class="tok-k">select</span></span>
+<span class="ln">        month,</span>
+<span class="ln">        account_id,</span>
+<span class="ln">        mrr_usd,</span>
+<span class="ln">        <span class="tok-f">coalesce</span>(<span class="tok-f">lag</span>(mrr_usd) <span class="tok-k">over</span> (<span class="tok-k">partition</span> <span class="tok-k">by</span> account_id <span class="tok-k">order</span> <span class="tok-k">by</span> month), <span class="tok-n">0</span>) <span class="tok-k">as</span> prev_mrr_usd</span>
+<span class="ln">    <span class="tok-k">from</span> filled</span>
+<span class="ln">)</span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-k">select</span></span>
+<span class="ln">    month,</span>
+<span class="ln">    account_id,</span>
+<span class="ln">    mrr_usd,</span>
+<span class="ln">    prev_mrr_usd,</span>
+<span class="ln">    mrr_usd - prev_mrr_usd <span class="tok-k">as</span> mrr_change_usd,</span>
+<span class="ln">    <span class="tok-k">case</span></span>
+<span class="ln">        <span class="tok-k">when</span> prev_mrr_usd = <span class="tok-n">0</span> <span class="tok-k">and</span> mrr_usd &gt; <span class="tok-n">0</span> <span class="tok-k">then</span> <span class="tok-s">&#x27;new&#x27;</span></span>
+<span class="ln">        <span class="tok-k">when</span> prev_mrr_usd &gt; <span class="tok-n">0</span> <span class="tok-k">and</span> mrr_usd = <span class="tok-n">0</span> <span class="tok-k">then</span> <span class="tok-s">&#x27;churn&#x27;</span></span>
+<span class="ln">        <span class="tok-k">when</span> mrr_usd &gt; prev_mrr_usd <span class="tok-k">then</span> <span class="tok-s">&#x27;expansion&#x27;</span></span>
+<span class="ln">        <span class="tok-k">when</span> mrr_usd &lt; prev_mrr_usd <span class="tok-k">then</span> <span class="tok-s">&#x27;contraction&#x27;</span></span>
+<span class="ln">        <span class="tok-k">else</span> <span class="tok-s">&#x27;flat&#x27;</span></span>
+<span class="ln">    <span class="tok-k">end</span> <span class="tok-k">as</span> movement</span>
+<span class="ln"><span class="tok-k">from</span> movements</span>
+<span class="ln"><span class="tok-k">where</span> <span class="tok-k">not</span> (mrr_usd = <span class="tok-n">0</span> <span class="tok-k">and</span> prev_mrr_usd = <span class="tok-n">0</span>)  <span class="tok-c">-- nothing to report after an account churns</span></span>
+<span class="ln"><span class="tok-p">{%</span> <span class="tok-k">if</span> <span class="tok-f">is_incremental</span>() <span class="tok-p">%}</span></span>
+<span class="ln">  <span class="tok-k">and</span> month &gt;= (<span class="tok-k">select</span> <span class="tok-f">dateadd</span>(month, -<span class="tok-n">1</span>, <span class="tok-f">max</span>(month)) <span class="tok-k">from</span> <span class="tok-p">{{</span> this <span class="tok-p">}}</span>)</span>
+<span class="ln"><span class="tok-p">{%</span> endif <span class="tok-p">%}</span></span></code></pre>
+            </div>
+          <div class="code-panel" role="tabpanel" id="code-etl-orchestration-cicd-2" aria-labelledby="tab-etl-orchestration-cicd-2" tabindex="0" hidden>
+              <p class="code-panel-caption">GitHub Actions: pull requests build only what changed in a schema of their own; merges to main deploy dbt and apply Terraform.</p>
+              <pre><code class="lang-yaml"><span class="ln"><span class="tok-p">name</span>: analytics-ci</span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-p">on</span>:</span>
+<span class="ln">  <span class="tok-p">pull_request</span>:</span>
+<span class="ln">    <span class="tok-p">paths</span>: [<span class="tok-s">&quot;dbt/**&quot;</span>, <span class="tok-s">&quot;infra/**&quot;</span>]</span>
+<span class="ln">  <span class="tok-p">push</span>:</span>
+<span class="ln">    <span class="tok-p">branches</span>: [main]</span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-p">concurrency</span>:</span>
+<span class="ln">  <span class="tok-p">group</span>: ci-${{ github.ref }}</span>
+<span class="ln">  <span class="tok-p">cancel-in-progress</span>: <span class="tok-k">true</span></span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-p">permissions</span>:</span>
+<span class="ln">  <span class="tok-p">id-token</span>: write   <span class="tok-c"># OIDC to AWS for the dbt artifacts bucket</span></span>
+<span class="ln">  <span class="tok-p">contents</span>: read</span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-p">jobs</span>:</span>
+<span class="ln">  <span class="tok-p">dbt</span>:</span>
+<span class="ln">    <span class="tok-p">runs-on</span>: ubuntu-latest</span>
+<span class="ln">    <span class="tok-p">defaults</span>:</span>
+<span class="ln">      <span class="tok-p">run</span>:</span>
+<span class="ln">        <span class="tok-p">working-directory</span>: dbt</span>
+<span class="ln">    <span class="tok-p">env</span>:</span>
+<span class="ln">      <span class="tok-p">SNOWFLAKE_ACCOUNT</span>: ${{ secrets.SNOWFLAKE_ACCOUNT }}</span>
+<span class="ln">      <span class="tok-p">SNOWFLAKE_USER</span>: ${{ secrets.SNOWFLAKE_CI_USER }}</span>
+<span class="ln">      <span class="tok-p">SNOWFLAKE_PRIVATE_KEY</span>: ${{ secrets.SNOWFLAKE_CI_KEY }}</span>
+<span class="ln">    <span class="tok-p">steps</span>:</span>
+<span class="ln">      - <span class="tok-p">uses</span>: actions/checkout@v4</span>
+<span class="ln">      - <span class="tok-p">uses</span>: actions/setup-python@v5</span>
+<span class="ln">        <span class="tok-p">with</span>:</span>
+<span class="ln">          <span class="tok-p">python-version</span>: <span class="tok-s">&quot;3.12&quot;</span></span>
+<span class="ln">      - <span class="tok-p">uses</span>: aws-actions/configure-aws-credentials@v4</span>
+<span class="ln">        <span class="tok-p">with</span>:</span>
+<span class="ln">          <span class="tok-p">role-to-assume</span>: ${{ secrets.AWS_ARTIFACTS_ROLE }}</span>
+<span class="ln">          <span class="tok-p">aws-region</span>: us-east-<span class="tok-n">1</span></span>
+<span class="ln">      - <span class="tok-p">run</span>: pip install -r requirements.txt</span>
+<span class="ln">      - <span class="tok-p">run</span>: sqlfluff lint models --dialect snowflake</span>
+<span class="ln">      - <span class="tok-p">run</span>: dbt deps</span>
+<span class="ln">      - <span class="tok-p">run</span>: aws s3 cp s3://analytics-dbt-artifacts/prod/manifest.json prod-state/manifest.json</span>
+<span class="ln"></span>
+<span class="ln">      - <span class="tok-p">name</span>: Build changed models and their children</span>
+<span class="ln">        <span class="tok-p">if</span>: github.event_name == <span class="tok-s">&#x27;pull_request&#x27;</span></span>
+<span class="ln">        <span class="tok-p">env</span>:</span>
+<span class="ln">          <span class="tok-p">DBT_SCHEMA</span>: pr_${{ github.event.number }}</span>
+<span class="ln">        <span class="tok-p">run</span>: dbt build --select state:modified+ --defer --state prod-state --target ci</span>
+<span class="ln"></span>
+<span class="ln">      - <span class="tok-p">name</span>: Deploy to production</span>
+<span class="ln">        <span class="tok-p">if</span>: github.ref == <span class="tok-s">&#x27;refs/heads/main&#x27;</span></span>
+<span class="ln">        <span class="tok-p">run</span>: |</span>
+<span class="ln">          dbt build --target prod</span>
+<span class="ln">          aws s3 cp target/manifest.json s3://analytics-dbt-artifacts/prod/manifest.json</span>
+<span class="ln"></span>
+<span class="ln">  <span class="tok-p">terraform</span>:</span>
+<span class="ln">    <span class="tok-p">runs-on</span>: ubuntu-latest</span>
+<span class="ln">    <span class="tok-p">defaults</span>:</span>
+<span class="ln">      <span class="tok-p">run</span>:</span>
+<span class="ln">        <span class="tok-p">working-directory</span>: infra</span>
+<span class="ln">    <span class="tok-p">steps</span>:</span>
+<span class="ln">      - <span class="tok-p">uses</span>: actions/checkout@v4</span>
+<span class="ln">      - <span class="tok-p">uses</span>: hashicorp/setup-terraform@v3</span>
+<span class="ln">      - <span class="tok-p">run</span>: terraform init -input=<span class="tok-k">false</span></span>
+<span class="ln">      - <span class="tok-p">run</span>: terraform plan -input=<span class="tok-k">false</span> -out=tfplan</span>
+<span class="ln">      - <span class="tok-p">if</span>: github.ref == <span class="tok-s">&#x27;refs/heads/main&#x27;</span></span>
+<span class="ln">        <span class="tok-p">run</span>: terraform apply -input=<span class="tok-k">false</span> tfplan</span></code></pre>
+            </div>
+          <div class="code-panel" role="tabpanel" id="code-etl-orchestration-cicd-3" aria-labelledby="tab-etl-orchestration-cicd-3" tabindex="0" hidden>
+              <p class="code-panel-caption">Terraform for Snowflake: warehouses from one map, a database, a role for dbt and a monthly credit limit.</p>
+              <pre><code class="lang-hcl"><span class="ln"><span class="tok-k">terraform</span> {</span>
+<span class="ln">  required_providers {</span>
+<span class="ln">    <span class="tok-p">snowflake</span> = {</span>
+<span class="ln">      <span class="tok-p">source</span>  = <span class="tok-s">&quot;snowflakedb/snowflake&quot;</span></span>
+<span class="ln">      <span class="tok-p">version</span> = <span class="tok-s">&quot;~&gt; 1.0&quot;</span></span>
+<span class="ln">    }</span>
+<span class="ln">  }</span>
+<span class="ln">  backend <span class="tok-s">&quot;s3&quot;</span> {</span>
+<span class="ln">    <span class="tok-p">bucket</span> = <span class="tok-s">&quot;analytics-terraform-state&quot;</span></span>
+<span class="ln">    <span class="tok-p">key</span>    = <span class="tok-s">&quot;snowflake/prod.tfstate&quot;</span></span>
+<span class="ln">    <span class="tok-p">region</span> = <span class="tok-s">&quot;us-east-1&quot;</span></span>
+<span class="ln">  }</span>
+<span class="ln">}</span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-k">locals</span> {</span>
+<span class="ln">  <span class="tok-p">warehouses</span> = {</span>
+<span class="ln">    LOADING   = { size = <span class="tok-s">&quot;XSMALL&quot;</span>, auto_suspend = <span class="tok-n">60</span> }</span>
+<span class="ln">    TRANSFORM = { size = <span class="tok-s">&quot;SMALL&quot;</span>, auto_suspend = <span class="tok-n">60</span> }</span>
+<span class="ln">    REPORTING = { size = <span class="tok-s">&quot;SMALL&quot;</span>, auto_suspend = <span class="tok-n">300</span> }</span>
+<span class="ln">    CI        = { size = <span class="tok-s">&quot;XSMALL&quot;</span>, auto_suspend = <span class="tok-n">60</span> }</span>
+<span class="ln">  }</span>
+<span class="ln">}</span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-k">resource</span> <span class="tok-s">&quot;snowflake_resource_monitor&quot;</span> <span class="tok-s">&quot;monthly&quot;</span> {</span>
+<span class="ln">  <span class="tok-p">name</span>            = <span class="tok-s">&quot;ANALYTICS_MONTHLY&quot;</span></span>
+<span class="ln">  <span class="tok-p">credit_quota</span>    = <span class="tok-n">400</span></span>
+<span class="ln">  <span class="tok-p">frequency</span>       = <span class="tok-s">&quot;MONTHLY&quot;</span></span>
+<span class="ln">  <span class="tok-p">start_timestamp</span> = <span class="tok-s">&quot;2026-01-01 00:00&quot;</span></span>
+<span class="ln">  <span class="tok-p">notify_triggers</span> = [<span class="tok-n">75</span>, <span class="tok-n">90</span>]</span>
+<span class="ln">  <span class="tok-p">suspend_trigger</span> = <span class="tok-n">100</span></span>
+<span class="ln">}</span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-k">resource</span> <span class="tok-s">&quot;snowflake_warehouse&quot;</span> <span class="tok-s">&quot;this&quot;</span> {</span>
+<span class="ln">  <span class="tok-k">for_each</span>            = local.warehouses</span>
+<span class="ln">  <span class="tok-p">name</span>                = <span class="tok-s">&quot;${each.key}_WH&quot;</span></span>
+<span class="ln">  <span class="tok-p">warehouse_size</span>      = each.value.size</span>
+<span class="ln">  <span class="tok-p">auto_suspend</span>        = each.value.auto_suspend</span>
+<span class="ln">  <span class="tok-p">auto_resume</span>         = <span class="tok-k">true</span></span>
+<span class="ln">  <span class="tok-p">initially_suspended</span> = <span class="tok-k">true</span></span>
+<span class="ln">  <span class="tok-p">resource_monitor</span>    = snowflake_resource_monitor.monthly.name</span>
+<span class="ln">}</span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-k">resource</span> <span class="tok-s">&quot;snowflake_database&quot;</span> <span class="tok-s">&quot;analytics&quot;</span> {</span>
+<span class="ln">  <span class="tok-p">name</span>                        = <span class="tok-s">&quot;ANALYTICS&quot;</span></span>
+<span class="ln">  <span class="tok-p">data_retention_time_in_days</span> = <span class="tok-n">7</span></span>
+<span class="ln">}</span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-k">resource</span> <span class="tok-s">&quot;snowflake_account_role&quot;</span> <span class="tok-s">&quot;transformer&quot;</span> {</span>
+<span class="ln">  <span class="tok-p">name</span>    = <span class="tok-s">&quot;TRANSFORMER&quot;</span></span>
+<span class="ln">  <span class="tok-p">comment</span> = <span class="tok-s">&quot;dbt runs as this role&quot;</span></span>
+<span class="ln">}</span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-k">resource</span> <span class="tok-s">&quot;snowflake_grant_privileges_to_account_role&quot;</span> <span class="tok-s">&quot;transformer_warehouse&quot;</span> {</span>
+<span class="ln">  <span class="tok-p">account_role_name</span> = snowflake_account_role.transformer.name</span>
+<span class="ln">  <span class="tok-p">privileges</span>        = [<span class="tok-s">&quot;USAGE&quot;</span>, <span class="tok-s">&quot;OPERATE&quot;</span>]</span>
+<span class="ln">  on_account_object {</span>
+<span class="ln">    <span class="tok-p">object_type</span> = <span class="tok-s">&quot;WAREHOUSE&quot;</span></span>
+<span class="ln">    <span class="tok-p">object_name</span> = snowflake_warehouse.this[<span class="tok-s">&quot;TRANSFORM&quot;</span>].name</span>
+<span class="ln">  }</span>
+<span class="ln">}</span></code></pre>
+            </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="dash-section" aria-labelledby="notes-title">
+      <div class="ds-container dash-container">
+        <div class="dash-section-head">
+          <h2 class="dash-h2" id="notes-title">Engineering notes</h2>
+        </div>
+        <div class="highlights">
+          <article class="highlight">
+            <h3>The Sep 29 failure did its job</h3>
+            <p>A billing API retry sent one invoice twice. The <code>unique</code> test on <code>fct_invoices</code> failed, so the finance dashboard kept the previous day&#x27;s numbers instead of showing double revenue. PR #477 deduplicated invoices and the next run was clean.</p>
+          </article>
+          <article class="highlight">
+            <h3>CI that catches things</h3>
+            <p>Slim CI built 6 models per pull request on average instead of 64, and stopped a broken <code>accepted_values</code> test (PR #475) before it reached production.</p>
+          </article>
+          <article class="highlight">
+            <h3>Runs got 12% faster</h3>
+            <p>Making the largest marts incremental in PR #474 cut the median nightly run by about six minutes.</p>
+          </article>
+          <article class="highlight">
+            <h3>Drift is visible</h3>
+            <p>A grant changed by hand in the Snowflake UI showed up in the nightly <code>terraform plan</code>. It was added to the code instead of being silently reverted on the next apply.</p>
+          </article>
+        </div>
+        <p class="data-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5"/><circle cx="12" cy="7.6" r=".6" fill="currentColor"/></svg><span><strong>About the data.</strong> Every number on this page is sample data from a seeded generator written for this project. It is shaped to behave like a real workload, with daily peaks, late events and the odd incident, but it does not come from any employer or client. Download it as <a href="dag_task_runs.csv">dag_task_runs.csv</a> or read <a href="data.json">data.json</a>.</span></p>
+      </div>
+    </section>
+
+    <div class="ds-container dash-container">
+      <nav class="dash-pager" aria-label="More projects">
+        <a href="/projects/cdc-pipeline/"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg> Previous · 03</span><strong>CDC Pipeline: Postgres to Snowflake</strong></a>
+        <a class="is-next" href="/projects/data-quality-observability/"><span>Next · 05 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span><strong>Data Quality and Observability Platform</strong></a>
+      </nav>
+    </div>
+  </main>
+
+  <footer class="contact-page-footer">
+    <div class="ds-container dash-container">
+      <div class="contact-footer-bottom">
+        <div class="footer-meta-group">
+          <div>
+            <p class="footer-meta-label">Version</p>
+            <p class="footer-meta-value"><span data-year>2026</span> © Edition</p>
+          </div>
+        </div>
+        <div class="footer-meta-group">
+          <div>
+            <p class="footer-meta-label">Socials</p>
+            <ul class="footer-socials">
+              <li><a href="https://www.linkedin.com/in/sarun2003" target="_blank" rel="noopener">LinkedIn</a></li>
+              <li><a href="mailto:sarun.shrestha.dev@gmail.com">Email</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/assets/vendor/echarts.custom.min.js?v=5.6.0" defer></script>
+  <script src="/assets/js/dashboard.js?v=20261007-6" defer></script>
+  <script src="/assets/js/main.js?v=20261007-6" defer></script>
+</body>
+</html>

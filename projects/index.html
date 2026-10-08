@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Projects — Sarun Shrestha</title>
+  <meta name="description" content="Ten data engineering projects by Sarun Shrestha, each with a live dashboard: streaming, lakehouse, CDC, orchestration, data quality, serverless, RAG, infrastructure as code and fraud detection.">
+  <meta name="author" content="Sarun Shrestha">
+  <meta name="theme-color" content="#011013">
+  <meta name="color-scheme" content="dark light">
+  <link rel="canonical" href="https://www.sarunshrestha.com.np/projects/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.sarunshrestha.com.np/projects/">
+  <meta property="og:site_name" content="Sarun Shrestha">
+  <meta property="og:title" content="Projects — Sarun Shrestha">
+  <meta property="og:description" content="Ten data engineering projects by Sarun Shrestha, each with a live dashboard: streaming, lakehouse, CDC, orchestration, data quality, serverless, RAG, infrastructure as code and fraud detection.">
+  <meta property="og:image" content="https://www.sarunshrestha.com.np/assets/img/projects/streaming-lakehouse.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://www.sarunshrestha.com.np/assets/img/projects/streaming-lakehouse.jpg">
+
+  <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+  <link rel="preload" href="/assets/fonts/plus-jakarta-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/assets/css/style.css?v=20261007-6">
+  <link rel="stylesheet" href="/assets/css/projects.css?v=20261007-6">
+  <script>
+    /* No intro greeting on this page; fall back to the plain page if the main script never starts. */
+    (function () {
+      var h = document.documentElement;
+      h.classList.remove('no-js');
+      h.classList.add('js', 'skip-loader');
+      setTimeout(function () {
+        if (!h.classList.contains('app-ready')) { h.classList.remove('js'); h.classList.add('no-js'); }
+      }, 6000);
+    })();
+  </script>
+</head>
+<body class="projects-page">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="noise-overlay" aria-hidden="true"></div>
+
+  <header class="ds-nav">
+    <a class="ds-logo" href="/" aria-label="Sarun Shrestha, home">
+      <span class="ds-logo-mark" aria-hidden="true">©</span>
+      <span class="ds-logo-text">Sarun Shrestha</span>
+    </a>
+    <nav aria-label="Primary">
+      <ul class="ds-nav-links">
+        <li><a class="ds-nav-link" href="/#about">About</a></li>
+        <li><a class="ds-nav-link is-active" href="/projects/" aria-current="page">Projects</a></li>
+        <li><a class="ds-nav-link" href="/#experience">Experience</a></li>
+        <li><a class="ds-nav-link" href="/#skills">Skills</a></li>
+        <li><a class="ds-nav-link" href="/contact/">Contact</a></li>
+        <li>
+          <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="side-menu">
+            <span class="menu-toggle-icon" aria-hidden="true"></span>Menu
+          </button>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="side-menu-overlay" data-menu-close></div>
+  <aside class="side-menu" id="side-menu" role="dialog" aria-modal="true" aria-label="Menu">
+    <button class="side-menu-close" type="button" data-menu-close>
+      Close
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>
+    </button>
+    <p class="side-menu-label">Navigation</p>
+    <nav aria-label="Menu">
+      <ul>
+        <li><a class="side-menu-nav-link" href="/">Home</a></li>
+        <li><a class="side-menu-nav-link" href="/#about">About</a></li>
+        <li><a class="side-menu-nav-link is-active" href="/projects/" aria-current="page">Projects</a></li>
+        <li><a class="side-menu-nav-link" href="/#experience">Experience</a></li>
+        <li><a class="side-menu-nav-link" href="/#skills">Skills</a></li>
+        <li><a class="side-menu-nav-link" href="/contact/">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="side-menu-socials">
+      <p class="side-menu-label">Socials</p>
+      <ul class="side-menu-social-links">
+        <li><a href="https://www.linkedin.com/in/sarun2003" target="_blank" rel="noopener">LinkedIn</a></li>
+        <li><a href="mailto:sarun.shrestha.dev@gmail.com">Email</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main id="main">
+    <section class="dash-hero projects-hero" aria-labelledby="projects-title">
+      <div class="ds-container">
+        <nav class="dash-crumbs" aria-label="Breadcrumb">
+          <a href="/">Home</a><span aria-hidden="true">/</span><span aria-current="page">Projects</span>
+        </nav>
+        <p class="dash-eyebrow">Projects · 10</p>
+        <h1 class="dash-title" id="projects-title">Data platforms, built end&nbsp;to&nbsp;end</h1>
+        <p class="dash-summary">Ten projects that cover the work I do every day: streaming and batch pipelines, lakehouses, change data capture, orchestration with CI/CD, data quality, serverless on AWS, retrieval pipelines for AI, infrastructure as code and real-time fraud detection. Each one opens as a dashboard with its data, architecture, data model and key code.</p>
+        <div class="dash-meta">
+          <span class="dash-badge"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 1.8h4M6.6 1.8v4.1L2.7 12.6a1.1 1.1 0 0 0 1 1.6h8.6a1.1 1.1 0 0 0 1-1.6L9.4 5.9V1.8"/><path d="M4.6 9.6h6.8"/></svg>Sample data</span>
+          <span class="dash-window">Every dashboard runs on generated sample data</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="projects-list-section" aria-label="All projects">
+      <div class="ds-container">
+        <ul class="projects-grid">
+          <li class="project-card">
+            <div class="tile-image-block"><picture><source srcset="/assets/img/projects/streaming-lakehouse.webp" type="image/webp"><img src="/assets/img/projects/streaming-lakehouse.jpg" alt="" width="1200" height="750" fetchpriority="high" decoding="async"></picture></div>
+            <div class="project-card-body">
+              <p class="project-card-num">01 · Real-time streaming</p>
+              <h2><a class="project-card-main" href="/projects/streaming-lakehouse/">Real-Time Streaming Lakehouse</a></h2>
+              <p>Ride-hailing events streamed from Kafka through Spark Structured Streaming into Apache Iceberg on S3, queryable within seconds.</p>
+              <ul aria-label="Tech stack"><li>Apache Kafka</li><li>Spark Structured Streaming</li><li>Apache Iceberg</li><li>Amazon S3</li><li>Apache Airflow</li></ul>
+              <span class="project-card-link" aria-hidden="true">Open dashboard <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></span>
+            </div>
+          </li>
+          <li class="project-card">
+            <div class="tile-image-block"><picture><source srcset="/assets/img/projects/medallion-lakehouse.webp" type="image/webp"><img src="/assets/img/projects/medallion-lakehouse.jpg" alt="" width="1200" height="750" fetchpriority="high" decoding="async"></picture></div>
+            <div class="project-card-body">
+              <p class="project-card-num">02 · Lakehouse</p>
+              <h2><a class="project-card-main" href="/projects/medallion-lakehouse/">Data Lakehouse with Medallion Architecture</a></h2>
+              <p>Retail orders, inventory and web events ingested with Auto Loader and refined bronze → silver → gold by a Lakeflow pipeline on Databricks.</p>
+              <ul aria-label="Tech stack"><li>Databricks</li><li>Delta Lake</li><li>Auto Loader</li><li>Lakeflow Declarative Pipelines</li><li>Unity Catalog</li></ul>
+              <span class="project-card-link" aria-hidden="true">Open dashboard <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></span>
+            </div>
+          </li>
+          <li class="project-card">
+            <div class="tile-image-block"><picture><source srcset="/assets/img/projects/cdc-pipeline.webp" type="image/webp"><img src="/assets/img/projects/cdc-pipeline.jpg" alt="" width="1200" height="750" loading="lazy" decoding="async"></picture></div>
+            <div class="project-card-body">
+              <p class="project-card-num">03 · Change data capture</p>
+              <h2><a class="project-card-main" href="/projects/cdc-pipeline/">CDC Pipeline: Postgres to Snowflake</a></h2>
+              <p>Every insert, update and delete in an orders database captured by Debezium, streamed through Kafka and Flink, and queryable in Snowflake within seconds.</p>
+              <ul aria-label="Tech stack"><li>PostgreSQL</li><li>Debezium</li><li>Apache Kafka</li><li>Apache Flink</li><li>Snowflake</li></ul>
+              <span class="project-card-link" aria-hidden="true">Open dashboard <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></span>
+            </div>
+          </li>
+          <li class="project-card">
+            <div class="tile-image-block"><picture><source srcset="/assets/img/projects/etl-orchestration-cicd.webp" type="image/webp"><img src="/assets/img/projects/etl-orchestration-cicd.jpg" alt="" width="1200" height="750" loading="lazy" decoding="async"></picture></div>
+            <div class="project-card-body">
+              <p class="project-card-num">04 · Orchestration &amp; CI/CD</p>
+              <h2><a class="project-card-main" href="/projects/etl-orchestration-cicd/">ETL with Orchestration and CI/CD</a></h2>
+              <p>A subscription-revenue warehouse built with Airflow and dbt on Snowflake, tested and deployed through GitHub Actions, with Terraform managing every Snowflake object.</p>
+              <ul aria-label="Tech stack"><li>Apache Airflow</li><li>dbt</li><li>Snowflake</li><li>GitHub Actions</li><li>Terraform</li></ul>
+              <span class="project-card-link" aria-hidden="true">Open dashboard <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></span>
+            </div>
+          </li>
+          <li class="project-card">
+            <div class="tile-image-block"><picture><source srcset="/assets/img/projects/data-quality-observability.webp" type="image/webp"><img src="/assets/img/projects/data-quality-observability.jpg" alt="" width="1200" height="750" loading="lazy" decoding="async"></picture></div>
+            <div class="project-card-body">
+              <p class="project-card-num">05 · Data quality</p>
+              <h2><a class="project-card-main" href="/projects/data-quality-observability/">Data Quality and Observability Platform</a></h2>
+              <p>Freshness SLAs, volume anomaly detection, schema checks and a dead-letter queue across 148 tables, with every incident routed to the team that owns the data.</p>
+              <ul aria-label="Tech stack"><li>Great Expectations</li><li>PySpark</li><li>Monte Carlo</li><li>Prometheus</li><li>Grafana</li></ul>
+              <span class="project-card-link" aria-hidden="true">Open dashboard <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></span>
+            </div>
+          </li>
+          <li class="project-card">
+            <div class="tile-image-block"><picture><source srcset="/assets/img/projects/unified-streaming-batch.webp" type="image/webp"><img src="/assets/img/projects/unified-streaming-batch.jpg" alt="" width="1200" height="750" loading="lazy" decoding="async"></picture></div>
+            <div class="project-card-body">
+              <p class="project-card-num">06 · Streaming + batch</p>
+              <h2><a class="project-card-main" href="/projects/unified-streaming-batch/">Unified Streaming and Batch Pipeline</a></h2>
+              <p>Web and mobile clickstream processed in real time by Flink and recomputed nightly by Spark, both writing the same Apache Iceberg tables so the numbers agree.</p>
+              <ul aria-label="Tech stack"><li>Apache Kafka</li><li>Amazon Kinesis</li><li>Apache Flink</li><li>Apache Iceberg</li><li>Apache Spark</li></ul>
+              <span class="project-card-link" aria-hidden="true">Open dashboard <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></span>
+            </div>
+          </li>
+          <li class="project-card">
+            <div class="tile-image-block"><picture><source srcset="/assets/img/projects/serverless-aws-pipeline.webp" type="image/webp"><img src="/assets/img/projects/serverless-aws-pipeline.jpg" alt="" width="1200" height="750" loading="lazy" decoding="async"></picture></div>
+            <div class="project-card-body">
+              <p class="project-card-num">07 · Serverless on AWS</p>
+              <h2><a class="project-card-main" href="/projects/serverless-aws-pipeline/">Serverless Data Pipeline on AWS</a></h2>
+              <p>Store sales files processed the moment they land in S3, by EventBridge, Step Functions, Lambda and Glue, with nothing running between files.</p>
+              <ul aria-label="Tech stack"><li>Amazon S3</li><li>Amazon EventBridge</li><li>AWS Step Functions</li><li>AWS Lambda</li><li>AWS Glue</li><li>Amazon Athena</li><li>Amazon Redshift Serverless</li></ul>
+              <span class="project-card-link" aria-hidden="true">Open dashboard <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></span>
+            </div>
+          </li>
+          <li class="project-card">
+            <div class="tile-image-block"><picture><source srcset="/assets/img/projects/rag-data-pipeline.webp" type="image/webp"><img src="/assets/img/projects/rag-data-pipeline.jpg" alt="" width="1200" height="750" loading="lazy" decoding="async"></picture></div>
+            <div class="project-card-body">
+              <p class="project-card-num">08 · AI data pipeline</p>
+              <h2><a class="project-card-main" href="/projects/rag-data-pipeline/">RAG Data Pipeline</a></h2>
+              <p>Company documents ingested, chunked, embedded and indexed in Pinecone every hour, with retrieval quality measured nightly against labelled questions.</p>
+              <ul aria-label="Tech stack"><li>Python</li><li>Apache Airflow</li><li>LangChain</li><li>Pinecone</li><li>PostgreSQL</li></ul>
+              <span class="project-card-link" aria-hidden="true">Open dashboard <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></span>
+            </div>
+          </li>
+          <li class="project-card">
+            <div class="tile-image-block"><picture><source srcset="/assets/img/projects/iac-data-platform.webp" type="image/webp"><img src="/assets/img/projects/iac-data-platform.jpg" alt="" width="1200" height="750" loading="lazy" decoding="async"></picture></div>
+            <div class="project-card-body">
+              <p class="project-card-num">09 · Infrastructure as code</p>
+              <h2><a class="project-card-main" href="/projects/iac-data-platform/">Infrastructure-as-Code Data Platform</a></h2>
+              <p>A complete lakehouse, from the network to the dashboards, defined in Terraform and Helm on Kubernetes and rebuilt from nothing in under 20 minutes.</p>
+              <ul aria-label="Tech stack"><li>Terraform</li><li>Docker</li><li>Kubernetes</li><li>Helm</li><li>Apache Iceberg</li><li>PostgreSQL</li><li>Grafana</li></ul>
+              <span class="project-card-link" aria-hidden="true">Open dashboard <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></span>
+            </div>
+          </li>
+          <li class="project-card">
+            <div class="tile-image-block"><picture><source srcset="/assets/img/projects/fraud-detection-streaming.webp" type="image/webp"><img src="/assets/img/projects/fraud-detection-streaming.jpg" alt="" width="1200" height="750" loading="lazy" decoding="async"></picture></div>
+            <div class="project-card-body">
+              <p class="project-card-num">10 · Real-time ML</p>
+              <h2><a class="project-card-main" href="/projects/fraud-detection-streaming/">Real-Time Fraud Detection Pipeline</a></h2>
+              <p>Card transactions scored in under 50 ms using streaming features from Spark and a Feast feature store, with alerts, analyst feedback and model quality in one view.</p>
+              <ul aria-label="Tech stack"><li>Apache Kafka</li><li>Spark Structured Streaming</li><li>Feast</li><li>Redis</li><li>Grafana</li></ul>
+              <span class="project-card-link" aria-hidden="true">Open dashboard <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></span>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="contact-page-footer">
+    <div class="ds-container">
+      <div class="contact-footer-bottom">
+        <div class="footer-meta-group">
+          <div>
+            <p class="footer-meta-label">Version</p>
+            <p class="footer-meta-value"><span data-year>2026</span> © Edition</p>
+          </div>
+        </div>
+        <div class="footer-meta-group">
+          <div>
+            <p class="footer-meta-label">Socials</p>
+            <ul class="footer-socials">
+              <li><a href="https://www.linkedin.com/in/sarun2003" target="_blank" rel="noopener">LinkedIn</a></li>
+              <li><a href="mailto:sarun.shrestha.dev@gmail.com">Email</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/assets/js/main.js?v=20261007-6" defer></script>
+</body>
+</html>

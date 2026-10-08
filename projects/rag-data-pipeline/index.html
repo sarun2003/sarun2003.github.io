@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RAG Data Pipeline — Sarun Shrestha</title>
+  <meta name="description" content="Company documents ingested, chunked, embedded and indexed in Pinecone every hour, with retrieval quality measured nightly against labelled questions.">
+  <meta name="author" content="Sarun Shrestha">
+  <meta name="theme-color" content="#011013">
+  <meta name="color-scheme" content="dark light">
+  <link rel="canonical" href="https://www.sarunshrestha.com.np/projects/rag-data-pipeline/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.sarunshrestha.com.np/projects/rag-data-pipeline/">
+  <meta property="og:site_name" content="Sarun Shrestha">
+  <meta property="og:title" content="RAG Data Pipeline — Sarun Shrestha">
+  <meta property="og:description" content="Company documents ingested, chunked, embedded and indexed in Pinecone every hour, with retrieval quality measured nightly against labelled questions.">
+  <meta property="og:image" content="https://www.sarunshrestha.com.np/assets/img/projects/rag-data-pipeline.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://www.sarunshrestha.com.np/assets/img/projects/rag-data-pipeline.jpg">
+
+  <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+  <link rel="preload" href="/assets/fonts/plus-jakarta-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/assets/css/style.css?v=20261007-6">
+  <link rel="stylesheet" href="/assets/css/projects.css?v=20261007-6">
+  <script>
+    /* No intro greeting on this page; fall back to the plain page if the main script never starts. */
+    (function () {
+      var h = document.documentElement;
+      h.classList.remove('no-js');
+      h.classList.add('js', 'skip-loader');
+      setTimeout(function () {
+        if (!h.classList.contains('app-ready')) { h.classList.remove('js'); h.classList.add('no-js'); }
+      }, 6000);
+    })();
+  </script>
+</head>
+<body class="dash-page">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="noise-overlay" aria-hidden="true"></div>
+
+  <header class="ds-nav">
+    <a class="ds-logo" href="/" aria-label="Sarun Shrestha, home">
+      <span class="ds-logo-mark" aria-hidden="true">©</span>
+      <span class="ds-logo-text">Sarun Shrestha</span>
+    </a>
+    <nav aria-label="Primary">
+      <ul class="ds-nav-links">
+        <li><a class="ds-nav-link" href="/#about">About</a></li>
+        <li><a class="ds-nav-link is-active" href="/projects/">Projects</a></li>
+        <li><a class="ds-nav-link" href="/#experience">Experience</a></li>
+        <li><a class="ds-nav-link" href="/#skills">Skills</a></li>
+        <li><a class="ds-nav-link" href="/contact/">Contact</a></li>
+        <li>
+          <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="side-menu">
+            <span class="menu-toggle-icon" aria-hidden="true"></span>Menu
+          </button>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="side-menu-overlay" data-menu-close></div>
+  <aside class="side-menu" id="side-menu" role="dialog" aria-modal="true" aria-label="Menu">
+    <button class="side-menu-close" type="button" data-menu-close>
+      Close
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>
+    </button>
+    <p class="side-menu-label">Navigation</p>
+    <nav aria-label="Menu">
+      <ul>
+        <li><a class="side-menu-nav-link" href="/">Home</a></li>
+        <li><a class="side-menu-nav-link" href="/#about">About</a></li>
+        <li><a class="side-menu-nav-link is-active" href="/projects/">Projects</a></li>
+        <li><a class="side-menu-nav-link" href="/#experience">Experience</a></li>
+        <li><a class="side-menu-nav-link" href="/#skills">Skills</a></li>
+        <li><a class="side-menu-nav-link" href="/contact/">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="side-menu-socials">
+      <p class="side-menu-label">Socials</p>
+      <ul class="side-menu-social-links">
+        <li><a href="https://www.linkedin.com/in/sarun2003" target="_blank" rel="noopener">LinkedIn</a></li>
+        <li><a href="mailto:sarun.shrestha.dev@gmail.com">Email</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main id="main">
+    <section class="dash-hero" aria-labelledby="dash-title">
+      <div class="ds-container dash-container">
+        <nav class="dash-crumbs" aria-label="Breadcrumb">
+          <a href="/">Home</a><span aria-hidden="true">/</span><a href="/projects/">Projects</a><span aria-hidden="true">/</span><span aria-current="page">RAG Pipeline</span>
+        </nav>
+        <p class="dash-eyebrow">Project 08 · AI data pipeline</p>
+        <h1 class="dash-title" id="dash-title">RAG Data Pipeline</h1>
+        <p class="dash-summary">An assistant can only answer from what it can find. This pipeline keeps a vector index in step with six document sources: product docs, support tickets, policies, the engineering wiki, release notes and FAQs. Every hour Airflow finds new, changed and deleted documents, LangChain loaders and splitters turn them into overlapping chunks with metadata, an embedding model turns the chunks into vectors, and Pinecone stores them in one namespace per source. Each night 500 labelled questions check that the right passage still comes back.</p>
+        <ul class="dash-stack" aria-label="Tech stack"><li>Python</li><li>Apache Airflow</li><li>LangChain</li><li>Pinecone</li><li>PostgreSQL</li></ul>
+        <div class="dash-meta">
+          <span class="dash-badge"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 1.8h4M6.6 1.8v4.1L2.7 12.6a1.1 1.1 0 0 0 1 1.6h8.6a1.1 1.1 0 0 0 1-1.6L9.4 5.9V1.8"/><path d="M4.6 9.6h6.8"/></svg>Sample data</span>
+          <span class="dash-window">Last 30 days · Sep 7 – Oct 6, 2026</span>
+          <a class="pill pill--sm" href="ingestion_daily.csv" download><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M5 19.5h14"/></svg>Download data (CSV)</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="dash-body" data-dashboard data-src="data.json" aria-label="Dashboard">
+      <div class="ds-container dash-container">
+        <noscript><p class="dash-noscript">The charts need JavaScript. The same numbers are in <a href="ingestion_daily.csv">ingestion_daily.csv</a> and <a href="data.json">data.json</a>.</p></noscript>
+        <div class="dash-kpis" data-kpis></div>
+        <div class="dash-grid">
+          <article class="dash-panel span-8" aria-labelledby="p-ingestion">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-ingestion">Document changes per day</h3>
+                <p class="dash-panel-sub">Detected at the sources and applied to the index</p>
+              </div>
+            <button class="dash-toggle" type="button" data-toggle aria-pressed="false" hidden><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="1.5" y="2" width="9" height="8" rx="1.2"/><path d="M1.5 5h9M1.5 7.6h9M5 5v5"/></svg>Table</button>
+            </header>
+            <div class="dash-chart" data-chart="ingestion" style="height:290px"></div>
+          </article>
+          <article class="dash-panel span-4" aria-labelledby="p-sources">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-sources">Documents by source</h3>
+                <p class="dash-panel-sub">One Pinecone namespace each</p>
+              </div>
+            <button class="dash-toggle" type="button" data-toggle aria-pressed="false" hidden><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="1.5" y="2" width="9" height="8" rx="1.2"/><path d="M1.5 5h9M1.5 7.6h9M5 5v5"/></svg>Table</button>
+            </header>
+            <div class="dash-chart" data-chart="sources" style="height:290px"></div>
+          </article>
+          <article class="dash-panel span-6" aria-labelledby="p-latency">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-latency">Retrieval latency</h3>
+                <p class="dash-panel-sub">Query embedding plus vector search</p>
+              </div>
+            <button class="dash-toggle" type="button" data-toggle aria-pressed="false" hidden><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="1.5" y="2" width="9" height="8" rx="1.2"/><path d="M1.5 5h9M1.5 7.6h9M5 5v5"/></svg>Table</button>
+            </header>
+            <div class="dash-chart" data-chart="latency" style="height:300px"></div>
+          </article>
+          <article class="dash-panel span-6" aria-labelledby="p-quality">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-quality">Retrieval quality by namespace</h3>
+                <p class="dash-panel-sub">500 labelled questions, Oct 6</p>
+              </div>
+            <button class="dash-toggle" type="button" data-toggle aria-pressed="false" hidden><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="1.5" y="2" width="9" height="8" rx="1.2"/><path d="M1.5 5h9M1.5 7.6h9M5 5v5"/></svg>Table</button>
+            </header>
+            <div class="dash-chart" data-chart="quality" style="height:300px"></div>
+          </article>
+          <article class="dash-panel span-5" aria-labelledby="p-chunks">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-chunks">Chunk sizes</h3>
+                <p class="dash-panel-sub">Tokens per chunk; the target is 512</p>
+              </div>
+            <button class="dash-toggle" type="button" data-toggle aria-pressed="false" hidden><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="1.5" y="2" width="9" height="8" rx="1.2"/><path d="M1.5 5h9M1.5 7.6h9M5 5v5"/></svg>Table</button>
+            </header>
+            <div class="dash-chart" data-chart="chunks" style="height:270px"></div>
+          </article>
+          <article class="dash-panel span-7" aria-labelledby="p-index">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-index">Index namespaces</h3>
+                <p class="dash-panel-sub">Pinecone index <code>kb-prod</code></p>
+              </div>
+            </header>
+            <div class="dash-table-wrap" data-table="index"></div>
+          </article>
+          <article class="dash-panel span-12" aria-labelledby="p-samples">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-samples">Sample retrievals from the eval set</h3>
+                <p class="dash-panel-sub">Top result for each question and where the right passage ranked</p>
+              </div>
+            </header>
+            <div class="dash-table-wrap" data-table="samples"></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="dash-section" aria-labelledby="how-title">
+      <div class="ds-container dash-container">
+        <div class="dash-section-head">
+          <h2 class="dash-h2" id="how-title">How it works</h2>
+          <p class="dash-section-note">Ingest → chunk → embed → index → evaluate, incrementally, every hour.</p>
+        </div>
+        <ol class="flow">
+          <li class="flow-step">
+            <p class="flow-stage">01 · Detect</p>
+            <p class="flow-tech">Airflow + source APIs</p>
+            <p class="flow-detail">Every hour, list documents changed since the last run in each source, by modified time and content hash.</p>
+          </li>
+          <li class="flow-step">
+            <p class="flow-stage">02 · Load</p>
+            <p class="flow-tech">LangChain loaders</p>
+            <p class="flow-detail">Confluence, Zendesk, Markdown docs and PDFs become text plus metadata: source, URL, title, access group, updated date.</p>
+          </li>
+          <li class="flow-step">
+            <p class="flow-stage">03 · Chunk</p>
+            <p class="flow-tech">Recursive splitter</p>
+            <p class="flow-detail">About 512-token chunks with a 64-token overlap, split on headings and paragraphs first so chunks stay coherent.</p>
+          </li>
+          <li class="flow-step">
+            <p class="flow-stage">04 · Embed</p>
+            <p class="flow-tech">Embedding model</p>
+            <p class="flow-detail">1,536-dimension vectors, 256 chunks per request, with retries and a token budget per run.</p>
+          </li>
+          <li class="flow-step">
+            <p class="flow-stage">05 · Index</p>
+            <p class="flow-tech">Pinecone</p>
+            <p class="flow-detail">One namespace per source. Vector ids are <code>doc_id#chunk</code>, so updates overwrite and deletes are exact.</p>
+          </li>
+          <li class="flow-step">
+            <p class="flow-stage">06 · Evaluate</p>
+            <p class="flow-tech">Nightly eval</p>
+            <p class="flow-detail">500 labelled questions measure recall@5 and MRR per namespace; a drop alerts the team.</p>
+          </li>
+        </ol>
+        <ul class="steps">
+          <li><strong>Only changed documents are re-embedded.</strong> A content hash per document skips unchanged ones, which keeps embedding cost under a dollar a day.</li>
+          <li><strong>Deletes are first-class.</strong> When a document is deleted or archived at the source, its chunk ids are removed from Pinecone in the same run, so the assistant never cites a retired policy.</li>
+          <li><strong>Metadata does the filtering.</strong> Every vector carries its source, access group and updated date, so search can be limited to what a user is allowed to see before ranking.</li>
+          <li><strong>Quality is measured, not assumed.</strong> Retrieval is scored every night against labelled questions. A chunking or model change ships only if recall@5 does not drop.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="dash-section" aria-labelledby="model-title">
+      <div class="ds-container dash-container">
+        <div class="dash-section-head">
+          <h2 class="dash-h2" id="model-title">Data model</h2>
+          <p class="dash-section-note">A manifest in PostgreSQL tracks every document so only changed ones are re-embedded; Pinecone holds the vectors.</p>
+        </div>
+        <div class="model-grid">
+          <article class="model-card">
+            <div class="model-card-head"><code>kb.documents</code><span>PostgreSQL · the manifest</span></div>
+            <dl class="model-cols">
+              <div><dt><code>doc_id</code><span class="model-type">text</span></dt><dd>Stable id from the source system</dd></div>
+              <div><dt><code>source / url / title</code><span class="model-type">text</span></dt><dd>Where it lives</dd></div>
+              <div><dt><code>content_hash</code><span class="model-type">char(64)</span></dt><dd>SHA-256 of the text; unchanged means skip</dd></div>
+              <div><dt><code>chunk_count</code><span class="model-type">int</span></dt><dd>How many vectors the document has</dd></div>
+              <div><dt><code>updated_at / deleted_at</code><span class="model-type">timestamptz</span></dt><dd>From the source</dd></div>
+              <div><dt><code>last_indexed_at</code><span class="model-type">timestamptz</span></dt><dd>When the index last matched this version</dd></div>
+            </dl>
+          </article>
+          <article class="model-card">
+            <div class="model-card-head"><code>kb-prod</code><span>Pinecone index · 1,536 dims · cosine</span></div>
+            <dl class="model-cols">
+              <div><dt><code>id</code><span class="model-type">string</span></dt><dd><code>doc_id#chunk_no</code></dd></div>
+              <div><dt><code>values</code><span class="model-type">float[1536]</span></dt><dd>The embedding</dd></div>
+              <div><dt><code>metadata.doc_id / title / url</code><span class="model-type">string</span></dt><dd>Used for citations</dd></div>
+              <div><dt><code>metadata.access_group</code><span class="model-type">string</span></dt><dd>Filter so users only see what they may read</dd></div>
+              <div><dt><code>metadata.updated_at</code><span class="model-type">string</span></dt><dd>Lets the assistant prefer recent content</dd></div>
+              <div><dt><code>metadata.text</code><span class="model-type">string</span></dt><dd>The chunk itself, returned with matches</dd></div>
+            </dl>
+          </article>
+          <article class="model-card">
+            <div class="model-card-head"><code>ingestion_daily</code><span>Rollup · the CSV download</span></div>
+            <dl class="model-cols">
+              <div><dt><code>date</code><span class="model-type">date</span></dt><dd>Day</dd></div>
+              <div><dt><code>docs_added / docs_updated / docs_deleted</code><span class="model-type">int</span></dt><dd>Changes found at the sources</dd></div>
+              <div><dt><code>chunks_upserted / embedding_tokens</code><span class="model-type">int</span></dt><dd>Work done</dd></div>
+              <div><dt><code>embedding_cost_usd</code><span class="model-type">decimal</span></dt><dd>Tokens × price</dd></div>
+              <div><dt><code>retrieval_p50_ms / p95_ms / recall_at_5</code><span class="model-type">int / double</span></dt><dd>Search speed and quality</dd></div>
+            </dl>
+          </article>
+        </div>
+        <ul class="dataset-files" aria-label="Downloads">
+          <li><a href="ingestion_daily.csv" download><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M5 19.5h14"/></svg><span><strong>ingestion_daily.csv</strong> Documents added, updated and deleted, chunks, embedding tokens and cost, latency and recall per day · 30 rows, 10 columns</span></a></li>
+          <li><a href="data.json"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M5 19.5h14"/></svg><span><strong>data.json</strong> Everything this dashboard draws: KPIs, chart series and tables</span></a></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="dash-section" aria-labelledby="code-title">
+      <div class="ds-container dash-container">
+        <div class="dash-section-head">
+          <h2 class="dash-h2" id="code-title">Key code</h2>
+          <p class="dash-section-note">Incremental indexing, the hourly DAG, and the nightly retrieval evaluation.</p>
+        </div>
+        <div class="code-block" data-code-block>
+          <div class="code-bar">
+            <div class="code-tabs" role="tablist" aria-label="Source files">
+              <button class="code-tab" type="button" role="tab" id="tab-rag-data-pipeline-0" aria-controls="code-rag-data-pipeline-0" aria-selected="true" tabindex="0">index_documents.py</button>
+              <button class="code-tab" type="button" role="tab" id="tab-rag-data-pipeline-1" aria-controls="code-rag-data-pipeline-1" aria-selected="false" tabindex="-1">kb_sync.py</button>
+              <button class="code-tab" type="button" role="tab" id="tab-rag-data-pipeline-2" aria-controls="code-rag-data-pipeline-2" aria-selected="false" tabindex="-1">evaluate_retrieval.py</button>
+            </div>
+            <button class="code-copy" type="button" data-copy hidden><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8" rx="1.6"/><path d="M10.5 5.5V3.6a1.1 1.1 0 0 0-1.1-1.1H3.6a1.1 1.1 0 0 0-1.1 1.1v5.8a1.1 1.1 0 0 0 1.1 1.1h1.9"/></svg><span>Copy</span></button>
+          </div>
+          <div class="code-panel" role="tabpanel" id="code-rag-data-pipeline-0" aria-labelledby="tab-rag-data-pipeline-0" tabindex="0">
+              <p class="code-panel-caption">Incremental indexing: skip unchanged documents, upsert new chunks, and delete chunks a shorter version no longer has.</p>
+              <pre><code class="lang-python"><span class="ln"><span class="tok-k">import</span> hashlib</span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-k">from</span> langchain_openai <span class="tok-k">import</span> OpenAIEmbeddings</span>
+<span class="ln"><span class="tok-k">from</span> langchain_text_splitters <span class="tok-k">import</span> RecursiveCharacterTextSplitter</span>
+<span class="ln"><span class="tok-k">from</span> pinecone <span class="tok-k">import</span> Pinecone</span>
+<span class="ln"></span>
+<span class="ln">splitter = RecursiveCharacterTextSplitter.<span class="tok-f">from_tiktoken_encoder</span>(</span>
+<span class="ln">    encoding_name=<span class="tok-s">&quot;cl100k_base&quot;</span>,</span>
+<span class="ln">    chunk_size=<span class="tok-n">512</span>,</span>
+<span class="ln">    chunk_overlap=<span class="tok-n">64</span>,</span>
+<span class="ln">    separators=[<span class="tok-s">&quot;\n## &quot;</span>, <span class="tok-s">&quot;\n### &quot;</span>, <span class="tok-s">&quot;\n\n&quot;</span>, <span class="tok-s">&quot;\n&quot;</span>, <span class="tok-s">&quot;. &quot;</span>, <span class="tok-s">&quot; &quot;</span>],</span>
+<span class="ln">)</span>
+<span class="ln">embeddings = <span class="tok-f">OpenAIEmbeddings</span>(model=<span class="tok-s">&quot;text-embedding-3-large&quot;</span>, dimensions=<span class="tok-n">1536</span>, chunk_size=<span class="tok-n">256</span>)</span>
+<span class="ln">index = <span class="tok-f">Pinecone</span>().<span class="tok-f">Index</span>(<span class="tok-s">&quot;kb-prod&quot;</span>)  <span class="tok-c"># reads PINECONE_API_KEY</span></span>
+<span class="ln"></span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-k">def</span> <span class="tok-f">index_document</span>(doc, manifest) -&gt; int:</span>
+<span class="ln">    <span class="tok-s">&quot;&quot;&quot;Index one document if it changed. Returns the number of chunks written.&quot;&quot;&quot;</span></span>
+<span class="ln">    meta = doc.metadata</span>
+<span class="ln">    digest = hashlib.<span class="tok-f">sha256</span>(doc.page_content.<span class="tok-f">encode</span>(<span class="tok-s">&quot;utf-8&quot;</span>)).<span class="tok-f">hexdigest</span>()</span>
+<span class="ln">    previous = manifest.<span class="tok-f">get</span>(meta[<span class="tok-s">&quot;doc_id&quot;</span>])</span>
+<span class="ln">    <span class="tok-k">if</span> previous <span class="tok-k">and</span> previous.content_hash == digest:</span>
+<span class="ln">        <span class="tok-k">return</span> <span class="tok-n">0</span>  <span class="tok-c"># unchanged: no embedding cost</span></span>
+<span class="ln"></span>
+<span class="ln">    chunks = splitter.<span class="tok-f">split_documents</span>([doc])</span>
+<span class="ln">    vectors = embeddings.<span class="tok-f">embed_documents</span>([c.page_content <span class="tok-k">for</span> c <span class="tok-k">in</span> chunks])</span>
+<span class="ln">    records = [</span>
+<span class="ln">        {</span>
+<span class="ln">            <span class="tok-s">&quot;id&quot;</span>: <span class="tok-s">f&quot;{meta[&#x27;doc_id&#x27;]}#{n}&quot;</span>,</span>
+<span class="ln">            <span class="tok-s">&quot;values&quot;</span>: vector,</span>
+<span class="ln">            <span class="tok-s">&quot;metadata&quot;</span>: {</span>
+<span class="ln">                <span class="tok-s">&quot;doc_id&quot;</span>: meta[<span class="tok-s">&quot;doc_id&quot;</span>],</span>
+<span class="ln">                <span class="tok-s">&quot;title&quot;</span>: meta[<span class="tok-s">&quot;title&quot;</span>],</span>
+<span class="ln">                <span class="tok-s">&quot;url&quot;</span>: meta[<span class="tok-s">&quot;url&quot;</span>],</span>
+<span class="ln">                <span class="tok-s">&quot;access_group&quot;</span>: meta[<span class="tok-s">&quot;access_group&quot;</span>],</span>
+<span class="ln">                <span class="tok-s">&quot;updated_at&quot;</span>: meta[<span class="tok-s">&quot;updated_at&quot;</span>],</span>
+<span class="ln">                <span class="tok-s">&quot;chunk_no&quot;</span>: n,</span>
+<span class="ln">                <span class="tok-s">&quot;text&quot;</span>: chunk.page_content,</span>
+<span class="ln">            },</span>
+<span class="ln">        }</span>
+<span class="ln">        <span class="tok-k">for</span> n, (chunk, vector) <span class="tok-k">in</span> <span class="tok-f">enumerate</span>(<span class="tok-f">zip</span>(chunks, vectors))</span>
+<span class="ln">    ]</span>
+<span class="ln">    <span class="tok-k">for</span> start <span class="tok-k">in</span> <span class="tok-f">range</span>(<span class="tok-n">0</span>, <span class="tok-f">len</span>(records), <span class="tok-n">100</span>):</span>
+<span class="ln">        index.<span class="tok-f">upsert</span>(vectors=records[start:start + <span class="tok-n">100</span>], namespace=meta[<span class="tok-s">&quot;source&quot;</span>])</span>
+<span class="ln"></span>
+<span class="ln">    <span class="tok-c"># A shorter new version leaves old chunks behind; remove them.</span></span>
+<span class="ln">    <span class="tok-k">if</span> previous <span class="tok-k">and</span> previous.chunk_count &gt; <span class="tok-f">len</span>(chunks):</span>
+<span class="ln">        stale = [<span class="tok-s">f&quot;{meta[&#x27;doc_id&#x27;]}#{n}&quot;</span> <span class="tok-k">for</span> n <span class="tok-k">in</span> <span class="tok-f">range</span>(<span class="tok-f">len</span>(chunks), previous.chunk_count)]</span>
+<span class="ln">        index.<span class="tok-f">delete</span>(ids=stale, namespace=meta[<span class="tok-s">&quot;source&quot;</span>])</span>
+<span class="ln"></span>
+<span class="ln">    manifest.<span class="tok-f">save</span>(meta[<span class="tok-s">&quot;doc_id&quot;</span>], content_hash=digest, chunk_count=<span class="tok-f">len</span>(chunks))</span>
+<span class="ln">    <span class="tok-k">return</span> <span class="tok-f">len</span>(chunks)</span>
+<span class="ln"></span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-k">def</span> <span class="tok-f">remove_document</span>(doc_id: str, source: str, chunk_count: int) -&gt; <span class="tok-k">None</span>:</span>
+<span class="ln">    index.<span class="tok-f">delete</span>(ids=[<span class="tok-s">f&quot;{doc_id}#{n}&quot;</span> <span class="tok-k">for</span> n <span class="tok-k">in</span> <span class="tok-f">range</span>(chunk_count)], namespace=source)</span></code></pre>
+            </div>
+          <div class="code-panel" role="tabpanel" id="code-rag-data-pipeline-1" aria-labelledby="tab-rag-data-pipeline-1" tabindex="0" hidden>
+              <p class="code-panel-caption">Hourly Airflow DAG: one mapped task per source finds changes, indexes them and removes deleted documents.</p>
+              <pre><code class="lang-python"><span class="ln"><span class="tok-k">from</span> datetime <span class="tok-k">import</span> datetime, timedelta</span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-k">from</span> airflow.decorators <span class="tok-k">import</span> dag, task</span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-k">from</span> kb.index_documents <span class="tok-k">import</span> index_document, remove_document</span>
+<span class="ln"><span class="tok-k">from</span> kb.manifest <span class="tok-k">import</span> Manifest</span>
+<span class="ln"><span class="tok-k">from</span> kb.sources <span class="tok-k">import</span> changed_since, deleted_since, load</span>
+<span class="ln"></span>
+<span class="ln">SOURCES = [<span class="tok-s">&quot;product_docs&quot;</span>, <span class="tok-s">&quot;support_tickets&quot;</span>, <span class="tok-s">&quot;policies&quot;</span>, <span class="tok-s">&quot;eng_wiki&quot;</span>, <span class="tok-s">&quot;release_notes&quot;</span>, <span class="tok-s">&quot;faqs&quot;</span>]</span>
+<span class="ln"></span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-f">@dag</span>(</span>
+<span class="ln">    schedule=<span class="tok-s">&quot;@hourly&quot;</span>,</span>
+<span class="ln">    start_date=<span class="tok-f">datetime</span>(<span class="tok-n">2026</span>, <span class="tok-n">1</span>, <span class="tok-n">1</span>),</span>
+<span class="ln">    catchup=<span class="tok-k">False</span>,</span>
+<span class="ln">    max_active_runs=<span class="tok-n">1</span>,</span>
+<span class="ln">    default_args={<span class="tok-s">&quot;retries&quot;</span>: <span class="tok-n">3</span>, <span class="tok-s">&quot;retry_delay&quot;</span>: <span class="tok-f">timedelta</span>(minutes=<span class="tok-n">2</span>)},</span>
+<span class="ln">    tags=[<span class="tok-s">&quot;rag&quot;</span>, <span class="tok-s">&quot;knowledge-base&quot;</span>],</span>
+<span class="ln">)</span>
+<span class="ln"><span class="tok-k">def</span> <span class="tok-f">kb_sync</span>():</span>
+<span class="ln">    <span class="tok-f">@task</span>(max_active_tis_per_dag=<span class="tok-n">3</span>)</span>
+<span class="ln">    <span class="tok-k">def</span> <span class="tok-f">sync_source</span>(source: str, data_interval_start=<span class="tok-k">None</span>) -&gt; dict:</span>
+<span class="ln">        manifest = <span class="tok-f">Manifest</span>(source)</span>
+<span class="ln">        written = <span class="tok-n">0</span></span>
+<span class="ln">        <span class="tok-k">for</span> ref <span class="tok-k">in</span> <span class="tok-f">changed_since</span>(source, data_interval_start):</span>
+<span class="ln">            written += <span class="tok-f">index_document</span>(<span class="tok-f">load</span>(ref), manifest)</span>
+<span class="ln">        removed = <span class="tok-n">0</span></span>
+<span class="ln">        <span class="tok-k">for</span> doc <span class="tok-k">in</span> <span class="tok-f">deleted_since</span>(source, data_interval_start):</span>
+<span class="ln">            <span class="tok-f">remove_document</span>(doc.doc_id, source, doc.chunk_count)</span>
+<span class="ln">            manifest.<span class="tok-f">mark_deleted</span>(doc.doc_id)</span>
+<span class="ln">            removed += <span class="tok-n">1</span></span>
+<span class="ln">        <span class="tok-k">return</span> {<span class="tok-s">&quot;source&quot;</span>: source, <span class="tok-s">&quot;chunks_written&quot;</span>: written, <span class="tok-s">&quot;documents_removed&quot;</span>: removed}</span>
+<span class="ln"></span>
+<span class="ln">    <span class="tok-f">@task</span></span>
+<span class="ln">    <span class="tok-k">def</span> <span class="tok-f">record_metrics</span>(results: list[dict]) -&gt; <span class="tok-k">None</span>:</span>
+<span class="ln">        <span class="tok-k">from</span> kb.metrics <span class="tok-k">import</span> write_run_metrics</span>
+<span class="ln">        <span class="tok-f">write_run_metrics</span>(results)</span>
+<span class="ln"></span>
+<span class="ln">    <span class="tok-f">record_metrics</span>(sync_source.<span class="tok-f">expand</span>(source=SOURCES))</span>
+<span class="ln"></span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-f">kb_sync</span>()</span></code></pre>
+            </div>
+          <div class="code-panel" role="tabpanel" id="code-rag-data-pipeline-2" aria-labelledby="tab-rag-data-pipeline-2" tabindex="0" hidden>
+              <p class="code-panel-caption">Nightly evaluation: recall@5 and mean reciprocal rank on 500 labelled questions, per namespace.</p>
+              <pre><code class="lang-python"><span class="ln"><span class="tok-k">from</span> collections <span class="tok-k">import</span> defaultdict</span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-k">from</span> kb.index_documents <span class="tok-k">import</span> embeddings, index</span>
+<span class="ln"></span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-k">def</span> <span class="tok-f">evaluate</span>(questions: list[dict], k: int = <span class="tok-n">5</span>) -&gt; dict:</span>
+<span class="ln">    <span class="tok-s">&quot;&quot;&quot;Each question has text, namespace and the doc_ids that contain the answer.&quot;&quot;&quot;</span></span>
+<span class="ln">    hits, reciprocal_ranks, counts = <span class="tok-f">defaultdict</span>(int), <span class="tok-f">defaultdict</span>(float), <span class="tok-f">defaultdict</span>(int)</span>
+<span class="ln">    <span class="tok-k">for</span> q <span class="tok-k">in</span> questions:</span>
+<span class="ln">        result = index.<span class="tok-f">query</span>(</span>
+<span class="ln">            vector=embeddings.<span class="tok-f">embed_query</span>(q[<span class="tok-s">&quot;text&quot;</span>]),</span>
+<span class="ln">            top_k=k,</span>
+<span class="ln">            namespace=q[<span class="tok-s">&quot;namespace&quot;</span>],</span>
+<span class="ln">            include_metadata=<span class="tok-k">True</span>,</span>
+<span class="ln">        )</span>
+<span class="ln">        ranked = [match.metadata[<span class="tok-s">&quot;doc_id&quot;</span>] <span class="tok-k">for</span> match <span class="tok-k">in</span> result.matches]</span>
+<span class="ln">        rank = <span class="tok-f">next</span>((i + <span class="tok-n">1</span> <span class="tok-k">for</span> i, doc_id <span class="tok-k">in</span> <span class="tok-f">enumerate</span>(ranked) <span class="tok-k">if</span> doc_id <span class="tok-k">in</span> q[<span class="tok-s">&quot;relevant&quot;</span>]), <span class="tok-k">None</span>)</span>
+<span class="ln">        ns = q[<span class="tok-s">&quot;namespace&quot;</span>]</span>
+<span class="ln">        counts[ns] += <span class="tok-n">1</span></span>
+<span class="ln">        <span class="tok-k">if</span> rank <span class="tok-k">is</span> <span class="tok-k">not</span> <span class="tok-k">None</span>:</span>
+<span class="ln">            hits[ns] += <span class="tok-n">1</span></span>
+<span class="ln">            reciprocal_ranks[ns] += <span class="tok-n">1</span> / rank</span>
+<span class="ln">    <span class="tok-k">return</span> {</span>
+<span class="ln">        ns: {<span class="tok-s">&quot;recall_at_5&quot;</span>: hits[ns] / n, <span class="tok-s">&quot;mrr&quot;</span>: reciprocal_ranks[ns] / n, <span class="tok-s">&quot;questions&quot;</span>: n}</span>
+<span class="ln">        <span class="tok-k">for</span> ns, n <span class="tok-k">in</span> counts.<span class="tok-f">items</span>()</span>
+<span class="ln">    }</span></code></pre>
+            </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="dash-section" aria-labelledby="notes-title">
+      <div class="ds-container dash-container">
+        <div class="dash-section-head">
+          <h2 class="dash-h2" id="notes-title">Engineering notes</h2>
+        </div>
+        <div class="highlights">
+          <article class="highlight">
+            <h3>The policy reorganisation</h3>
+            <p>On Sep 15 HR restructured the policy handbook and about 2,100 documents changed in one afternoon. Only those were re-embedded, about 54K chunks for roughly three dollars, and the old chunks were deleted in the same run.</p>
+          </article>
+          <article class="highlight">
+            <h3>Smaller chunks, better answers</h3>
+            <p>Moving from 1,000-token chunks to 512 tokens with heading-aware splitting raised recall@5 on the eval set from 0.86 to 0.91.</p>
+          </article>
+          <article class="highlight">
+            <h3>Fast enough to feel instant</h3>
+            <p>Retrieval takes about 170 ms at p95, including embedding the question, inside the assistant&#x27;s 250 ms budget. Sep 22 came close during an index scale-up.</p>
+          </article>
+          <article class="highlight">
+            <h3>Support tickets need more</h3>
+            <p>The support namespace has the lowest recall, 0.84, because tickets are short and repetitive. The next step is hybrid search that also matches product names and error codes as keywords.</p>
+          </article>
+        </div>
+        <p class="data-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5"/><circle cx="12" cy="7.6" r=".6" fill="currentColor"/></svg><span><strong>About the data.</strong> Every number on this page is sample data from a seeded generator written for this project. It is shaped to behave like a real workload, with daily peaks, late events and the odd incident, but it does not come from any employer or client. Download it as <a href="ingestion_daily.csv">ingestion_daily.csv</a> or read <a href="data.json">data.json</a>.</span></p>
+      </div>
+    </section>
+
+    <div class="ds-container dash-container">
+      <nav class="dash-pager" aria-label="More projects">
+        <a href="/projects/serverless-aws-pipeline/"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg> Previous · 07</span><strong>Serverless Data Pipeline on AWS</strong></a>
+        <a class="is-next" href="/projects/iac-data-platform/"><span>Next · 09 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span><strong>Infrastructure-as-Code Data Platform</strong></a>
+      </nav>
+    </div>
+  </main>
+
+  <footer class="contact-page-footer">
+    <div class="ds-container dash-container">
+      <div class="contact-footer-bottom">
+        <div class="footer-meta-group">
+          <div>
+            <p class="footer-meta-label">Version</p>
+            <p class="footer-meta-value"><span data-year>2026</span> © Edition</p>
+          </div>
+        </div>
+        <div class="footer-meta-group">
+          <div>
+            <p class="footer-meta-label">Socials</p>
+            <ul class="footer-socials">
+              <li><a href="https://www.linkedin.com/in/sarun2003" target="_blank" rel="noopener">LinkedIn</a></li>
+              <li><a href="mailto:sarun.shrestha.dev@gmail.com">Email</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/assets/vendor/echarts.custom.min.js?v=5.6.0" defer></script>
+  <script src="/assets/js/dashboard.js?v=20261007-6" defer></script>
+  <script src="/assets/js/main.js?v=20261007-6" defer></script>
+</body>
+</html>

@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Data Lakehouse with Medallion Architecture — Sarun Shrestha</title>
+  <meta name="description" content="Retail orders, inventory and web events ingested with Auto Loader and refined bronze → silver → gold by a Lakeflow pipeline on Databricks.">
+  <meta name="author" content="Sarun Shrestha">
+  <meta name="theme-color" content="#011013">
+  <meta name="color-scheme" content="dark light">
+  <link rel="canonical" href="https://www.sarunshrestha.com.np/projects/medallion-lakehouse/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.sarunshrestha.com.np/projects/medallion-lakehouse/">
+  <meta property="og:site_name" content="Sarun Shrestha">
+  <meta property="og:title" content="Data Lakehouse with Medallion Architecture — Sarun Shrestha">
+  <meta property="og:description" content="Retail orders, inventory and web events ingested with Auto Loader and refined bronze → silver → gold by a Lakeflow pipeline on Databricks.">
+  <meta property="og:image" content="https://www.sarunshrestha.com.np/assets/img/projects/medallion-lakehouse.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://www.sarunshrestha.com.np/assets/img/projects/medallion-lakehouse.jpg">
+
+  <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+  <link rel="preload" href="/assets/fonts/plus-jakarta-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/assets/css/style.css?v=20261007-6">
+  <link rel="stylesheet" href="/assets/css/projects.css?v=20261007-6">
+  <script>
+    /* No intro greeting on this page; fall back to the plain page if the main script never starts. */
+    (function () {
+      var h = document.documentElement;
+      h.classList.remove('no-js');
+      h.classList.add('js', 'skip-loader');
+      setTimeout(function () {
+        if (!h.classList.contains('app-ready')) { h.classList.remove('js'); h.classList.add('no-js'); }
+      }, 6000);
+    })();
+  </script>
+</head>
+<body class="dash-page">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="noise-overlay" aria-hidden="true"></div>
+
+  <header class="ds-nav">
+    <a class="ds-logo" href="/" aria-label="Sarun Shrestha, home">
+      <span class="ds-logo-mark" aria-hidden="true">©</span>
+      <span class="ds-logo-text">Sarun Shrestha</span>
+    </a>
+    <nav aria-label="Primary">
+      <ul class="ds-nav-links">
+        <li><a class="ds-nav-link" href="/#about">About</a></li>
+        <li><a class="ds-nav-link is-active" href="/projects/">Projects</a></li>
+        <li><a class="ds-nav-link" href="/#experience">Experience</a></li>
+        <li><a class="ds-nav-link" href="/#skills">Skills</a></li>
+        <li><a class="ds-nav-link" href="/contact/">Contact</a></li>
+        <li>
+          <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="side-menu">
+            <span class="menu-toggle-icon" aria-hidden="true"></span>Menu
+          </button>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="side-menu-overlay" data-menu-close></div>
+  <aside class="side-menu" id="side-menu" role="dialog" aria-modal="true" aria-label="Menu">
+    <button class="side-menu-close" type="button" data-menu-close>
+      Close
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>
+    </button>
+    <p class="side-menu-label">Navigation</p>
+    <nav aria-label="Menu">
+      <ul>
+        <li><a class="side-menu-nav-link" href="/">Home</a></li>
+        <li><a class="side-menu-nav-link" href="/#about">About</a></li>
+        <li><a class="side-menu-nav-link is-active" href="/projects/">Projects</a></li>
+        <li><a class="side-menu-nav-link" href="/#experience">Experience</a></li>
+        <li><a class="side-menu-nav-link" href="/#skills">Skills</a></li>
+        <li><a class="side-menu-nav-link" href="/contact/">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="side-menu-socials">
+      <p class="side-menu-label">Socials</p>
+      <ul class="side-menu-social-links">
+        <li><a href="https://www.linkedin.com/in/sarun2003" target="_blank" rel="noopener">LinkedIn</a></li>
+        <li><a href="mailto:sarun.shrestha.dev@gmail.com">Email</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main id="main">
+    <section class="dash-hero" aria-labelledby="dash-title">
+      <div class="ds-container dash-container">
+        <nav class="dash-crumbs" aria-label="Breadcrumb">
+          <a href="/">Home</a><span aria-hidden="true">/</span><a href="/projects/">Projects</a><span aria-hidden="true">/</span><span aria-current="page">Medallion Lakehouse</span>
+        </nav>
+        <p class="dash-eyebrow">Project 02 · Lakehouse</p>
+        <h1 class="dash-title" id="dash-title">Data Lakehouse with Medallion Architecture</h1>
+        <p class="dash-summary">Order files from the web store, point-of-sale exports from 140 stores, nightly inventory snapshots and web events land in cloud storage all day. Auto Loader picks up each new file exactly once and writes it untouched to bronze Delta tables. A Lakeflow Declarative Pipeline (formerly Delta Live Tables) cleans, deduplicates and conforms the data into silver, where data quality expectations quarantine bad rows instead of failing the run, then builds the gold tables that sales, inventory and marketing reporting read.</p>
+        <ul class="dash-stack" aria-label="Tech stack"><li>Databricks</li><li>Delta Lake</li><li>Auto Loader</li><li>Lakeflow Declarative Pipelines</li><li>Unity Catalog</li></ul>
+        <div class="dash-meta">
+          <span class="dash-badge"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 1.8h4M6.6 1.8v4.1L2.7 12.6a1.1 1.1 0 0 0 1 1.6h8.6a1.1 1.1 0 0 0 1-1.6L9.4 5.9V1.8"/><path d="M4.6 9.6h6.8"/></svg>Sample data</span>
+          <span class="dash-window">Last 30 days · Sep 7 – Oct 6, 2026</span>
+          <a class="pill pill--sm" href="gold_daily_sales.csv" download><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M5 19.5h14"/></svg>Download data (CSV)</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="dash-body" data-dashboard data-src="data.json" aria-label="Dashboard">
+      <div class="ds-container dash-container">
+        <noscript><p class="dash-noscript">The charts need JavaScript. The same numbers are in <a href="gold_daily_sales.csv">gold_daily_sales.csv</a> and <a href="data.json">data.json</a>.</p></noscript>
+        <div class="dash-kpis" data-kpis></div>
+        <div class="dash-grid">
+          <article class="dash-panel span-12" aria-labelledby="p-flow">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-flow">How rows moved through the layers</h3>
+                <p class="dash-panel-sub">Landing files → bronze → silver (or quarantine) → gold, last 30 days</p>
+              </div>
+            <button class="dash-toggle" type="button" data-toggle aria-pressed="false" hidden><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="1.5" y="2" width="9" height="8" rx="1.2"/><path d="M1.5 5h9M1.5 7.6h9M5 5v5"/></svg>Table</button>
+            </header>
+            <div class="dash-chart" data-chart="flow" style="height:400px"></div>
+          </article>
+          <article class="dash-panel span-8" aria-labelledby="p-revenue">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-revenue">Revenue by category</h3>
+                <p class="dash-panel-sub">Daily, from <code>gold.daily_sales</code></p>
+              </div>
+            <button class="dash-toggle" type="button" data-toggle aria-pressed="false" hidden><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="1.5" y="2" width="9" height="8" rx="1.2"/><path d="M1.5 5h9M1.5 7.6h9M5 5v5"/></svg>Table</button>
+            </header>
+            <div class="dash-chart" data-chart="revenue" style="height:300px"></div>
+          </article>
+          <article class="dash-panel span-4" aria-labelledby="p-reasons">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-reasons">Why rows were quarantined</h3>
+                <p class="dash-panel-sub">Silver expectations that rows failed</p>
+              </div>
+            <button class="dash-toggle" type="button" data-toggle aria-pressed="false" hidden><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="1.5" y="2" width="9" height="8" rx="1.2"/><path d="M1.5 5h9M1.5 7.6h9M5 5v5"/></svg>Table</button>
+            </header>
+            <div class="dash-chart" data-chart="reasons" style="height:300px"></div>
+          </article>
+          <article class="dash-panel span-6" aria-labelledby="p-files">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-files">Auto Loader: new files per hour</h3>
+                <p class="dash-panel-sub">Last 7 days, all four landing folders</p>
+              </div>
+            <button class="dash-toggle" type="button" data-toggle aria-pressed="false" hidden><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="1.5" y="2" width="9" height="8" rx="1.2"/><path d="M1.5 5h9M1.5 7.6h9M5 5v5"/></svg>Table</button>
+            </header>
+            <div class="dash-chart" data-chart="files" style="height:260px"></div>
+          </article>
+          <article class="dash-panel span-6" aria-labelledby="p-duration">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-duration">Pipeline update time</h3>
+                <p class="dash-panel-sub">p50 and p95 per day, 24 updates a day</p>
+              </div>
+            <button class="dash-toggle" type="button" data-toggle aria-pressed="false" hidden><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="1.5" y="2" width="9" height="8" rx="1.2"/><path d="M1.5 5h9M1.5 7.6h9M5 5v5"/></svg>Table</button>
+            </header>
+            <div class="dash-chart" data-chart="duration" style="height:260px"></div>
+          </article>
+          <article class="dash-panel span-12" aria-labelledby="p-expectations">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-expectations">Data quality expectations</h3>
+                <p class="dash-panel-sub">From the pipeline event log, last 30 days</p>
+              </div>
+            </header>
+            <div class="dash-table-wrap" data-table="expectations"></div>
+          </article>
+          <article class="dash-panel span-12" aria-labelledby="p-catalog">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-catalog">Tables in Unity Catalog</h3>
+                <p class="dash-panel-sub">Freshness checked against each table&#x27;s SLA</p>
+              </div>
+            </header>
+            <div class="dash-table-wrap" data-table="catalog"></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="dash-section" aria-labelledby="how-title">
+      <div class="ds-container dash-container">
+        <div class="dash-section-head">
+          <h2 class="dash-h2" id="how-title">How it works</h2>
+          <p class="dash-section-note">Each layer has one job: bronze keeps everything, silver makes it trustworthy, gold makes it useful.</p>
+        </div>
+        <ol class="flow">
+          <li class="flow-step">
+            <p class="flow-stage">01 · Land</p>
+            <p class="flow-tech">Cloud storage</p>
+            <p class="flow-detail">Web orders as JSON, POS exports as CSV from 140 stores, inventory snapshots as Parquet and web events, all in one landing bucket.</p>
+          </li>
+          <li class="flow-step">
+            <p class="flow-stage">02 · Ingest</p>
+            <p class="flow-tech">Auto Loader</p>
+            <p class="flow-detail"><code>cloudFiles</code> streams every new file exactly once, infers and evolves the schema, and keeps surprises in <code>_rescued_data</code>.</p>
+          </li>
+          <li class="flow-step">
+            <p class="flow-stage">03 · Bronze</p>
+            <p class="flow-tech">Delta Lake</p>
+            <p class="flow-detail">Rows exactly as they arrived, plus the source file and ingest time. Nothing is dropped here.</p>
+          </li>
+          <li class="flow-step">
+            <p class="flow-stage">04 · Silver</p>
+            <p class="flow-tech">Lakeflow pipeline</p>
+            <p class="flow-detail">Typed, deduplicated and conformed. Expectations quarantine rows that break the rules and log every failure.</p>
+          </li>
+          <li class="flow-step">
+            <p class="flow-stage">05 · Gold</p>
+            <p class="flow-tech">Materialized views</p>
+            <p class="flow-detail">Daily sales, inventory health and the web funnel, refreshed incrementally each update.</p>
+          </li>
+          <li class="flow-step">
+            <p class="flow-stage">06 · Serve</p>
+            <p class="flow-tech">Unity Catalog + SQL warehouse</p>
+            <p class="flow-detail">Lineage and access control on every table; BI tools and this dashboard query gold.</p>
+          </li>
+        </ol>
+        <ul class="steps">
+          <li><strong>Bronze keeps everything.</strong> Auto Loader writes each file as-is with <code>_source_file</code> and <code>_ingested_at</code>. Columns nobody expected land in <code>_rescued_data</code>, so a row can always be traced to its file.</li>
+          <li><strong>Expectations decide, not exceptions.</strong> Unusable rows are dropped to quarantine, odd but valid rows only warn, and a missing SKU fails the update, because that means the upstream contract broke.</li>
+          <li><strong>Quarantine, then replay.</strong> Failed rows are kept with the rule they broke. Once the cause is fixed, for example a new store added to <code>silver.stores</code>, they are replayed into silver.</li>
+          <li><strong>Customers keep their history.</strong> Customer changes from the CRM feed are applied as SCD type 2 with <code>apply_changes</code>, so reports can use the address that was valid at order time.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="dash-section" aria-labelledby="model-title">
+      <div class="ds-container dash-container">
+        <div class="dash-section-head">
+          <h2 class="dash-h2" id="model-title">Data model</h2>
+          <p class="dash-section-note">Tables live in Unity Catalog under <code>retail</code>. The CSV download is <code>gold.daily_sales</code> for the 30-day window.</p>
+        </div>
+        <div class="model-grid">
+          <article class="model-card">
+            <div class="model-card-head"><code>retail.bronze.orders_raw</code><span>Streaming table · Auto Loader</span></div>
+            <dl class="model-cols">
+              <div><dt><code>order_id</code><span class="model-type">string</span></dt><dd>As sent by the web store</dd></div>
+              <div><dt><code>order_ts</code><span class="model-type">string</span></dt><dd>Raw timestamp text, parsed in silver</dd></div>
+              <div><dt><code>store_id / customer_id</code><span class="model-type">string</span></dt><dd>Raw ids</dd></div>
+              <div><dt><code>lines</code><span class="model-type">array&lt;struct&gt;</span></dt><dd>SKU, quantity, unit price</dd></div>
+              <div><dt><code>_rescued_data</code><span class="model-type">string</span></dt><dd>Fields that did not match the schema</dd></div>
+              <div><dt><code>_source_file / _ingested_at</code><span class="model-type">string / timestamp</span></dt><dd>Where and when the row arrived</dd></div>
+            </dl>
+          </article>
+          <article class="model-card">
+            <div class="model-card-head"><code>retail.silver.order_lines</code><span>Streaming table · expectations</span></div>
+            <dl class="model-cols">
+              <div><dt><code>order_id / line_no</code><span class="model-type">string / int</span></dt><dd>Unique per line; duplicates removed</dd></div>
+              <div><dt><code>order_ts</code><span class="model-type">timestamp</span></dt><dd>Parsed and converted to UTC</dd></div>
+              <div><dt><code>store_id</code><span class="model-type">int</span></dt><dd>Must exist in <code>silver.stores</code></dd></div>
+              <div><dt><code>channel</code><span class="model-type">string</span></dt><dd><code>web</code> or <code>store</code></dd></div>
+              <div><dt><code>sku / category</code><span class="model-type">string</span></dt><dd>Joined from the product dimension</dd></div>
+              <div><dt><code>quantity / unit_price_usd</code><span class="model-type">int / decimal(10,2)</span></dt><dd>Quantity must be positive</dd></div>
+            </dl>
+          </article>
+          <article class="model-card">
+            <div class="model-card-head"><code>retail.gold.daily_sales</code><span>Materialized view · the CSV download</span></div>
+            <dl class="model-cols">
+              <div><dt><code>date</code><span class="model-type">date</span></dt><dd>Order date, store local time</dd></div>
+              <div><dt><code>category</code><span class="model-type">string</span></dt><dd>Product category</dd></div>
+              <div><dt><code>order_lines / units_sold</code><span class="model-type">bigint</span></dt><dd>Lines and units sold</dd></div>
+              <div><dt><code>revenue_usd</code><span class="model-type">decimal(14,2)</span></dt><dd>Quantity × unit price</dd></div>
+              <div><dt><code>avg_line_value_usd</code><span class="model-type">decimal(10,2)</span></dt><dd>Revenue per line</dd></div>
+            </dl>
+          </article>
+        </div>
+        <ul class="dataset-files" aria-label="Downloads">
+          <li><a href="gold_daily_sales.csv" download><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M5 19.5h14"/></svg><span><strong>gold_daily_sales.csv</strong> Gold daily sales by category · 150 rows, 6 columns</span></a></li>
+          <li><a href="data.json"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M5 19.5h14"/></svg><span><strong>data.json</strong> Everything this dashboard draws: KPIs, chart series and tables</span></a></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="dash-section" aria-labelledby="code-title">
+      <div class="ds-container dash-container">
+        <div class="dash-section-head">
+          <h2 class="dash-h2" id="code-title">Key code</h2>
+          <p class="dash-section-note">The pipeline itself, the bundle that deploys it, and the event-log query behind the expectations table.</p>
+        </div>
+        <div class="code-block" data-code-block>
+          <div class="code-bar">
+            <div class="code-tabs" role="tablist" aria-label="Source files">
+              <button class="code-tab" type="button" role="tab" id="tab-medallion-lakehouse-0" aria-controls="code-medallion-lakehouse-0" aria-selected="true" tabindex="0">pipeline.py</button>
+              <button class="code-tab" type="button" role="tab" id="tab-medallion-lakehouse-1" aria-controls="code-medallion-lakehouse-1" aria-selected="false" tabindex="-1">databricks.yml</button>
+              <button class="code-tab" type="button" role="tab" id="tab-medallion-lakehouse-2" aria-controls="code-medallion-lakehouse-2" aria-selected="false" tabindex="-1">expectations.sql</button>
+            </div>
+            <button class="code-copy" type="button" data-copy hidden><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8" rx="1.6"/><path d="M10.5 5.5V3.6a1.1 1.1 0 0 0-1.1-1.1H3.6a1.1 1.1 0 0 0-1.1 1.1v5.8a1.1 1.1 0 0 0 1.1 1.1h1.9"/></svg><span>Copy</span></button>
+          </div>
+          <div class="code-panel" role="tabpanel" id="code-medallion-lakehouse-0" aria-labelledby="tab-medallion-lakehouse-0" tabindex="0">
+              <p class="code-panel-caption">The Lakeflow pipeline: Auto Loader into bronze, expectations and quarantine in silver, a materialized view in gold.</p>
+              <pre><code class="lang-python"><span class="ln"><span class="tok-k">import</span> dlt</span>
+<span class="ln"><span class="tok-k">from</span> pyspark.sql <span class="tok-k">import</span> functions <span class="tok-k">as</span> F</span>
+<span class="ln"></span>
+<span class="ln">LANDING = <span class="tok-s">&quot;s3://retail-landing&quot;</span></span>
+<span class="ln"></span>
+<span class="ln">RULES = {</span>
+<span class="ln">    <span class="tok-s">&quot;known_store_id&quot;</span>: <span class="tok-s">&quot;store_known&quot;</span>,</span>
+<span class="ln">    <span class="tok-s">&quot;positive_quantity&quot;</span>: <span class="tok-s">&quot;quantity &gt; 0&quot;</span>,</span>
+<span class="ln">    <span class="tok-s">&quot;valid_order_ts&quot;</span>: <span class="tok-s">&quot;order_ts IS NOT NULL&quot;</span>,</span>
+<span class="ln">}</span>
+<span class="ln"><span class="tok-c"># A row goes to quarantine if any rule is false or null</span></span>
+<span class="ln">QUARANTINE_IF = <span class="tok-s">&quot; OR &quot;</span>.<span class="tok-f">join</span>(<span class="tok-s">f&quot;NOT coalesce({rule}, false)&quot;</span> <span class="tok-k">for</span> rule <span class="tok-k">in</span> RULES.<span class="tok-f">values</span>())</span>
+<span class="ln"></span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-c"># ---------- Bronze: every file, exactly once, as it arrived</span></span>
+<span class="ln"><span class="tok-f">@dlt.table</span>(comment=<span class="tok-s">&quot;Raw web orders from Auto Loader&quot;</span>)</span>
+<span class="ln"><span class="tok-k">def</span> <span class="tok-f">orders_raw</span>():</span>
+<span class="ln">    <span class="tok-k">return</span> (</span>
+<span class="ln">        spark.readStream.<span class="tok-f">format</span>(<span class="tok-s">&quot;cloudFiles&quot;</span>)</span>
+<span class="ln">        .<span class="tok-f">option</span>(<span class="tok-s">&quot;cloudFiles.format&quot;</span>, <span class="tok-s">&quot;json&quot;</span>)</span>
+<span class="ln">        .<span class="tok-f">option</span>(<span class="tok-s">&quot;cloudFiles.schemaEvolutionMode&quot;</span>, <span class="tok-s">&quot;addNewColumns&quot;</span>)</span>
+<span class="ln">        .<span class="tok-f">option</span>(<span class="tok-s">&quot;cloudFiles.inferColumnTypes&quot;</span>, <span class="tok-s">&quot;false&quot;</span>)</span>
+<span class="ln">        .<span class="tok-f">load</span>(<span class="tok-s">f&quot;{LANDING}/orders/&quot;</span>)</span>
+<span class="ln">        .<span class="tok-f">withColumn</span>(<span class="tok-s">&quot;_source_file&quot;</span>, F.<span class="tok-f">col</span>(<span class="tok-s">&quot;_metadata.file_path&quot;</span>))</span>
+<span class="ln">        .<span class="tok-f">withColumn</span>(<span class="tok-s">&quot;_ingested_at&quot;</span>, F.<span class="tok-f">current_timestamp</span>())</span>
+<span class="ln">    )</span>
+<span class="ln"></span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-c"># ---------- Silver: typed and checked; bad rows are routed, not lost</span></span>
+<span class="ln"><span class="tok-c"># (`stores` and `products` are defined in dimensions.py)</span></span>
+<span class="ln"><span class="tok-f">@dlt.view</span></span>
+<span class="ln"><span class="tok-k">def</span> <span class="tok-f">order_lines_checked</span>():</span>
+<span class="ln">    stores = dlt.<span class="tok-f">read</span>(<span class="tok-s">&quot;stores&quot;</span>).<span class="tok-f">select</span>(<span class="tok-s">&quot;store_id&quot;</span>, F.<span class="tok-f">lit</span>(<span class="tok-k">True</span>).<span class="tok-f">alias</span>(<span class="tok-s">&quot;store_known&quot;</span>))</span>
+<span class="ln">    lines = (</span>
+<span class="ln">        dlt.<span class="tok-f">read_stream</span>(<span class="tok-s">&quot;orders_raw&quot;</span>)</span>
+<span class="ln">        .<span class="tok-f">withColumn</span>(<span class="tok-s">&quot;line&quot;</span>, F.<span class="tok-f">explode</span>(<span class="tok-s">&quot;lines&quot;</span>))</span>
+<span class="ln">        .<span class="tok-f">select</span>(</span>
+<span class="ln">            <span class="tok-s">&quot;order_id&quot;</span>,</span>
+<span class="ln">            F.<span class="tok-f">col</span>(<span class="tok-s">&quot;line.line_no&quot;</span>).<span class="tok-f">cast</span>(<span class="tok-s">&quot;int&quot;</span>).<span class="tok-f">alias</span>(<span class="tok-s">&quot;line_no&quot;</span>),</span>
+<span class="ln">            F.<span class="tok-f">to_timestamp</span>(<span class="tok-s">&quot;order_ts&quot;</span>).<span class="tok-f">alias</span>(<span class="tok-s">&quot;order_ts&quot;</span>),</span>
+<span class="ln">            F.<span class="tok-f">col</span>(<span class="tok-s">&quot;store_id&quot;</span>).<span class="tok-f">cast</span>(<span class="tok-s">&quot;int&quot;</span>).<span class="tok-f">alias</span>(<span class="tok-s">&quot;store_id&quot;</span>),</span>
+<span class="ln">            F.<span class="tok-f">col</span>(<span class="tok-s">&quot;line.sku&quot;</span>).<span class="tok-f">alias</span>(<span class="tok-s">&quot;sku&quot;</span>),</span>
+<span class="ln">            F.<span class="tok-f">col</span>(<span class="tok-s">&quot;line.quantity&quot;</span>).<span class="tok-f">cast</span>(<span class="tok-s">&quot;int&quot;</span>).<span class="tok-f">alias</span>(<span class="tok-s">&quot;quantity&quot;</span>),</span>
+<span class="ln">            F.<span class="tok-f">col</span>(<span class="tok-s">&quot;line.unit_price&quot;</span>).<span class="tok-f">cast</span>(<span class="tok-s">&quot;decimal(10,2)&quot;</span>).<span class="tok-f">alias</span>(<span class="tok-s">&quot;unit_price_usd&quot;</span>),</span>
+<span class="ln">        )</span>
+<span class="ln">    )</span>
+<span class="ln">    <span class="tok-k">return</span> (</span>
+<span class="ln">        lines.<span class="tok-f">join</span>(F.<span class="tok-f">broadcast</span>(stores), <span class="tok-s">&quot;store_id&quot;</span>, <span class="tok-s">&quot;left&quot;</span>)</span>
+<span class="ln">        .<span class="tok-f">withColumn</span>(<span class="tok-s">&quot;store_known&quot;</span>, F.<span class="tok-f">coalesce</span>(<span class="tok-s">&quot;store_known&quot;</span>, F.<span class="tok-f">lit</span>(<span class="tok-k">False</span>)))</span>
+<span class="ln">        .<span class="tok-f">withColumn</span>(<span class="tok-s">&quot;is_quarantined&quot;</span>, F.<span class="tok-f">expr</span>(QUARANTINE_IF))</span>
+<span class="ln">    )</span>
+<span class="ln"></span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-f">@dlt.table</span>(comment=<span class="tok-s">&quot;Clean order lines&quot;</span>)</span>
+<span class="ln"><span class="tok-f">@dlt.expect_all_or_drop</span>(RULES)</span>
+<span class="ln"><span class="tok-k">def</span> <span class="tok-f">order_lines</span>():</span>
+<span class="ln">    <span class="tok-k">return</span> (</span>
+<span class="ln">        dlt.<span class="tok-f">read_stream</span>(<span class="tok-s">&quot;order_lines_checked&quot;</span>)</span>
+<span class="ln">        .<span class="tok-f">withWatermark</span>(<span class="tok-s">&quot;order_ts&quot;</span>, <span class="tok-s">&quot;2 days&quot;</span>)</span>
+<span class="ln">        .<span class="tok-f">dropDuplicatesWithinWatermark</span>([<span class="tok-s">&quot;order_id&quot;</span>, <span class="tok-s">&quot;line_no&quot;</span>])</span>
+<span class="ln">        .<span class="tok-f">drop</span>(<span class="tok-s">&quot;store_known&quot;</span>, <span class="tok-s">&quot;is_quarantined&quot;</span>)</span>
+<span class="ln">    )</span>
+<span class="ln"></span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-f">@dlt.table</span>(comment=<span class="tok-s">&quot;Rows that failed a silver rule, kept for replay&quot;</span>)</span>
+<span class="ln"><span class="tok-k">def</span> <span class="tok-f">order_lines_quarantine</span>():</span>
+<span class="ln">    <span class="tok-k">return</span> dlt.<span class="tok-f">read_stream</span>(<span class="tok-s">&quot;order_lines_checked&quot;</span>).<span class="tok-f">where</span>(<span class="tok-s">&quot;is_quarantined&quot;</span>)</span>
+<span class="ln"></span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-c"># ---------- Gold: refreshed incrementally on each update</span></span>
+<span class="ln"><span class="tok-f">@dlt.table</span>(comment=<span class="tok-s">&quot;Daily sales by category&quot;</span>)</span>
+<span class="ln"><span class="tok-k">def</span> <span class="tok-f">daily_sales</span>():</span>
+<span class="ln">    <span class="tok-k">return</span> (</span>
+<span class="ln">        dlt.<span class="tok-f">read</span>(<span class="tok-s">&quot;order_lines&quot;</span>)</span>
+<span class="ln">        .<span class="tok-f">join</span>(dlt.<span class="tok-f">read</span>(<span class="tok-s">&quot;products&quot;</span>), <span class="tok-s">&quot;sku&quot;</span>)</span>
+<span class="ln">        .<span class="tok-f">groupBy</span>(F.<span class="tok-f">to_date</span>(<span class="tok-s">&quot;order_ts&quot;</span>).<span class="tok-f">alias</span>(<span class="tok-s">&quot;date&quot;</span>), <span class="tok-s">&quot;category&quot;</span>)</span>
+<span class="ln">        .<span class="tok-f">agg</span>(</span>
+<span class="ln">            F.<span class="tok-f">count</span>(<span class="tok-s">&quot;*&quot;</span>).<span class="tok-f">alias</span>(<span class="tok-s">&quot;order_lines&quot;</span>),</span>
+<span class="ln">            F.<span class="tok-f">sum</span>(<span class="tok-s">&quot;quantity&quot;</span>).<span class="tok-f">alias</span>(<span class="tok-s">&quot;units_sold&quot;</span>),</span>
+<span class="ln">            F.<span class="tok-f">sum</span>(F.<span class="tok-f">col</span>(<span class="tok-s">&quot;quantity&quot;</span>) * F.<span class="tok-f">col</span>(<span class="tok-s">&quot;unit_price_usd&quot;</span>)).<span class="tok-f">alias</span>(<span class="tok-s">&quot;revenue_usd&quot;</span>),</span>
+<span class="ln">        )</span>
+<span class="ln">        .<span class="tok-f">withColumn</span>(<span class="tok-s">&quot;avg_line_value_usd&quot;</span>, F.<span class="tok-f">round</span>(F.<span class="tok-f">col</span>(<span class="tok-s">&quot;revenue_usd&quot;</span>) / F.<span class="tok-f">col</span>(<span class="tok-s">&quot;order_lines&quot;</span>), <span class="tok-n">2</span>))</span>
+<span class="ln">    )</span></code></pre>
+            </div>
+          <div class="code-panel" role="tabpanel" id="code-medallion-lakehouse-1" aria-labelledby="tab-medallion-lakehouse-1" tabindex="0" hidden>
+              <p class="code-panel-caption">Databricks Asset Bundle: the pipeline and its hourly job, deployed from CI to dev and prod.</p>
+              <pre><code class="lang-yaml"><span class="ln"><span class="tok-p">bundle</span>:</span>
+<span class="ln">  <span class="tok-p">name</span>: retail-lakehouse</span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-p">variables</span>:</span>
+<span class="ln">  <span class="tok-p">catalog</span>:</span>
+<span class="ln">    <span class="tok-p">default</span>: retail_dev</span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-p">resources</span>:</span>
+<span class="ln">  <span class="tok-p">pipelines</span>:</span>
+<span class="ln">    <span class="tok-p">retail_medallion</span>:</span>
+<span class="ln">      <span class="tok-p">name</span>: retail-medallion-${bundle.target}</span>
+<span class="ln">      <span class="tok-p">catalog</span>: ${var.catalog}</span>
+<span class="ln">      <span class="tok-p">schema</span>: lakehouse</span>
+<span class="ln">      <span class="tok-p">serverless</span>: <span class="tok-k">true</span></span>
+<span class="ln">      <span class="tok-p">photon</span>: <span class="tok-k">true</span></span>
+<span class="ln">      <span class="tok-p">channel</span>: CURRENT</span>
+<span class="ln">      <span class="tok-p">libraries</span>:</span>
+<span class="ln">        - <span class="tok-p">file</span>:</span>
+<span class="ln">            <span class="tok-p">path</span>: ./src/pipeline.py</span>
+<span class="ln">      <span class="tok-p">notifications</span>:</span>
+<span class="ln">        - <span class="tok-p">email_recipients</span>: [data-alerts@example.com]</span>
+<span class="ln">          <span class="tok-p">alerts</span>: [on-update-failure, on-flow-failure]</span>
+<span class="ln"></span>
+<span class="ln">  <span class="tok-p">jobs</span>:</span>
+<span class="ln">    <span class="tok-p">retail_medallion_hourly</span>:</span>
+<span class="ln">      <span class="tok-p">name</span>: retail-medallion-hourly-${bundle.target}</span>
+<span class="ln">      <span class="tok-p">schedule</span>:</span>
+<span class="ln">        <span class="tok-p">quartz_cron_expression</span>: <span class="tok-s">&quot;0 0 * * * ?&quot;</span></span>
+<span class="ln">        <span class="tok-p">timezone_id</span>: America/Chicago</span>
+<span class="ln">      <span class="tok-p">tasks</span>:</span>
+<span class="ln">        - <span class="tok-p">task_key</span>: refresh</span>
+<span class="ln">          <span class="tok-p">pipeline_task</span>:</span>
+<span class="ln">            <span class="tok-p">pipeline_id</span>: ${resources.pipelines.retail_medallion.id}</span>
+<span class="ln">          <span class="tok-p">max_retries</span>: <span class="tok-n">1</span></span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-p">targets</span>:</span>
+<span class="ln">  <span class="tok-p">dev</span>:</span>
+<span class="ln">    <span class="tok-p">mode</span>: development</span>
+<span class="ln">    <span class="tok-p">default</span>: <span class="tok-k">true</span></span>
+<span class="ln">  <span class="tok-p">prod</span>:</span>
+<span class="ln">    <span class="tok-p">mode</span>: production</span>
+<span class="ln">    <span class="tok-p">variables</span>:</span>
+<span class="ln">      <span class="tok-p">catalog</span>: retail</span></code></pre>
+            </div>
+          <div class="code-panel" role="tabpanel" id="code-medallion-lakehouse-2" aria-labelledby="tab-medallion-lakehouse-2" tabindex="0" hidden>
+              <p class="code-panel-caption">Reads the pipeline event log to produce the expectations table on this page.</p>
+              <pre><code class="lang-sql"><span class="ln"><span class="tok-c">-- Pass and fail counts per expectation, from the pipeline&#x27;s event log</span></span>
+<span class="ln"><span class="tok-k">WITH</span> progress <span class="tok-k">AS</span> (</span>
+<span class="ln">  <span class="tok-k">SELECT</span></span>
+<span class="ln">    timestamp,</span>
+<span class="ln">    <span class="tok-f">explode</span>(</span>
+<span class="ln">      <span class="tok-f">from_json</span>(</span>
+<span class="ln">        details:flow_progress:data_quality:expectations,</span>
+<span class="ln">        <span class="tok-s">&#x27;array&lt;struct&lt;name: string, dataset: string, passed_records: bigint, failed_records: bigint&gt;&gt;&#x27;</span></span>
+<span class="ln">      )</span>
+<span class="ln">    ) <span class="tok-k">AS</span> e</span>
+<span class="ln">  <span class="tok-k">FROM</span> <span class="tok-f">event_log</span>(<span class="tok-k">TABLE</span>(retail.lakehouse.order_lines))</span>
+<span class="ln">  <span class="tok-k">WHERE</span> event_type = <span class="tok-s">&#x27;flow_progress&#x27;</span></span>
+<span class="ln">    <span class="tok-k">AND</span> timestamp &gt;= <span class="tok-f">current_timestamp</span>() - <span class="tok-k">INTERVAL</span> <span class="tok-n">30</span> DAYS</span>
+<span class="ln">)</span>
+<span class="ln"><span class="tok-k">SELECT</span></span>
+<span class="ln">  e.dataset,</span>
+<span class="ln">  e.name                                   <span class="tok-k">AS</span> expectation,</span>
+<span class="ln">  <span class="tok-f">sum</span>(e.passed_records) + <span class="tok-f">sum</span>(e.failed_records) <span class="tok-k">AS</span> rows_checked,</span>
+<span class="ln">  <span class="tok-f">sum</span>(e.failed_records)                    <span class="tok-k">AS</span> failed,</span>
+<span class="ln">  <span class="tok-f">round</span>(<span class="tok-f">sum</span>(e.passed_records) / <span class="tok-f">nullif</span>(<span class="tok-f">sum</span>(e.passed_records) + <span class="tok-f">sum</span>(e.failed_records), <span class="tok-n">0</span>), <span class="tok-n">4</span>) <span class="tok-k">AS</span> pass_rate</span>
+<span class="ln"><span class="tok-k">FROM</span> progress</span>
+<span class="ln"><span class="tok-k">GROUP</span> <span class="tok-k">BY</span> e.dataset, e.name</span>
+<span class="ln"><span class="tok-k">ORDER</span> <span class="tok-k">BY</span> failed <span class="tok-k">DESC</span>;</span></code></pre>
+            </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="dash-section" aria-labelledby="notes-title">
+      <div class="ds-container dash-container">
+        <div class="dash-section-head">
+          <h2 class="dash-h2" id="notes-title">Engineering notes</h2>
+        </div>
+        <div class="highlights">
+          <article class="highlight">
+            <h3>A schema change that broke nothing</h3>
+            <p>On Sep 22 the web store added <code>promo_code</code> to its order JSON. Auto Loader added the column to bronze, the pipeline restarted once on its own, and silver picked the field up after a one-line change. No rows were lost.</p>
+          </article>
+          <article class="highlight">
+            <h3>Quarantine is down 12%</h3>
+            <p>Most quarantined rows came from two stores that sent an unknown <code>store_id</code> after a POS upgrade. Adding them to <code>silver.stores</code> and replaying the quarantine table recovered about 96K rows.</p>
+          </article>
+          <article class="highlight">
+            <h3>The slow day</h3>
+            <p>On Sep 24, update p95 reached 21 minutes while a fixed-size cluster scaled for a backfill. Moving the pipeline to serverless on Sep 26 brought p95 back to about 11 minutes.</p>
+          </article>
+          <article class="highlight">
+            <h3>Gold stays cheap</h3>
+            <p>Gold tables are materialized views, so most hourly updates only reprocess the current day instead of recomputing 30 days of sales.</p>
+          </article>
+        </div>
+        <p class="data-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5"/><circle cx="12" cy="7.6" r=".6" fill="currentColor"/></svg><span><strong>About the data.</strong> Every number on this page is sample data from a seeded generator written for this project. It is shaped to behave like a real workload, with daily peaks, late events and the odd incident, but it does not come from any employer or client. Download it as <a href="gold_daily_sales.csv">gold_daily_sales.csv</a> or read <a href="data.json">data.json</a>.</span></p>
+      </div>
+    </section>
+
+    <div class="ds-container dash-container">
+      <nav class="dash-pager" aria-label="More projects">
+        <a href="/projects/streaming-lakehouse/"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg> Previous · 01</span><strong>Real-Time Streaming Lakehouse</strong></a>
+        <a class="is-next" href="/projects/cdc-pipeline/"><span>Next · 03 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span><strong>CDC Pipeline: Postgres to Snowflake</strong></a>
+      </nav>
+    </div>
+  </main>
+
+  <footer class="contact-page-footer">
+    <div class="ds-container dash-container">
+      <div class="contact-footer-bottom">
+        <div class="footer-meta-group">
+          <div>
+            <p class="footer-meta-label">Version</p>
+            <p class="footer-meta-value"><span data-year>2026</span> © Edition</p>
+          </div>
+        </div>
+        <div class="footer-meta-group">
+          <div>
+            <p class="footer-meta-label">Socials</p>
+            <ul class="footer-socials">
+              <li><a href="https://www.linkedin.com/in/sarun2003" target="_blank" rel="noopener">LinkedIn</a></li>
+              <li><a href="mailto:sarun.shrestha.dev@gmail.com">Email</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/assets/vendor/echarts.custom.min.js?v=5.6.0" defer></script>
+  <script src="/assets/js/dashboard.js?v=20261007-6" defer></script>
+  <script src="/assets/js/main.js?v=20261007-6" defer></script>
+</body>
+</html>

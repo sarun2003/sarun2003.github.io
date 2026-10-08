@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Real-Time Streaming Lakehouse — Sarun Shrestha</title>
+  <meta name="description" content="Ride-hailing events streamed from Kafka through Spark Structured Streaming into Apache Iceberg on S3, queryable within seconds.">
+  <meta name="author" content="Sarun Shrestha">
+  <meta name="theme-color" content="#011013">
+  <meta name="color-scheme" content="dark light">
+  <link rel="canonical" href="https://www.sarunshrestha.com.np/projects/streaming-lakehouse/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.sarunshrestha.com.np/projects/streaming-lakehouse/">
+  <meta property="og:site_name" content="Sarun Shrestha">
+  <meta property="og:title" content="Real-Time Streaming Lakehouse — Sarun Shrestha">
+  <meta property="og:description" content="Ride-hailing events streamed from Kafka through Spark Structured Streaming into Apache Iceberg on S3, queryable within seconds.">
+  <meta property="og:image" content="https://www.sarunshrestha.com.np/assets/img/projects/streaming-lakehouse.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://www.sarunshrestha.com.np/assets/img/projects/streaming-lakehouse.jpg">
+
+  <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+  <link rel="preload" href="/assets/fonts/plus-jakarta-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/assets/css/style.css?v=20261007-6">
+  <link rel="stylesheet" href="/assets/css/projects.css?v=20261007-6">
+  <script>
+    /* No intro greeting on this page; fall back to the plain page if the main script never starts. */
+    (function () {
+      var h = document.documentElement;
+      h.classList.remove('no-js');
+      h.classList.add('js', 'skip-loader');
+      setTimeout(function () {
+        if (!h.classList.contains('app-ready')) { h.classList.remove('js'); h.classList.add('no-js'); }
+      }, 6000);
+    })();
+  </script>
+</head>
+<body class="dash-page">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="noise-overlay" aria-hidden="true"></div>
+
+  <header class="ds-nav">
+    <a class="ds-logo" href="/" aria-label="Sarun Shrestha, home">
+      <span class="ds-logo-mark" aria-hidden="true">©</span>
+      <span class="ds-logo-text">Sarun Shrestha</span>
+    </a>
+    <nav aria-label="Primary">
+      <ul class="ds-nav-links">
+        <li><a class="ds-nav-link" href="/#about">About</a></li>
+        <li><a class="ds-nav-link is-active" href="/projects/">Projects</a></li>
+        <li><a class="ds-nav-link" href="/#experience">Experience</a></li>
+        <li><a class="ds-nav-link" href="/#skills">Skills</a></li>
+        <li><a class="ds-nav-link" href="/contact/">Contact</a></li>
+        <li>
+          <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="side-menu">
+            <span class="menu-toggle-icon" aria-hidden="true"></span>Menu
+          </button>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="side-menu-overlay" data-menu-close></div>
+  <aside class="side-menu" id="side-menu" role="dialog" aria-modal="true" aria-label="Menu">
+    <button class="side-menu-close" type="button" data-menu-close>
+      Close
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>
+    </button>
+    <p class="side-menu-label">Navigation</p>
+    <nav aria-label="Menu">
+      <ul>
+        <li><a class="side-menu-nav-link" href="/">Home</a></li>
+        <li><a class="side-menu-nav-link" href="/#about">About</a></li>
+        <li><a class="side-menu-nav-link is-active" href="/projects/">Projects</a></li>
+        <li><a class="side-menu-nav-link" href="/#experience">Experience</a></li>
+        <li><a class="side-menu-nav-link" href="/#skills">Skills</a></li>
+        <li><a class="side-menu-nav-link" href="/contact/">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="side-menu-socials">
+      <p class="side-menu-label">Socials</p>
+      <ul class="side-menu-social-links">
+        <li><a href="https://www.linkedin.com/in/sarun2003" target="_blank" rel="noopener">LinkedIn</a></li>
+        <li><a href="mailto:sarun.shrestha.dev@gmail.com">Email</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main id="main">
+    <section class="dash-hero" aria-labelledby="dash-title">
+      <div class="ds-container dash-container">
+        <nav class="dash-crumbs" aria-label="Breadcrumb">
+          <a href="/">Home</a><span aria-hidden="true">/</span><a href="/projects/">Projects</a><span aria-hidden="true">/</span><span aria-current="page">Streaming Lakehouse</span>
+        </nav>
+        <p class="dash-eyebrow">Project 01 · Real-time streaming</p>
+        <h1 class="dash-title" id="dash-title">Real-Time Streaming Lakehouse</h1>
+        <p class="dash-summary">Rider and driver apps publish trip requests, location pings, trip state changes and payments to Kafka. A Spark Structured Streaming job reads them in 10-second micro-batches, handles late events with a watermark and writes exactly once into Apache Iceberg tables on Amazon S3, so analysts can query a trip seconds after it happens. Airflow keeps the tables healthy with hourly compaction and snapshot expiry.</p>
+        <ul class="dash-stack" aria-label="Tech stack"><li>Apache Kafka</li><li>Spark Structured Streaming</li><li>Apache Iceberg</li><li>Amazon S3</li><li>Apache Airflow</li></ul>
+        <div class="dash-meta">
+          <span class="dash-badge"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 1.8h4M6.6 1.8v4.1L2.7 12.6a1.1 1.1 0 0 0 1 1.6h8.6a1.1 1.1 0 0 0 1-1.6L9.4 5.9V1.8"/><path d="M4.6 9.6h6.8"/></svg>Sample data</span>
+          <span class="dash-window">Tuesday, Oct 6, 2026 · 24 hours, US Central</span>
+          <a class="pill pill--sm" href="trips_5min.csv" download><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M5 19.5h14"/></svg>Download data (CSV)</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="dash-body" data-dashboard data-src="data.json" aria-label="Dashboard">
+      <div class="ds-container dash-container">
+        <noscript><p class="dash-noscript">The charts need JavaScript. The same numbers are in <a href="trips_5min.csv">trips_5min.csv</a> and <a href="data.json">data.json</a>.</p></noscript>
+        <div class="dash-kpis" data-kpis></div>
+        <div class="dash-grid">
+          <article class="dash-panel span-8" aria-labelledby="p-trips">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-trips">Trips completed per 5 minutes</h3>
+                <p class="dash-panel-sub">Oct 6 against the same Tuesday last week</p>
+              </div>
+            <button class="dash-toggle" type="button" data-toggle aria-pressed="false" hidden><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="1.5" y="2" width="9" height="8" rx="1.2"/><path d="M1.5 5h9M1.5 7.6h9M5 5v5"/></svg>Table</button>
+            </header>
+            <div class="dash-chart" data-chart="trips" style="height:300px"></div>
+          </article>
+          <article class="dash-panel span-4" aria-labelledby="p-zones">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-zones">Busiest pickup zones</h3>
+                <p class="dash-panel-sub">Completed trips, top ten zones</p>
+              </div>
+            <button class="dash-toggle" type="button" data-toggle aria-pressed="false" hidden><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="1.5" y="2" width="9" height="8" rx="1.2"/><path d="M1.5 5h9M1.5 7.6h9M5 5v5"/></svg>Table</button>
+            </header>
+            <div class="dash-chart" data-chart="zones" style="height:300px"></div>
+          </article>
+          <article class="dash-panel span-6" aria-labelledby="p-freshness">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-freshness">End-to-end freshness</h3>
+                <p class="dash-panel-sub">Event time to committed Iceberg row, p50 and p95</p>
+              </div>
+            <button class="dash-toggle" type="button" data-toggle aria-pressed="false" hidden><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="1.5" y="2" width="9" height="8" rx="1.2"/><path d="M1.5 5h9M1.5 7.6h9M5 5v5"/></svg>Table</button>
+            </header>
+            <div class="dash-chart" data-chart="freshness" style="height:270px"></div>
+          </article>
+          <article class="dash-panel span-6" aria-labelledby="p-lag">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-lag">Peak consumer lag by partition</h3>
+                <p class="dash-panel-sub">Highest lag per Kafka partition today</p>
+              </div>
+            <button class="dash-toggle" type="button" data-toggle aria-pressed="false" hidden><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="1.5" y="2" width="9" height="8" rx="1.2"/><path d="M1.5 5h9M1.5 7.6h9M5 5v5"/></svg>Table</button>
+            </header>
+            <div class="dash-chart" data-chart="lag" style="height:270px"></div>
+          </article>
+          <article class="dash-panel span-7" aria-labelledby="p-demand">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-demand">Demand by weekday and hour</h3>
+                <p class="dash-panel-sub">Average completed trips per hour, last four weeks</p>
+              </div>
+            <button class="dash-toggle" type="button" data-toggle aria-pressed="false" hidden><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="1.5" y="2" width="9" height="8" rx="1.2"/><path d="M1.5 5h9M1.5 7.6h9M5 5v5"/></svg>Table</button>
+            </header>
+            <div class="dash-chart" data-chart="demand" style="height:300px"></div>
+          </article>
+          <article class="dash-panel span-5" aria-labelledby="p-fares">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-fares">Fare distribution</h3>
+                <p class="dash-panel-sub">Completed trips by fare band</p>
+              </div>
+            <button class="dash-toggle" type="button" data-toggle aria-pressed="false" hidden><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="1.5" y="2" width="9" height="8" rx="1.2"/><path d="M1.5 5h9M1.5 7.6h9M5 5v5"/></svg>Table</button>
+            </header>
+            <div class="dash-chart" data-chart="fares" style="height:300px"></div>
+          </article>
+          <article class="dash-panel span-12" aria-labelledby="p-iceberg">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-iceberg">Iceberg table health</h3>
+                <p class="dash-panel-sub">Snapshots retained for 24 hours; compaction targets 256 MB files</p>
+              </div>
+            </header>
+            <div class="dash-table-wrap" data-table="iceberg"></div>
+          </article>
+          <article class="dash-panel span-12" aria-labelledby="p-maintenance">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-maintenance">Latest maintenance runs</h3>
+                <p class="dash-panel-sub">Airflow DAG <code>iceberg_maintenance</code></p>
+              </div>
+            </header>
+            <div class="dash-table-wrap" data-table="maintenance"></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="dash-section" aria-labelledby="how-title">
+      <div class="ds-container dash-container">
+        <div class="dash-section-head">
+          <h2 class="dash-h2" id="how-title">How it works</h2>
+          <p class="dash-section-note">From an app event to a queryable Iceberg row in about 10 seconds at p95.</p>
+        </div>
+        <ol class="flow">
+          <li class="flow-step">
+            <p class="flow-stage">01 · Produce</p>
+            <p class="flow-tech">Rider and driver apps</p>
+            <p class="flow-detail">Trip requests, state changes, payments and a driver location ping every 4 seconds, as Avro events.</p>
+          </li>
+          <li class="flow-step">
+            <p class="flow-stage">02 · Ingest</p>
+            <p class="flow-tech">Apache Kafka</p>
+            <p class="flow-detail">Four topics with 12 partitions each and 7-day retention. Schema Registry blocks incompatible schema changes.</p>
+          </li>
+          <li class="flow-step">
+            <p class="flow-stage">03 · Process</p>
+            <p class="flow-tech">Spark Structured Streaming</p>
+            <p class="flow-detail">10-second micro-batches, deduplication on <code>event_id</code> and a 10-minute watermark for late events.</p>
+          </li>
+          <li class="flow-step">
+            <p class="flow-stage">04 · Store</p>
+            <p class="flow-tech">Apache Iceberg on S3</p>
+            <p class="flow-detail">Hidden hourly partitions and atomic snapshot commits, so readers never see half a batch.</p>
+          </li>
+          <li class="flow-step">
+            <p class="flow-stage">05 · Maintain</p>
+            <p class="flow-tech">Apache Airflow</p>
+            <p class="flow-detail">Hourly compaction, snapshot expiry and orphan-file cleanup, with an alert when a table falls behind.</p>
+          </li>
+          <li class="flow-step">
+            <p class="flow-stage">06 · Query</p>
+            <p class="flow-tech">Trino and Athena</p>
+            <p class="flow-detail">Analysts and this dashboard read the same tables, seconds behind the apps.</p>
+          </li>
+        </ol>
+        <ul class="steps">
+          <li><strong>Exactly once, end to end.</strong> Raw events use Iceberg&#x27;s streaming sink, which records each batch&#x27;s epoch in the snapshot, so a replayed batch is skipped. Trip state is upserted with <code>MERGE</code> on <code>trip_id</code>, which is safe to run twice.</li>
+          <li><strong>Event time, not arrival time.</strong> Aggregations follow <code>event_ts</code> with a 10-minute watermark. Events later than that go to <code>rides.late_events</code>, and a nightly job folds them in.</li>
+          <li><strong>Small files are expected, then fixed.</strong> Committing every 10 seconds creates many small files. Hourly <code>rewrite_data_files</code> runs compact them to about 256 MB.</li>
+          <li><strong>Freshness is measured, not assumed.</strong> Every row carries <code>ingest_ts</code>. The job records commit time minus event time per batch, which feeds the freshness chart and its alert.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="dash-section" aria-labelledby="model-title">
+      <div class="ds-container dash-container">
+        <div class="dash-section-head">
+          <h2 class="dash-h2" id="model-title">Data model</h2>
+          <p class="dash-section-note">Three Iceberg tables in the <code>rides</code> namespace. The CSV download is the 5-minute aggregate behind the charts.</p>
+        </div>
+        <div class="model-grid">
+          <article class="model-card">
+            <div class="model-card-head"><code>rides.trip_events</code><span>Iceberg · append · hours(event_ts)</span></div>
+            <dl class="model-cols">
+              <div><dt><code>event_id</code><span class="model-type">string</span></dt><dd>Unique id from the app; used to drop duplicates</dd></div>
+              <div><dt><code>trip_id</code><span class="model-type">string</span></dt><dd>Trip the event belongs to</dd></div>
+              <div><dt><code>event_type</code><span class="model-type">string</span></dt><dd><code>requested</code>, <code>accepted</code>, <code>picked_up</code>, <code>completed</code>, <code>cancelled</code></dd></div>
+              <div><dt><code>rider_id / driver_id</code><span class="model-type">string</span></dt><dd>Pseudonymous ids</dd></div>
+              <div><dt><code>zone_id</code><span class="model-type">int</span></dt><dd>Pickup zone</dd></div>
+              <div><dt><code>fare_usd</code><span class="model-type">decimal(8,2)</span></dt><dd>Set on <code>completed</code> events</dd></div>
+              <div><dt><code>event_ts</code><span class="model-type">timestamp</span></dt><dd>When it happened in the app</dd></div>
+              <div><dt><code>ingest_ts</code><span class="model-type">timestamp</span></dt><dd>When the row was committed</dd></div>
+            </dl>
+          </article>
+          <article class="model-card">
+            <div class="model-card-head"><code>rides.trips</code><span>Iceberg · MERGE · days(requested_ts)</span></div>
+            <dl class="model-cols">
+              <div><dt><code>trip_id</code><span class="model-type">string</span></dt><dd>Primary key</dd></div>
+              <div><dt><code>status</code><span class="model-type">string</span></dt><dd>Latest state of the trip</dd></div>
+              <div><dt><code>requested_ts</code><span class="model-type">timestamp</span></dt><dd>Request time</dd></div>
+              <div><dt><code>pickup_ts / dropoff_ts</code><span class="model-type">timestamp</span></dt><dd>Null until the trip reaches that state</dd></div>
+              <div><dt><code>pickup_zone / dropoff_zone</code><span class="model-type">int</span></dt><dd>Zone ids</dd></div>
+              <div><dt><code>distance_km</code><span class="model-type">decimal(6,2)</span></dt><dd>Trip distance</dd></div>
+              <div><dt><code>fare_usd</code><span class="model-type">decimal(8,2)</span></dt><dd>Final fare</dd></div>
+              <div><dt><code>updated_ts</code><span class="model-type">timestamp</span></dt><dd>Event time of the latest change; MERGE keeps the newest</dd></div>
+            </dl>
+          </article>
+          <article class="model-card">
+            <div class="model-card-head"><code>rides.trips_5min</code><span>Iceberg · MERGE · the CSV download</span></div>
+            <dl class="model-cols">
+              <div><dt><code>interval_start</code><span class="model-type">timestamp</span></dt><dd>Start of the 5-minute window</dd></div>
+              <div><dt><code>trips_requested / trips_completed</code><span class="model-type">bigint</span></dt><dd>Counts in the window</dd></div>
+              <div><dt><code>avg_fare_usd / avg_eta_min</code><span class="model-type">double</span></dt><dd>Averages over completed trips</dd></div>
+              <div><dt><code>events / late_events</code><span class="model-type">bigint</span></dt><dd>Events processed, and how many arrived after their window</dd></div>
+              <div><dt><code>freshness_p50_s / freshness_p95_s</code><span class="model-type">double</span></dt><dd>Event time to commit, in seconds</dd></div>
+            </dl>
+          </article>
+        </div>
+        <ul class="dataset-files" aria-label="Downloads">
+          <li><a href="trips_5min.csv" download><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M5 19.5h14"/></svg><span><strong>trips_5min.csv</strong> Trips, fares, events and freshness in 5-minute intervals · 288 rows, 11 columns</span></a></li>
+          <li><a href="data.json"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M5 19.5h14"/></svg><span><strong>data.json</strong> Everything this dashboard draws: KPIs, chart series and tables</span></a></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="dash-section" aria-labelledby="code-title">
+      <div class="ds-container dash-container">
+        <div class="dash-section-head">
+          <h2 class="dash-h2" id="code-title">Key code</h2>
+          <p class="dash-section-note">The streaming job, the table definitions and the Airflow DAG that maintains the tables.</p>
+        </div>
+        <div class="code-block" data-code-block>
+          <div class="code-bar">
+            <div class="code-tabs" role="tablist" aria-label="Source files">
+              <button class="code-tab" type="button" role="tab" id="tab-streaming-lakehouse-0" aria-controls="code-streaming-lakehouse-0" aria-selected="true" tabindex="0">stream_trips.py</button>
+              <button class="code-tab" type="button" role="tab" id="tab-streaming-lakehouse-1" aria-controls="code-streaming-lakehouse-1" aria-selected="false" tabindex="-1">tables.sql</button>
+              <button class="code-tab" type="button" role="tab" id="tab-streaming-lakehouse-2" aria-controls="code-streaming-lakehouse-2" aria-selected="false" tabindex="-1">iceberg_maintenance.py</button>
+            </div>
+            <button class="code-copy" type="button" data-copy hidden><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8" rx="1.6"/><path d="M10.5 5.5V3.6a1.1 1.1 0 0 0-1.1-1.1H3.6a1.1 1.1 0 0 0-1.1 1.1v5.8a1.1 1.1 0 0 0 1.1 1.1h1.9"/></svg><span>Copy</span></button>
+          </div>
+          <div class="code-panel" role="tabpanel" id="code-streaming-lakehouse-0" aria-labelledby="tab-streaming-lakehouse-0" tabindex="0">
+              <p class="code-panel-caption">Reads trip events from Kafka, appends them to <code>rides.trip_events</code> and upserts trip state into <code>rides.trips</code> every 10 seconds.</p>
+              <pre><code class="lang-python"><span class="ln"><span class="tok-s">&quot;&quot;&quot;Kafka -&gt; Iceberg. Raw events are appended; trip state is upserted with MERGE.&quot;&quot;&quot;</span></span>
+<span class="ln"><span class="tok-k">from</span> pyspark.sql <span class="tok-k">import</span> SparkSession, Window, functions <span class="tok-k">as</span> F</span>
+<span class="ln"><span class="tok-k">from</span> pyspark.sql.avro.functions <span class="tok-k">import</span> from_avro</span>
+<span class="ln"></span>
+<span class="ln">CHECKPOINTS = <span class="tok-s">&quot;s3://rides-lakehouse/checkpoints&quot;</span></span>
+<span class="ln">SCHEMA = <span class="tok-f">open</span>(<span class="tok-s">&quot;schemas/trip_event.avsc&quot;</span>).<span class="tok-f">read</span>()</span>
+<span class="ln"></span>
+<span class="ln">spark = (</span>
+<span class="ln">    SparkSession.builder.<span class="tok-f">appName</span>(<span class="tok-s">&quot;stream-trips&quot;</span>)</span>
+<span class="ln">    .<span class="tok-f">config</span>(<span class="tok-s">&quot;spark.sql.extensions&quot;</span>, <span class="tok-s">&quot;org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions&quot;</span>)</span>
+<span class="ln">    .<span class="tok-f">config</span>(<span class="tok-s">&quot;spark.sql.catalog.lake&quot;</span>, <span class="tok-s">&quot;org.apache.iceberg.spark.SparkCatalog&quot;</span>)</span>
+<span class="ln">    .<span class="tok-f">config</span>(<span class="tok-s">&quot;spark.sql.catalog.lake.catalog-impl&quot;</span>, <span class="tok-s">&quot;org.apache.iceberg.aws.glue.GlueCatalog&quot;</span>)</span>
+<span class="ln">    .<span class="tok-f">config</span>(<span class="tok-s">&quot;spark.sql.catalog.lake.warehouse&quot;</span>, <span class="tok-s">&quot;s3://rides-lakehouse/warehouse&quot;</span>)</span>
+<span class="ln">    .<span class="tok-f">getOrCreate</span>()</span>
+<span class="ln">)</span>
+<span class="ln"></span>
+<span class="ln">events = (</span>
+<span class="ln">    spark.readStream.<span class="tok-f">format</span>(<span class="tok-s">&quot;kafka&quot;</span>)</span>
+<span class="ln">    .<span class="tok-f">option</span>(<span class="tok-s">&quot;kafka.bootstrap.servers&quot;</span>, <span class="tok-s">&quot;broker-1:9092,broker-2:9092,broker-3:9092&quot;</span>)</span>
+<span class="ln">    .<span class="tok-f">option</span>(<span class="tok-s">&quot;subscribe&quot;</span>, <span class="tok-s">&quot;rides.trip-events&quot;</span>)</span>
+<span class="ln">    .<span class="tok-f">option</span>(<span class="tok-s">&quot;maxOffsetsPerTrigger&quot;</span>, 400_000)</span>
+<span class="ln">    .<span class="tok-f">load</span>()</span>
+<span class="ln">    <span class="tok-c"># Confluent wire format: skip the magic byte and 4-byte schema id</span></span>
+<span class="ln">    .<span class="tok-f">select</span>(<span class="tok-f">from_avro</span>(F.<span class="tok-f">expr</span>(<span class="tok-s">&quot;substring(value, 6, length(value) - 5)&quot;</span>), SCHEMA).<span class="tok-f">alias</span>(<span class="tok-s">&quot;e&quot;</span>))</span>
+<span class="ln">    .<span class="tok-f">select</span>(<span class="tok-s">&quot;e.*&quot;</span>)</span>
+<span class="ln">    .<span class="tok-f">withColumn</span>(<span class="tok-s">&quot;event_ts&quot;</span>, F.<span class="tok-f">expr</span>(<span class="tok-s">&quot;timestamp_millis(event_time_ms)&quot;</span>))</span>
+<span class="ln">    .<span class="tok-f">withColumn</span>(<span class="tok-s">&quot;ingest_ts&quot;</span>, F.<span class="tok-f">current_timestamp</span>())</span>
+<span class="ln">    .<span class="tok-f">withWatermark</span>(<span class="tok-s">&quot;event_ts&quot;</span>, <span class="tok-s">&quot;10 minutes&quot;</span>)</span>
+<span class="ln">    .<span class="tok-f">dropDuplicatesWithinWatermark</span>([<span class="tok-s">&quot;event_id&quot;</span>])</span>
+<span class="ln">)</span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-c"># 1) Raw events: the Iceberg sink commits each epoch once, even after a restart.</span></span>
+<span class="ln">raw = (</span>
+<span class="ln">    events.<span class="tok-f">drop</span>(<span class="tok-s">&quot;event_time_ms&quot;</span>).writeStream.<span class="tok-f">format</span>(<span class="tok-s">&quot;iceberg&quot;</span>)</span>
+<span class="ln">    .<span class="tok-f">outputMode</span>(<span class="tok-s">&quot;append&quot;</span>)</span>
+<span class="ln">    .<span class="tok-f">trigger</span>(processingTime=<span class="tok-s">&quot;10 seconds&quot;</span>)</span>
+<span class="ln">    .<span class="tok-f">option</span>(<span class="tok-s">&quot;checkpointLocation&quot;</span>, <span class="tok-s">f&quot;{CHECKPOINTS}/trip_events&quot;</span>)</span>
+<span class="ln">    .<span class="tok-f">toTable</span>(<span class="tok-s">&quot;lake.rides.trip_events&quot;</span>)</span>
+<span class="ln">)</span>
+<span class="ln"></span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-c"># 2) Trip state: keep the newest event per trip, then MERGE (idempotent on retry).</span></span>
+<span class="ln"><span class="tok-k">def</span> <span class="tok-f">upsert_trips</span>(batch, batch_id):</span>
+<span class="ln">    newest = Window.<span class="tok-f">partitionBy</span>(<span class="tok-s">&quot;trip_id&quot;</span>).<span class="tok-f">orderBy</span>(F.<span class="tok-f">col</span>(<span class="tok-s">&quot;event_ts&quot;</span>).<span class="tok-f">desc</span>())</span>
+<span class="ln">    (batch.<span class="tok-f">where</span>(<span class="tok-s">&quot;trip_id IS NOT NULL&quot;</span>)</span>
+<span class="ln">          .<span class="tok-f">withColumn</span>(<span class="tok-s">&quot;rn&quot;</span>, F.<span class="tok-f">row_number</span>().<span class="tok-f">over</span>(newest))</span>
+<span class="ln">          .<span class="tok-f">where</span>(<span class="tok-s">&quot;rn = 1&quot;</span>)</span>
+<span class="ln">          .<span class="tok-f">createOrReplaceTempView</span>(<span class="tok-s">&quot;updates&quot;</span>))</span>
+<span class="ln">    batch.sparkSession.<span class="tok-f">sql</span>(<span class="tok-s">&quot;&quot;&quot;</span></span>
+<span class="ln"><span class="tok-s">        MERGE INTO lake.rides.trips t</span></span>
+<span class="ln"><span class="tok-s">        USING updates u ON t.trip_id = u.trip_id</span></span>
+<span class="ln"><span class="tok-s">        WHEN MATCHED AND u.event_ts &gt; t.updated_ts THEN UPDATE SET</span></span>
+<span class="ln"><span class="tok-s">            status = u.event_type,</span></span>
+<span class="ln"><span class="tok-s">            pickup_ts = coalesce(t.pickup_ts, CASE WHEN u.event_type = &#x27;picked_up&#x27; THEN u.event_ts END),</span></span>
+<span class="ln"><span class="tok-s">            dropoff_ts = CASE WHEN u.event_type = &#x27;completed&#x27; THEN u.event_ts ELSE t.dropoff_ts END,</span></span>
+<span class="ln"><span class="tok-s">            fare_usd = coalesce(u.fare_usd, t.fare_usd),</span></span>
+<span class="ln"><span class="tok-s">            updated_ts = u.event_ts</span></span>
+<span class="ln"><span class="tok-s">        WHEN NOT MATCHED THEN INSERT (trip_id, rider_id, status, requested_ts, pickup_zone, updated_ts)</span></span>
+<span class="ln"><span class="tok-s">            VALUES (u.trip_id, u.rider_id, u.event_type, u.event_ts, u.zone_id, u.event_ts)</span></span>
+<span class="ln"><span class="tok-s">    &quot;&quot;&quot;</span>)</span>
+<span class="ln"></span>
+<span class="ln"></span>
+<span class="ln">state = (</span>
+<span class="ln">    events.writeStream.<span class="tok-f">foreachBatch</span>(upsert_trips)</span>
+<span class="ln">    .<span class="tok-f">trigger</span>(processingTime=<span class="tok-s">&quot;10 seconds&quot;</span>)</span>
+<span class="ln">    .<span class="tok-f">option</span>(<span class="tok-s">&quot;checkpointLocation&quot;</span>, <span class="tok-s">f&quot;{CHECKPOINTS}/trips&quot;</span>)</span>
+<span class="ln">    .<span class="tok-f">start</span>()</span>
+<span class="ln">)</span>
+<span class="ln"></span>
+<span class="ln">spark.streams.<span class="tok-f">awaitAnyTermination</span>()</span></code></pre>
+            </div>
+          <div class="code-panel" role="tabpanel" id="code-streaming-lakehouse-1" aria-labelledby="tab-streaming-lakehouse-1" tabindex="0" hidden>
+              <p class="code-panel-caption">Iceberg table definitions. Hidden partitioning means queries filter on <code>event_ts</code> and Iceberg prunes the files.</p>
+              <pre><code class="lang-sql"><span class="ln"><span class="tok-c">-- Raw events: append-only, partitioned by hour without a separate partition column.</span></span>
+<span class="ln"><span class="tok-k">CREATE</span> <span class="tok-k">TABLE</span> <span class="tok-k">IF</span> <span class="tok-k">NOT</span> <span class="tok-k">EXISTS</span> lake.rides.trip_events (</span>
+<span class="ln">  event_id    STRING    <span class="tok-k">NOT</span> <span class="tok-k">NULL</span>,</span>
+<span class="ln">  trip_id     STRING,</span>
+<span class="ln">  event_type  STRING    <span class="tok-k">NOT</span> <span class="tok-k">NULL</span>,</span>
+<span class="ln">  rider_id    STRING,</span>
+<span class="ln">  driver_id   STRING,</span>
+<span class="ln">  zone_id     INT,</span>
+<span class="ln">  fare_usd    <span class="tok-f">DECIMAL</span>(<span class="tok-n">8</span>, <span class="tok-n">2</span>),</span>
+<span class="ln">  event_ts    TIMESTAMP <span class="tok-k">NOT</span> <span class="tok-k">NULL</span>,</span>
+<span class="ln">  ingest_ts   TIMESTAMP <span class="tok-k">NOT</span> <span class="tok-k">NULL</span></span>
+<span class="ln">)</span>
+<span class="ln"><span class="tok-k">USING</span> iceberg</span>
+<span class="ln">PARTITIONED <span class="tok-k">BY</span> (<span class="tok-f">hours</span>(event_ts))</span>
+<span class="ln">TBLPROPERTIES (</span>
+<span class="ln">  <span class="tok-s">&#x27;format-version&#x27;</span> = <span class="tok-s">&#x27;2&#x27;</span>,</span>
+<span class="ln">  <span class="tok-s">&#x27;write.target-file-size-bytes&#x27;</span> = <span class="tok-s">&#x27;268435456&#x27;</span>,</span>
+<span class="ln">  <span class="tok-s">&#x27;write.distribution-mode&#x27;</span> = <span class="tok-s">&#x27;hash&#x27;</span>,</span>
+<span class="ln">  <span class="tok-s">&#x27;history.expire.max-snapshot-age-ms&#x27;</span> = <span class="tok-s">&#x27;86400000&#x27;</span>,   <span class="tok-c">-- keep 24 hours of snapshots</span></span>
+<span class="ln">  <span class="tok-s">&#x27;write.metadata.delete-after-commit.enabled&#x27;</span> = <span class="tok-s">&#x27;true&#x27;</span>,</span>
+<span class="ln">  <span class="tok-s">&#x27;write.metadata.previous-versions-max&#x27;</span> = <span class="tok-s">&#x27;50&#x27;</span></span>
+<span class="ln">);</span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-c">-- Current state of every trip, upserted each micro-batch. Merge-on-read keeps MERGE cheap.</span></span>
+<span class="ln"><span class="tok-k">CREATE</span> <span class="tok-k">TABLE</span> <span class="tok-k">IF</span> <span class="tok-k">NOT</span> <span class="tok-k">EXISTS</span> lake.rides.trips (</span>
+<span class="ln">  trip_id       STRING <span class="tok-k">NOT</span> <span class="tok-k">NULL</span>,</span>
+<span class="ln">  rider_id      STRING,</span>
+<span class="ln">  driver_id     STRING,</span>
+<span class="ln">  status        STRING,</span>
+<span class="ln">  requested_ts  TIMESTAMP,</span>
+<span class="ln">  pickup_ts     TIMESTAMP,</span>
+<span class="ln">  dropoff_ts    TIMESTAMP,</span>
+<span class="ln">  pickup_zone   INT,</span>
+<span class="ln">  dropoff_zone  INT,</span>
+<span class="ln">  distance_km   <span class="tok-f">DECIMAL</span>(<span class="tok-n">6</span>, <span class="tok-n">2</span>),</span>
+<span class="ln">  fare_usd      <span class="tok-f">DECIMAL</span>(<span class="tok-n">8</span>, <span class="tok-n">2</span>),</span>
+<span class="ln">  updated_ts    TIMESTAMP <span class="tok-k">NOT</span> <span class="tok-k">NULL</span></span>
+<span class="ln">)</span>
+<span class="ln"><span class="tok-k">USING</span> iceberg</span>
+<span class="ln">PARTITIONED <span class="tok-k">BY</span> (<span class="tok-f">days</span>(requested_ts), <span class="tok-f">bucket</span>(<span class="tok-n">16</span>, trip_id))</span>
+<span class="ln">TBLPROPERTIES (</span>
+<span class="ln">  <span class="tok-s">&#x27;format-version&#x27;</span> = <span class="tok-s">&#x27;2&#x27;</span>,</span>
+<span class="ln">  <span class="tok-s">&#x27;write.merge.mode&#x27;</span> = <span class="tok-s">&#x27;merge-on-read&#x27;</span>,</span>
+<span class="ln">  <span class="tok-s">&#x27;write.update.mode&#x27;</span> = <span class="tok-s">&#x27;merge-on-read&#x27;</span>,</span>
+<span class="ln">  <span class="tok-s">&#x27;history.expire.max-snapshot-age-ms&#x27;</span> = <span class="tok-s">&#x27;86400000&#x27;</span></span>
+<span class="ln">);</span></code></pre>
+            </div>
+          <div class="code-panel" role="tabpanel" id="code-streaming-lakehouse-2" aria-labelledby="tab-streaming-lakehouse-2" tabindex="0" hidden>
+              <p class="code-panel-caption">Hourly Airflow DAG: compact small files, then expire old snapshots. Orphan files are removed once a night.</p>
+              <pre><code class="lang-python"><span class="ln"><span class="tok-s">&quot;&quot;&quot;Hourly Iceberg upkeep for the rides tables.&quot;&quot;&quot;</span></span>
+<span class="ln"><span class="tok-k">from</span> datetime <span class="tok-k">import</span> datetime, timedelta</span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-k">from</span> airflow <span class="tok-k">import</span> DAG</span>
+<span class="ln"><span class="tok-k">from</span> airflow.operators.python <span class="tok-k">import</span> ShortCircuitOperator</span>
+<span class="ln"><span class="tok-k">from</span> airflow.providers.apache.spark.operators.spark_sql <span class="tok-k">import</span> SparkSqlOperator</span>
+<span class="ln"></span>
+<span class="ln">TABLES = [<span class="tok-s">&quot;rides.trip_events&quot;</span>, <span class="tok-s">&quot;rides.driver_locations&quot;</span>, <span class="tok-s">&quot;rides.trips&quot;</span>, <span class="tok-s">&quot;rides.payments&quot;</span>]</span>
+<span class="ln"></span>
+<span class="ln">COMPACT = <span class="tok-s">&quot;&quot;&quot;</span></span>
+<span class="ln"><span class="tok-s">CALL lake.system.rewrite_data_files(</span></span>
+<span class="ln"><span class="tok-s">  table =&gt; &#x27;{table}&#x27;,</span></span>
+<span class="ln"><span class="tok-s">  strategy =&gt; &#x27;binpack&#x27;,</span></span>
+<span class="ln"><span class="tok-s">  options =&gt; map(</span></span>
+<span class="ln"><span class="tok-s">    &#x27;target-file-size-bytes&#x27;, &#x27;268435456&#x27;,</span></span>
+<span class="ln"><span class="tok-s">    &#x27;min-input-files&#x27;, &#x27;8&#x27;,</span></span>
+<span class="ln"><span class="tok-s">    &#x27;partial-progress.enabled&#x27;, &#x27;true&#x27;))</span></span>
+<span class="ln"><span class="tok-s">&quot;&quot;&quot;</span></span>
+<span class="ln">EXPIRE = <span class="tok-s">&quot;CALL lake.system.expire_snapshots(table =&gt; &#x27;{table}&#x27;, retain_last =&gt; 100)&quot;</span></span>
+<span class="ln">ORPHANS = <span class="tok-s">&quot;CALL lake.system.remove_orphan_files(table =&gt; &#x27;{table}&#x27;)&quot;</span></span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-k">with</span> <span class="tok-f">DAG</span>(</span>
+<span class="ln">    dag_id=<span class="tok-s">&quot;iceberg_maintenance&quot;</span>,</span>
+<span class="ln">    schedule=<span class="tok-s">&quot;15 * * * *&quot;</span>,</span>
+<span class="ln">    start_date=<span class="tok-f">datetime</span>(<span class="tok-n">2026</span>, <span class="tok-n">1</span>, <span class="tok-n">1</span>),</span>
+<span class="ln">    catchup=<span class="tok-k">False</span>,</span>
+<span class="ln">    max_active_runs=<span class="tok-n">1</span>,</span>
+<span class="ln">    default_args={<span class="tok-s">&quot;retries&quot;</span>: <span class="tok-n">2</span>, <span class="tok-s">&quot;retry_delay&quot;</span>: <span class="tok-f">timedelta</span>(minutes=<span class="tok-n">5</span>)},</span>
+<span class="ln">    tags=[<span class="tok-s">&quot;iceberg&quot;</span>, <span class="tok-s">&quot;maintenance&quot;</span>],</span>
+<span class="ln">) <span class="tok-k">as</span> dag:</span>
+<span class="ln">    nightly = <span class="tok-f">ShortCircuitOperator</span>(</span>
+<span class="ln">        task_id=<span class="tok-s">&quot;only_at_3am&quot;</span>,</span>
+<span class="ln">        python_callable=<span class="tok-k">lambda</span> data_interval_end, **_: data_interval_end.hour == <span class="tok-n">3</span>,</span>
+<span class="ln">    )</span>
+<span class="ln">    <span class="tok-k">for</span> table <span class="tok-k">in</span> TABLES:</span>
+<span class="ln">        name = table.<span class="tok-f">split</span>(<span class="tok-s">&quot;.&quot;</span>)[-<span class="tok-n">1</span>]</span>
+<span class="ln">        compact = <span class="tok-f">SparkSqlOperator</span>(task_id=<span class="tok-s">f&quot;compact_{name}&quot;</span>, sql=COMPACT.<span class="tok-f">format</span>(table=table), conn_id=<span class="tok-s">&quot;spark_lake&quot;</span>)</span>
+<span class="ln">        expire = <span class="tok-f">SparkSqlOperator</span>(task_id=<span class="tok-s">f&quot;expire_{name}&quot;</span>, sql=EXPIRE.<span class="tok-f">format</span>(table=table), conn_id=<span class="tok-s">&quot;spark_lake&quot;</span>)</span>
+<span class="ln">        orphans = <span class="tok-f">SparkSqlOperator</span>(task_id=<span class="tok-s">f&quot;orphans_{name}&quot;</span>, sql=ORPHANS.<span class="tok-f">format</span>(table=table), conn_id=<span class="tok-s">&quot;spark_lake&quot;</span>)</span>
+<span class="ln">        compact &gt;&gt; expire</span>
+<span class="ln">        nightly &gt;&gt; orphans</span></code></pre>
+            </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="dash-section" aria-labelledby="notes-title">
+      <div class="ds-container dash-container">
+        <div class="dash-section-head">
+          <h2 class="dash-h2" id="notes-title">Engineering notes</h2>
+        </div>
+        <div class="highlights">
+          <article class="highlight">
+            <h3>A broker restart, absorbed</h3>
+            <p>At 08:20, during the morning peak, Kafka broker 2 restarted. Lag on its four partitions passed 40K events and p95 freshness broke the 15 s SLA for two intervals. The job caught up in about six minutes with no lost or duplicated rows.</p>
+          </article>
+          <article class="highlight">
+            <h3>Small files under control</h3>
+            <p>Ten-second commits create about 8,600 snapshots a day per table. Hourly compaction keeps average files near the 256 MB target. <code>driver_locations</code> is flagged because its compaction is running long and needs more executors.</p>
+          </article>
+          <article class="highlight">
+            <h3>Late data has a home</h3>
+            <p>About 0.4% of events arrive late but inside the 10-minute watermark, and are merged normally. The rare events beyond it go to <code>rides.late_events</code> and are folded in by a nightly batch job.</p>
+          </article>
+          <article class="highlight">
+            <h3>Readers never see half a batch</h3>
+            <p>Each micro-batch is one Iceberg commit. Queries read the last committed snapshot, and MERGE on <code>trip_id</code> keeps <code>rides.trips</code> correct when a batch is retried.</p>
+          </article>
+        </div>
+        <p class="data-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5"/><circle cx="12" cy="7.6" r=".6" fill="currentColor"/></svg><span><strong>About the data.</strong> Every number on this page is sample data from a seeded generator written for this project. It is shaped to behave like a real workload, with daily peaks, late events and the odd incident, but it does not come from any employer or client. Download it as <a href="trips_5min.csv">trips_5min.csv</a> or read <a href="data.json">data.json</a>.</span></p>
+      </div>
+    </section>
+
+    <div class="ds-container dash-container">
+      <nav class="dash-pager" aria-label="More projects">
+        <a href="/projects/fraud-detection-streaming/"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg> Previous · 10</span><strong>Real-Time Fraud Detection Pipeline</strong></a>
+        <a class="is-next" href="/projects/medallion-lakehouse/"><span>Next · 02 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span><strong>Data Lakehouse with Medallion Architecture</strong></a>
+      </nav>
+    </div>
+  </main>
+
+  <footer class="contact-page-footer">
+    <div class="ds-container dash-container">
+      <div class="contact-footer-bottom">
+        <div class="footer-meta-group">
+          <div>
+            <p class="footer-meta-label">Version</p>
+            <p class="footer-meta-value"><span data-year>2026</span> © Edition</p>
+          </div>
+        </div>
+        <div class="footer-meta-group">
+          <div>
+            <p class="footer-meta-label">Socials</p>
+            <ul class="footer-socials">
+              <li><a href="https://www.linkedin.com/in/sarun2003" target="_blank" rel="noopener">LinkedIn</a></li>
+              <li><a href="mailto:sarun.shrestha.dev@gmail.com">Email</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/assets/vendor/echarts.custom.min.js?v=5.6.0" defer></script>
+  <script src="/assets/js/dashboard.js?v=20261007-6" defer></script>
+  <script src="/assets/js/main.js?v=20261007-6" defer></script>
+</body>
+</html>

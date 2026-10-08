@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Serverless Data Pipeline on AWS — Sarun Shrestha</title>
+  <meta name="description" content="Store sales files processed the moment they land in S3, by EventBridge, Step Functions, Lambda and Glue, with nothing running between files.">
+  <meta name="author" content="Sarun Shrestha">
+  <meta name="theme-color" content="#011013">
+  <meta name="color-scheme" content="dark light">
+  <link rel="canonical" href="https://www.sarunshrestha.com.np/projects/serverless-aws-pipeline/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.sarunshrestha.com.np/projects/serverless-aws-pipeline/">
+  <meta property="og:site_name" content="Sarun Shrestha">
+  <meta property="og:title" content="Serverless Data Pipeline on AWS — Sarun Shrestha">
+  <meta property="og:description" content="Store sales files processed the moment they land in S3, by EventBridge, Step Functions, Lambda and Glue, with nothing running between files.">
+  <meta property="og:image" content="https://www.sarunshrestha.com.np/assets/img/projects/serverless-aws-pipeline.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://www.sarunshrestha.com.np/assets/img/projects/serverless-aws-pipeline.jpg">
+
+  <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+  <link rel="preload" href="/assets/fonts/plus-jakarta-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/assets/css/style.css?v=20261007-6">
+  <link rel="stylesheet" href="/assets/css/projects.css?v=20261007-6">
+  <script>
+    /* No intro greeting on this page; fall back to the plain page if the main script never starts. */
+    (function () {
+      var h = document.documentElement;
+      h.classList.remove('no-js');
+      h.classList.add('js', 'skip-loader');
+      setTimeout(function () {
+        if (!h.classList.contains('app-ready')) { h.classList.remove('js'); h.classList.add('no-js'); }
+      }, 6000);
+    })();
+  </script>
+</head>
+<body class="dash-page">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="noise-overlay" aria-hidden="true"></div>
+
+  <header class="ds-nav">
+    <a class="ds-logo" href="/" aria-label="Sarun Shrestha, home">
+      <span class="ds-logo-mark" aria-hidden="true">©</span>
+      <span class="ds-logo-text">Sarun Shrestha</span>
+    </a>
+    <nav aria-label="Primary">
+      <ul class="ds-nav-links">
+        <li><a class="ds-nav-link" href="/#about">About</a></li>
+        <li><a class="ds-nav-link is-active" href="/projects/">Projects</a></li>
+        <li><a class="ds-nav-link" href="/#experience">Experience</a></li>
+        <li><a class="ds-nav-link" href="/#skills">Skills</a></li>
+        <li><a class="ds-nav-link" href="/contact/">Contact</a></li>
+        <li>
+          <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="side-menu">
+            <span class="menu-toggle-icon" aria-hidden="true"></span>Menu
+          </button>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="side-menu-overlay" data-menu-close></div>
+  <aside class="side-menu" id="side-menu" role="dialog" aria-modal="true" aria-label="Menu">
+    <button class="side-menu-close" type="button" data-menu-close>
+      Close
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>
+    </button>
+    <p class="side-menu-label">Navigation</p>
+    <nav aria-label="Menu">
+      <ul>
+        <li><a class="side-menu-nav-link" href="/">Home</a></li>
+        <li><a class="side-menu-nav-link" href="/#about">About</a></li>
+        <li><a class="side-menu-nav-link is-active" href="/projects/">Projects</a></li>
+        <li><a class="side-menu-nav-link" href="/#experience">Experience</a></li>
+        <li><a class="side-menu-nav-link" href="/#skills">Skills</a></li>
+        <li><a class="side-menu-nav-link" href="/contact/">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="side-menu-socials">
+      <p class="side-menu-label">Socials</p>
+      <ul class="side-menu-social-links">
+        <li><a href="https://www.linkedin.com/in/sarun2003" target="_blank" rel="noopener">LinkedIn</a></li>
+        <li><a href="mailto:sarun.shrestha.dev@gmail.com">Email</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main id="main">
+    <section class="dash-hero" aria-labelledby="dash-title">
+      <div class="ds-container dash-container">
+        <nav class="dash-crumbs" aria-label="Breadcrumb">
+          <a href="/">Home</a><span aria-hidden="true">/</span><a href="/projects/">Projects</a><span aria-hidden="true">/</span><span aria-current="page">Serverless on AWS</span>
+        </nav>
+        <p class="dash-eyebrow">Project 07 · Serverless on AWS</p>
+        <h1 class="dash-title" id="dash-title">Serverless Data Pipeline on AWS</h1>
+        <p class="dash-summary">Point-of-sale systems in 140 stores drop sales files into Amazon S3 throughout the day. Each new file triggers an EventBridge rule that starts a Step Functions workflow: a Lambda function validates the file, and an AWS Glue job merges its rows into an Apache Iceberg table in the Glue Data Catalog. Athena queries the table directly and Redshift Serverless refreshes the reporting views every 15 minutes. Nothing runs between files, so the whole pipeline costs about $14 a day.</p>
+        <ul class="dash-stack" aria-label="Tech stack"><li>Amazon S3</li><li>Amazon EventBridge</li><li>AWS Step Functions</li><li>AWS Lambda</li><li>AWS Glue</li><li>Amazon Athena</li><li>Amazon Redshift Serverless</li></ul>
+        <div class="dash-meta">
+          <span class="dash-badge"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 1.8h4M6.6 1.8v4.1L2.7 12.6a1.1 1.1 0 0 0 1 1.6h8.6a1.1 1.1 0 0 0 1-1.6L9.4 5.9V1.8"/><path d="M4.6 9.6h6.8"/></svg>Sample data</span>
+          <span class="dash-window">Last 30 days · Sep 7 – Oct 6, 2026</span>
+          <a class="pill pill--sm" href="pipeline_daily.csv" download><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M5 19.5h14"/></svg>Download data (CSV)</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="dash-body" data-dashboard data-src="data.json" aria-label="Dashboard">
+      <div class="ds-container dash-container">
+        <noscript><p class="dash-noscript">The charts need JavaScript. The same numbers are in <a href="pipeline_daily.csv">pipeline_daily.csv</a> and <a href="data.json">data.json</a>.</p></noscript>
+        <div class="dash-kpis" data-kpis></div>
+        <div class="dash-grid">
+          <article class="dash-panel span-8" aria-labelledby="p-executions">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-executions">Workflow executions by outcome</h3>
+                <p class="dash-panel-sub">Step Functions, one execution per file</p>
+              </div>
+            <button class="dash-toggle" type="button" data-toggle aria-pressed="false" hidden><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="1.5" y="2" width="9" height="8" rx="1.2"/><path d="M1.5 5h9M1.5 7.6h9M5 5v5"/></svg>Table</button>
+            </header>
+            <div class="dash-chart" data-chart="executions" style="height:290px"></div>
+          </article>
+          <article class="dash-panel span-4" aria-labelledby="p-regions">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-regions">Sales by region</h3>
+                <p class="dash-panel-sub">From the processed files, 30 days</p>
+              </div>
+            <button class="dash-toggle" type="button" data-toggle aria-pressed="false" hidden><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="1.5" y="2" width="9" height="8" rx="1.2"/><path d="M1.5 5h9M1.5 7.6h9M5 5v5"/></svg>Table</button>
+            </header>
+            <div class="dash-chart" data-chart="regions" style="height:290px"></div>
+          </article>
+          <article class="dash-panel span-6" aria-labelledby="p-invocations">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-invocations">Lambda invocations</h3>
+                <p class="dash-panel-sub">Per day</p>
+              </div>
+            <button class="dash-toggle" type="button" data-toggle aria-pressed="false" hidden><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="1.5" y="2" width="9" height="8" rx="1.2"/><path d="M1.5 5h9M1.5 7.6h9M5 5v5"/></svg>Table</button>
+            </header>
+            <div class="dash-chart" data-chart="invocations" style="height:250px"></div>
+          </article>
+          <article class="dash-panel span-6" aria-labelledby="p-errors">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-errors">Lambda error rate</h3>
+                <p class="dash-panel-sub">Per day, with the alert threshold</p>
+              </div>
+            <button class="dash-toggle" type="button" data-toggle aria-pressed="false" hidden><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="1.5" y="2" width="9" height="8" rx="1.2"/><path d="M1.5 5h9M1.5 7.6h9M5 5v5"/></svg>Table</button>
+            </header>
+            <div class="dash-chart" data-chart="errors" style="height:250px"></div>
+          </article>
+          <article class="dash-panel span-7" aria-labelledby="p-cost">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-cost">Daily cost by service</h3>
+                <p class="dash-panel-sub">Everything the pipeline uses, in USD</p>
+              </div>
+            <button class="dash-toggle" type="button" data-toggle aria-pressed="false" hidden><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="1.5" y="2" width="9" height="8" rx="1.2"/><path d="M1.5 5h9M1.5 7.6h9M5 5v5"/></svg>Table</button>
+            </header>
+            <div class="dash-chart" data-chart="cost" style="height:290px"></div>
+          </article>
+          <article class="dash-panel span-5" aria-labelledby="p-glue">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-glue">Glue job run time</h3>
+                <p class="dash-panel-sub">p50 and p95 per day</p>
+              </div>
+            <button class="dash-toggle" type="button" data-toggle aria-pressed="false" hidden><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="1.5" y="2" width="9" height="8" rx="1.2"/><path d="M1.5 5h9M1.5 7.6h9M5 5v5"/></svg>Table</button>
+            </header>
+            <div class="dash-chart" data-chart="glue" style="height:290px"></div>
+          </article>
+          <article class="dash-panel span-12" aria-labelledby="p-runs">
+            <header class="dash-panel-head">
+              <div>
+                <h3 class="dash-panel-title" id="p-runs">Latest executions</h3>
+                <p class="dash-panel-sub">Oct 6, most recent first</p>
+              </div>
+            </header>
+            <div class="dash-table-wrap" data-table="runs"></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="dash-section" aria-labelledby="how-title">
+      <div class="ds-container dash-container">
+        <div class="dash-section-head">
+          <h2 class="dash-h2" id="how-title">How it works</h2>
+          <p class="dash-section-note">Event-driven from end to end: a file arrives, a workflow runs, and then everything scales back to zero.</p>
+        </div>
+        <ol class="flow">
+          <li class="flow-step">
+            <p class="flow-stage">01 · Land</p>
+            <p class="flow-tech">Amazon S3</p>
+            <p class="flow-detail">POS systems upload about 630 sales files a day to <code>s3://sales-landing/&lt;store&gt;/&lt;date&gt;/</code>.</p>
+          </li>
+          <li class="flow-step">
+            <p class="flow-stage">02 · Trigger</p>
+            <p class="flow-tech">Amazon EventBridge</p>
+            <p class="flow-detail">An Object Created rule starts one Step Functions execution per file.</p>
+          </li>
+          <li class="flow-step">
+            <p class="flow-stage">03 · Validate</p>
+            <p class="flow-tech">AWS Lambda</p>
+            <p class="flow-detail">Checks the header, row count and encoding. Bad files move to a quarantine prefix with the reason.</p>
+          </li>
+          <li class="flow-step">
+            <p class="flow-stage">04 · Transform</p>
+            <p class="flow-tech">AWS Glue</p>
+            <p class="flow-detail">A Spark job types the rows and merges them into an Iceberg table on transaction id.</p>
+          </li>
+          <li class="flow-step">
+            <p class="flow-stage">05 · Catalog</p>
+            <p class="flow-tech">Glue Data Catalog</p>
+            <p class="flow-detail">Every Iceberg commit updates the catalog, so new rows are queryable immediately.</p>
+          </li>
+          <li class="flow-step">
+            <p class="flow-stage">06 · Serve</p>
+            <p class="flow-tech">Athena · Redshift Serverless</p>
+            <p class="flow-detail">Athena for ad hoc questions; Redshift refreshes reporting views every 15 minutes.</p>
+          </li>
+        </ol>
+        <ul class="steps">
+          <li><strong>Pay per file.</strong> No cluster waits for work. Lambda and Glue start when a file lands and stop when it is done; backfills run on Glue Flex at a lower price.</li>
+          <li><strong>Retries live in the workflow.</strong> Step Functions retries throttled Lambda calls and Glue errors with exponential backoff before an execution is marked failed and an alert goes out.</li>
+          <li><strong>Safe to run twice.</strong> The Glue job merges on <code>transaction_id</code> and <code>sku</code>, so a file processed twice, by a retry or a manual rerun, does not double the sales.</li>
+          <li><strong>Bad files don&#x27;t block good ones.</strong> A file that fails validation goes to quarantine with its reason and the next file runs normally. Store support gets a daily list.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="dash-section" aria-labelledby="model-title">
+      <div class="ds-container dash-container">
+        <div class="dash-section-head">
+          <h2 class="dash-h2" id="model-title">Data model</h2>
+          <p class="dash-section-note">Raw files keep their CSV layout; the Iceberg table is what Athena and Redshift query.</p>
+        </div>
+        <div class="model-grid">
+          <article class="model-card">
+            <div class="model-card-head"><code>s3://sales-landing</code><span>CSV files from POS systems</span></div>
+            <dl class="model-cols">
+              <div><dt><code>store_id / register_id</code><span class="model-type">string</span></dt><dd>Where the sale happened</dd></div>
+              <div><dt><code>transaction_id</code><span class="model-type">string</span></dt><dd>Unique per sale within a store</dd></div>
+              <div><dt><code>sold_at</code><span class="model-type">string</span></dt><dd>Local timestamp, parsed by Glue</dd></div>
+              <div><dt><code>sku / quantity / unit_price</code><span class="model-type">string</span></dt><dd>One row per item</dd></div>
+              <div><dt><code>payment_type</code><span class="model-type">string</span></dt><dd><code>card</code>, <code>cash</code>, <code>gift_card</code>, <code>mobile</code></dd></div>
+            </dl>
+          </article>
+          <article class="model-card">
+            <div class="model-card-head"><code>sales.transactions</code><span>Iceberg table · Glue Data Catalog · days(sold_at), store_id</span></div>
+            <dl class="model-cols">
+              <div><dt><code>transaction_id / sku</code><span class="model-type">string</span></dt><dd>Merge key</dd></div>
+              <div><dt><code>store_id</code><span class="model-type">int</span></dt><dd>Store</dd></div>
+              <div><dt><code>sold_at</code><span class="model-type">timestamp</span></dt><dd>Converted to UTC</dd></div>
+              <div><dt><code>quantity / unit_price</code><span class="model-type">int / decimal(10,2)</span></dt><dd>Typed values</dd></div>
+              <div><dt><code>source_file</code><span class="model-type">string</span></dt><dd>The S3 key it came from</dd></div>
+            </dl>
+          </article>
+          <article class="model-card">
+            <div class="model-card-head"><code>pipeline_daily</code><span>Rollup · the CSV download</span></div>
+            <dl class="model-cols">
+              <div><dt><code>date</code><span class="model-type">date</span></dt><dd>Day</dd></div>
+              <div><dt><code>files / executions_*</code><span class="model-type">int</span></dt><dd>Files received and how their workflows ended</dd></div>
+              <div><dt><code>lambda_invocations / lambda_errors</code><span class="model-type">int</span></dt><dd>Lambda activity</dd></div>
+              <div><dt><code>glue_p50_s / glue_p95_s</code><span class="model-type">int</span></dt><dd>Glue run time</dd></div>
+              <div><dt><code>cost_*_usd / sales_usd</code><span class="model-type">decimal</span></dt><dd>Cost by service, and sales in the files</dd></div>
+            </dl>
+          </article>
+        </div>
+        <ul class="dataset-files" aria-label="Downloads">
+          <li><a href="pipeline_daily.csv" download><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M5 19.5h14"/></svg><span><strong>pipeline_daily.csv</strong> Files, workflow outcomes, Lambda and Glue activity, cost and sales per day · 30 rows, 16 columns</span></a></li>
+          <li><a href="data.json"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M5 19.5h14"/></svg><span><strong>data.json</strong> Everything this dashboard draws: KPIs, chart series and tables</span></a></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="dash-section" aria-labelledby="code-title">
+      <div class="ds-container dash-container">
+        <div class="dash-section-head">
+          <h2 class="dash-h2" id="code-title">Key code</h2>
+          <p class="dash-section-note">The Step Functions workflow, the validation Lambda and the Glue job.</p>
+        </div>
+        <div class="code-block" data-code-block>
+          <div class="code-bar">
+            <div class="code-tabs" role="tablist" aria-label="Source files">
+              <button class="code-tab" type="button" role="tab" id="tab-serverless-aws-pipeline-0" aria-controls="code-serverless-aws-pipeline-0" aria-selected="true" tabindex="0">process_sales_file.asl.json</button>
+              <button class="code-tab" type="button" role="tab" id="tab-serverless-aws-pipeline-1" aria-controls="code-serverless-aws-pipeline-1" aria-selected="false" tabindex="-1">validate_file.py</button>
+              <button class="code-tab" type="button" role="tab" id="tab-serverless-aws-pipeline-2" aria-controls="code-serverless-aws-pipeline-2" aria-selected="false" tabindex="-1">merge_sales_file.py</button>
+            </div>
+            <button class="code-copy" type="button" data-copy hidden><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8" rx="1.6"/><path d="M10.5 5.5V3.6a1.1 1.1 0 0 0-1.1-1.1H3.6a1.1 1.1 0 0 0-1.1 1.1v5.8a1.1 1.1 0 0 0 1.1 1.1h1.9"/></svg><span>Copy</span></button>
+          </div>
+          <div class="code-panel" role="tabpanel" id="code-serverless-aws-pipeline-0" aria-labelledby="tab-serverless-aws-pipeline-0" tabindex="0">
+              <p class="code-panel-caption">Step Functions workflow (Amazon States Language): validate, transform, and quarantine on failure.</p>
+              <pre><code class="lang-json"><span class="ln">{</span>
+<span class="ln">  <span class="tok-p">&quot;Comment&quot;</span>: <span class="tok-s">&quot;Process one POS sales file from S3&quot;</span>,</span>
+<span class="ln">  <span class="tok-p">&quot;StartAt&quot;</span>: <span class="tok-s">&quot;ValidateFile&quot;</span>,</span>
+<span class="ln">  <span class="tok-p">&quot;States&quot;</span>: {</span>
+<span class="ln">    <span class="tok-p">&quot;ValidateFile&quot;</span>: {</span>
+<span class="ln">      <span class="tok-p">&quot;Type&quot;</span>: <span class="tok-s">&quot;Task&quot;</span>,</span>
+<span class="ln">      <span class="tok-p">&quot;Resource&quot;</span>: <span class="tok-s">&quot;arn:aws:states:::lambda:invoke&quot;</span>,</span>
+<span class="ln">      <span class="tok-p">&quot;Parameters&quot;</span>: {</span>
+<span class="ln">        <span class="tok-p">&quot;FunctionName&quot;</span>: <span class="tok-s">&quot;validate-sales-file&quot;</span>,</span>
+<span class="ln">        <span class="tok-p">&quot;Payload&quot;</span>: {</span>
+<span class="ln">          <span class="tok-p">&quot;bucket.$&quot;</span>: <span class="tok-s">&quot;$.detail.bucket.name&quot;</span>,</span>
+<span class="ln">          <span class="tok-p">&quot;key.$&quot;</span>: <span class="tok-s">&quot;$.detail.object.key&quot;</span></span>
+<span class="ln">        }</span>
+<span class="ln">      },</span>
+<span class="ln">      <span class="tok-p">&quot;ResultSelector&quot;</span>: { <span class="tok-p">&quot;file.$&quot;</span>: <span class="tok-s">&quot;$.Payload&quot;</span> },</span>
+<span class="ln">      <span class="tok-p">&quot;Retry&quot;</span>: [</span>
+<span class="ln">        {</span>
+<span class="ln">          <span class="tok-p">&quot;ErrorEquals&quot;</span>: [<span class="tok-s">&quot;Lambda.TooManyRequestsException&quot;</span>, <span class="tok-s">&quot;Lambda.ServiceException&quot;</span>],</span>
+<span class="ln">          <span class="tok-p">&quot;IntervalSeconds&quot;</span>: <span class="tok-n">2</span>,</span>
+<span class="ln">          <span class="tok-p">&quot;MaxAttempts&quot;</span>: <span class="tok-n">3</span>,</span>
+<span class="ln">          <span class="tok-p">&quot;BackoffRate&quot;</span>: <span class="tok-n">2</span></span>
+<span class="ln">        }</span>
+<span class="ln">      ],</span>
+<span class="ln">      <span class="tok-p">&quot;Catch&quot;</span>: [</span>
+<span class="ln">        { <span class="tok-p">&quot;ErrorEquals&quot;</span>: [<span class="tok-s">&quot;InvalidFile&quot;</span>], <span class="tok-p">&quot;ResultPath&quot;</span>: <span class="tok-s">&quot;$.error&quot;</span>, <span class="tok-p">&quot;Next&quot;</span>: <span class="tok-s">&quot;Quarantine&quot;</span> }</span>
+<span class="ln">      ],</span>
+<span class="ln">      <span class="tok-p">&quot;Next&quot;</span>: <span class="tok-s">&quot;MergeIntoIceberg&quot;</span></span>
+<span class="ln">    },</span>
+<span class="ln">    <span class="tok-p">&quot;MergeIntoIceberg&quot;</span>: {</span>
+<span class="ln">      <span class="tok-p">&quot;Type&quot;</span>: <span class="tok-s">&quot;Task&quot;</span>,</span>
+<span class="ln">      <span class="tok-p">&quot;Resource&quot;</span>: <span class="tok-s">&quot;arn:aws:states:::glue:startJobRun.sync&quot;</span>,</span>
+<span class="ln">      <span class="tok-p">&quot;Parameters&quot;</span>: {</span>
+<span class="ln">        <span class="tok-p">&quot;JobName&quot;</span>: <span class="tok-s">&quot;merge-sales-file&quot;</span>,</span>
+<span class="ln">        <span class="tok-p">&quot;Arguments&quot;</span>: {</span>
+<span class="ln">          <span class="tok-p">&quot;--source_key.$&quot;</span>: <span class="tok-s">&quot;$.file.key&quot;</span>,</span>
+<span class="ln">          <span class="tok-p">&quot;--store_id.$&quot;</span>: <span class="tok-s">&quot;$.file.store_id&quot;</span></span>
+<span class="ln">        }</span>
+<span class="ln">      },</span>
+<span class="ln">      <span class="tok-p">&quot;Retry&quot;</span>: [</span>
+<span class="ln">        {</span>
+<span class="ln">          <span class="tok-p">&quot;ErrorEquals&quot;</span>: [<span class="tok-s">&quot;Glue.ConcurrentRunsExceededException&quot;</span>, <span class="tok-s">&quot;Glue.AWSGlueException&quot;</span>],</span>
+<span class="ln">          <span class="tok-p">&quot;IntervalSeconds&quot;</span>: <span class="tok-n">30</span>,</span>
+<span class="ln">          <span class="tok-p">&quot;MaxAttempts&quot;</span>: <span class="tok-n">4</span>,</span>
+<span class="ln">          <span class="tok-p">&quot;BackoffRate&quot;</span>: <span class="tok-n">2</span></span>
+<span class="ln">        }</span>
+<span class="ln">      ],</span>
+<span class="ln">      <span class="tok-p">&quot;End&quot;</span>: <span class="tok-k">true</span></span>
+<span class="ln">    },</span>
+<span class="ln">    <span class="tok-p">&quot;Quarantine&quot;</span>: {</span>
+<span class="ln">      <span class="tok-p">&quot;Type&quot;</span>: <span class="tok-s">&quot;Task&quot;</span>,</span>
+<span class="ln">      <span class="tok-p">&quot;Resource&quot;</span>: <span class="tok-s">&quot;arn:aws:states:::lambda:invoke&quot;</span>,</span>
+<span class="ln">      <span class="tok-p">&quot;Parameters&quot;</span>: { <span class="tok-p">&quot;FunctionName&quot;</span>: <span class="tok-s">&quot;quarantine-sales-file&quot;</span>, <span class="tok-p">&quot;Payload.$&quot;</span>: <span class="tok-s">&quot;$&quot;</span> },</span>
+<span class="ln">      <span class="tok-p">&quot;Next&quot;</span>: <span class="tok-s">&quot;Rejected&quot;</span></span>
+<span class="ln">    },</span>
+<span class="ln">    <span class="tok-p">&quot;Rejected&quot;</span>: {</span>
+<span class="ln">      <span class="tok-p">&quot;Type&quot;</span>: <span class="tok-s">&quot;Fail&quot;</span>,</span>
+<span class="ln">      <span class="tok-p">&quot;Error&quot;</span>: <span class="tok-s">&quot;InvalidFile&quot;</span>,</span>
+<span class="ln">      <span class="tok-p">&quot;Cause&quot;</span>: <span class="tok-s">&quot;The file failed validation and was moved to quarantine&quot;</span></span>
+<span class="ln">    }</span>
+<span class="ln">  }</span>
+<span class="ln">}</span></code></pre>
+            </div>
+          <div class="code-panel" role="tabpanel" id="code-serverless-aws-pipeline-1" aria-labelledby="tab-serverless-aws-pipeline-1" tabindex="0" hidden>
+              <p class="code-panel-caption">Lambda: cheap checks before any Spark runs. Raising <code>InvalidFile</code> sends the execution to the quarantine branch.</p>
+              <pre><code class="lang-python"><span class="ln"><span class="tok-k">import</span> csv</span>
+<span class="ln"><span class="tok-k">import</span> io</span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-k">import</span> boto3</span>
+<span class="ln"></span>
+<span class="ln">s3 = boto3.<span class="tok-f">client</span>(<span class="tok-s">&quot;s3&quot;</span>)</span>
+<span class="ln">EXPECTED = [<span class="tok-s">&quot;store_id&quot;</span>, <span class="tok-s">&quot;register_id&quot;</span>, <span class="tok-s">&quot;transaction_id&quot;</span>, <span class="tok-s">&quot;sold_at&quot;</span>, <span class="tok-s">&quot;sku&quot;</span>, <span class="tok-s">&quot;quantity&quot;</span>, <span class="tok-s">&quot;unit_price&quot;</span>, <span class="tok-s">&quot;payment_type&quot;</span>]</span>
+<span class="ln">MAX_BYTES = <span class="tok-n">50</span> * <span class="tok-n">1024</span> * <span class="tok-n">1024</span></span>
+<span class="ln"></span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-k">class</span> <span class="tok-f">InvalidFile</span>(Exception):</span>
+<span class="ln">    <span class="tok-s">&quot;&quot;&quot;A file that must not be processed. Step Functions catches this by name.&quot;&quot;&quot;</span></span>
+<span class="ln"></span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-k">def</span> <span class="tok-f">handler</span>(event, context):</span>
+<span class="ln">    bucket, key = event[<span class="tok-s">&quot;bucket&quot;</span>], event[<span class="tok-s">&quot;key&quot;</span>]   <span class="tok-c"># &lt;store&gt;/&lt;yyyy-mm-dd&gt;/&lt;file&gt;.csv</span></span>
+<span class="ln">    head = s3.<span class="tok-f">head_object</span>(Bucket=bucket, Key=key)</span>
+<span class="ln">    <span class="tok-k">if</span> head[<span class="tok-s">&quot;ContentLength&quot;</span>] == <span class="tok-n">0</span>:</span>
+<span class="ln">        <span class="tok-k">raise</span> <span class="tok-f">InvalidFile</span>(<span class="tok-s">f&quot;{key} is empty&quot;</span>)</span>
+<span class="ln">    <span class="tok-k">if</span> head[<span class="tok-s">&quot;ContentLength&quot;</span>] &gt; MAX_BYTES:</span>
+<span class="ln">        <span class="tok-k">raise</span> <span class="tok-f">InvalidFile</span>(<span class="tok-s">f&quot;{key} is larger than 50 MB&quot;</span>)</span>
+<span class="ln"></span>
+<span class="ln">    body = s3.<span class="tok-f">get_object</span>(Bucket=bucket, Key=key)[<span class="tok-s">&quot;Body&quot;</span>].<span class="tok-f">read</span>()</span>
+<span class="ln">    <span class="tok-k">try</span>:</span>
+<span class="ln">        text = body.<span class="tok-f">decode</span>(<span class="tok-s">&quot;utf-8-sig&quot;</span>)</span>
+<span class="ln">    <span class="tok-k">except</span> UnicodeDecodeError <span class="tok-k">as</span> err:</span>
+<span class="ln">        <span class="tok-k">raise</span> <span class="tok-f">InvalidFile</span>(<span class="tok-s">f&quot;{key} is not UTF-8: {err}&quot;</span>) <span class="tok-k">from</span> err</span>
+<span class="ln"></span>
+<span class="ln">    reader = csv.<span class="tok-f">reader</span>(io.<span class="tok-f">StringIO</span>(text))</span>
+<span class="ln">    header = <span class="tok-f">next</span>(reader, [])</span>
+<span class="ln">    <span class="tok-k">if</span> [h.<span class="tok-f">strip</span>().<span class="tok-f">lower</span>() <span class="tok-k">for</span> h <span class="tok-k">in</span> header] != EXPECTED:</span>
+<span class="ln">        <span class="tok-k">raise</span> <span class="tok-f">InvalidFile</span>(<span class="tok-s">f&quot;{key} has an unexpected header: {header}&quot;</span>)</span>
+<span class="ln"></span>
+<span class="ln">    rows = <span class="tok-f">sum</span>(<span class="tok-n">1</span> <span class="tok-k">for</span> _ <span class="tok-k">in</span> reader)</span>
+<span class="ln">    <span class="tok-k">if</span> rows == <span class="tok-n">0</span>:</span>
+<span class="ln">        <span class="tok-k">raise</span> <span class="tok-f">InvalidFile</span>(<span class="tok-s">f&quot;{key} has no rows&quot;</span>)</span>
+<span class="ln"></span>
+<span class="ln">    <span class="tok-k">return</span> {</span>
+<span class="ln">        <span class="tok-s">&quot;bucket&quot;</span>: bucket,</span>
+<span class="ln">        <span class="tok-s">&quot;key&quot;</span>: key,</span>
+<span class="ln">        <span class="tok-s">&quot;store_id&quot;</span>: key.<span class="tok-f">split</span>(<span class="tok-s">&quot;/&quot;</span>)[<span class="tok-n">0</span>].<span class="tok-f">removeprefix</span>(<span class="tok-s">&quot;store-&quot;</span>),</span>
+<span class="ln">        <span class="tok-s">&quot;rows&quot;</span>: rows,</span>
+<span class="ln">        <span class="tok-s">&quot;etag&quot;</span>: head[<span class="tok-s">&quot;ETag&quot;</span>].<span class="tok-f">strip</span>(<span class="tok-s">&#x27;&quot;&#x27;</span>),</span>
+<span class="ln">    }</span></code></pre>
+            </div>
+          <div class="code-panel" role="tabpanel" id="code-serverless-aws-pipeline-2" aria-labelledby="tab-serverless-aws-pipeline-2" tabindex="0" hidden>
+              <p class="code-panel-caption">Glue job (Spark + Iceberg): type the rows and merge them on <code>transaction_id</code> and <code>sku</code>, so reruns never duplicate sales.</p>
+              <pre><code class="lang-python"><span class="ln"><span class="tok-k">import</span> sys</span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-k">from</span> awsglue.context <span class="tok-k">import</span> GlueContext</span>
+<span class="ln"><span class="tok-k">from</span> awsglue.job <span class="tok-k">import</span> Job</span>
+<span class="ln"><span class="tok-k">from</span> awsglue.utils <span class="tok-k">import</span> getResolvedOptions</span>
+<span class="ln"><span class="tok-k">from</span> pyspark.context <span class="tok-k">import</span> SparkContext</span>
+<span class="ln"><span class="tok-k">from</span> pyspark.sql <span class="tok-k">import</span> functions <span class="tok-k">as</span> F</span>
+<span class="ln"></span>
+<span class="ln"><span class="tok-c"># Job parameters include --datalake-formats iceberg and the glue_catalog Spark settings.</span></span>
+<span class="ln">args = <span class="tok-f">getResolvedOptions</span>(sys.argv, [<span class="tok-s">&quot;JOB_NAME&quot;</span>, <span class="tok-s">&quot;source_key&quot;</span>, <span class="tok-s">&quot;store_id&quot;</span>])</span>
+<span class="ln">glue = <span class="tok-f">GlueContext</span>(SparkContext.<span class="tok-f">getOrCreate</span>())</span>
+<span class="ln">spark = glue.spark_session</span>
+<span class="ln">job = <span class="tok-f">Job</span>(glue)</span>
+<span class="ln">job.<span class="tok-f">init</span>(args[<span class="tok-s">&quot;JOB_NAME&quot;</span>], args)</span>
+<span class="ln"></span>
+<span class="ln">rows = (</span>
+<span class="ln">    spark.read.<span class="tok-f">option</span>(<span class="tok-s">&quot;header&quot;</span>, <span class="tok-k">True</span>).<span class="tok-f">csv</span>(<span class="tok-s">f&quot;s3://sales-landing/{args[&#x27;source_key&#x27;]}&quot;</span>)</span>
+<span class="ln">    .<span class="tok-f">select</span>(</span>
+<span class="ln">        F.<span class="tok-f">col</span>(<span class="tok-s">&quot;store_id&quot;</span>).<span class="tok-f">cast</span>(<span class="tok-s">&quot;int&quot;</span>).<span class="tok-f">alias</span>(<span class="tok-s">&quot;store_id&quot;</span>),</span>
+<span class="ln">        <span class="tok-s">&quot;register_id&quot;</span>,</span>
+<span class="ln">        <span class="tok-s">&quot;transaction_id&quot;</span>,</span>
+<span class="ln">        F.<span class="tok-f">to_utc_timestamp</span>(F.<span class="tok-f">to_timestamp</span>(<span class="tok-s">&quot;sold_at&quot;</span>), <span class="tok-s">&quot;America/Chicago&quot;</span>).<span class="tok-f">alias</span>(<span class="tok-s">&quot;sold_at&quot;</span>),</span>
+<span class="ln">        <span class="tok-s">&quot;sku&quot;</span>,</span>
+<span class="ln">        F.<span class="tok-f">col</span>(<span class="tok-s">&quot;quantity&quot;</span>).<span class="tok-f">cast</span>(<span class="tok-s">&quot;int&quot;</span>).<span class="tok-f">alias</span>(<span class="tok-s">&quot;quantity&quot;</span>),</span>
+<span class="ln">        F.<span class="tok-f">col</span>(<span class="tok-s">&quot;unit_price&quot;</span>).<span class="tok-f">cast</span>(<span class="tok-s">&quot;decimal(10,2)&quot;</span>).<span class="tok-f">alias</span>(<span class="tok-s">&quot;unit_price&quot;</span>),</span>
+<span class="ln">        <span class="tok-s">&quot;payment_type&quot;</span>,</span>
+<span class="ln">    )</span>
+<span class="ln">    .<span class="tok-f">where</span>(F.<span class="tok-f">col</span>(<span class="tok-s">&quot;quantity&quot;</span>) != <span class="tok-n">0</span>)</span>
+<span class="ln">    .<span class="tok-f">dropDuplicates</span>([<span class="tok-s">&quot;transaction_id&quot;</span>, <span class="tok-s">&quot;sku&quot;</span>])</span>
+<span class="ln">    .<span class="tok-f">withColumn</span>(<span class="tok-s">&quot;source_file&quot;</span>, F.<span class="tok-f">lit</span>(args[<span class="tok-s">&quot;source_key&quot;</span>]))</span>
+<span class="ln">)</span>
+<span class="ln">rows.<span class="tok-f">createOrReplaceTempView</span>(<span class="tok-s">&quot;incoming&quot;</span>)</span>
+<span class="ln"></span>
+<span class="ln">spark.<span class="tok-f">sql</span>(<span class="tok-s">&quot;&quot;&quot;</span></span>
+<span class="ln"><span class="tok-s">    MERGE INTO glue_catalog.sales.transactions AS t</span></span>
+<span class="ln"><span class="tok-s">    USING incoming AS s</span></span>
+<span class="ln"><span class="tok-s">    ON t.transaction_id = s.transaction_id AND t.sku = s.sku</span></span>
+<span class="ln"><span class="tok-s">    WHEN NOT MATCHED THEN INSERT *</span></span>
+<span class="ln"><span class="tok-s">&quot;&quot;&quot;</span>)</span>
+<span class="ln"></span>
+<span class="ln">job.<span class="tok-f">commit</span>()</span></code></pre>
+            </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="dash-section" aria-labelledby="notes-title">
+      <div class="ds-container dash-container">
+        <div class="dash-section-head">
+          <h2 class="dash-h2" id="notes-title">Engineering notes</h2>
+        </div>
+        <div class="highlights">
+          <article class="highlight">
+            <h3>A POS upgrade, contained</h3>
+            <p>On Sep 18 a software update at one store changed the CSV header. Eleven files failed validation and went to quarantine with the reason; every other store&#x27;s files kept flowing. After the store&#x27;s export was fixed, the quarantined files were replayed.</p>
+          </article>
+          <article class="highlight">
+            <h3>The Oct 1 backfill</h3>
+            <p>Reprocessing a month for an audit hit Glue&#x27;s concurrent-run limit. Step Functions retried with backoff, so 31 executions finished late instead of failing; p95 Glue time that day was about 7 minutes.</p>
+          </article>
+          <article class="highlight">
+            <h3>About $14 a day</h3>
+            <p>Glue is two-thirds of the cost. Moving backfills to Glue Flex on Sep 27 cut Glue spend by about 6% without slowing the daily files.</p>
+          </article>
+          <article class="highlight">
+            <h3>Minutes, not a nightly batch</h3>
+            <p>Sales are queryable in Athena about six minutes after a store uploads a file, and in the Redshift reporting views within the next 15-minute refresh.</p>
+          </article>
+        </div>
+        <p class="data-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5"/><circle cx="12" cy="7.6" r=".6" fill="currentColor"/></svg><span><strong>About the data.</strong> Every number on this page is sample data from a seeded generator written for this project. It is shaped to behave like a real workload, with daily peaks, late events and the odd incident, but it does not come from any employer or client. Download it as <a href="pipeline_daily.csv">pipeline_daily.csv</a> or read <a href="data.json">data.json</a>.</span></p>
+      </div>
+    </section>
+
+    <div class="ds-container dash-container">
+      <nav class="dash-pager" aria-label="More projects">
+        <a href="/projects/unified-streaming-batch/"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg> Previous · 06</span><strong>Unified Streaming and Batch Pipeline</strong></a>
+        <a class="is-next" href="/projects/rag-data-pipeline/"><span>Next · 08 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span><strong>RAG Data Pipeline</strong></a>
+      </nav>
+    </div>
+  </main>
+
+  <footer class="contact-page-footer">
+    <div class="ds-container dash-container">
+      <div class="contact-footer-bottom">
+        <div class="footer-meta-group">
+          <div>
+            <p class="footer-meta-label">Version</p>
+            <p class="footer-meta-value"><span data-year>2026</span> © Edition</p>
+          </div>
+        </div>
+        <div class="footer-meta-group">
+          <div>
+            <p class="footer-meta-label">Socials</p>
+            <ul class="footer-socials">
+              <li><a href="https://www.linkedin.com/in/sarun2003" target="_blank" rel="noopener">LinkedIn</a></li>
+              <li><a href="mailto:sarun.shrestha.dev@gmail.com">Email</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/assets/vendor/echarts.custom.min.js?v=5.6.0" defer></script>
+  <script src="/assets/js/dashboard.js?v=20261007-6" defer></script>
+  <script src="/assets/js/main.js?v=20261007-6" defer></script>
+</body>
+</html>
