@@ -279,12 +279,14 @@
 .project-card { position: relative; }
 .project-card-body { margin-top: 1.15rem; }
 .project-card-body > .project-card-num { margin: 0 0 .5rem; font-family: var(--font-mono); font-size: .72rem; letter-spacing: .05em; color: var(--on-light-dim); }
-.project-card h2 { font-size: clamp(1.25rem, 2.2vw, 1.6rem); font-weight: 650; letter-spacing: -.02em; line-height: 1.2; transition: transform .3s var(--ease-out); }
+.project-card h2 { font-size: clamp(1.25rem, 2.2vw, 1.6rem); font-weight: 650; letter-spacing: -.02em; line-height: 1.2; }
+/* The hover slide lives on an inner span: a transform on the h2 or the link would shrink the card-wide click area to the title. */
+.project-card-title { display: inline-block; transition: transform .3s var(--ease-out); }
 .project-card-main { color: inherit; }
 .project-card-main::after { content: ""; position: absolute; inset: 0; z-index: 1; border-radius: 12px; }
 .project-card-main:focus-visible { outline: none; }
 .project-card-main:focus-visible::after { outline: 2px solid var(--dark); outline-offset: 10px; }
-.project-card:hover h2 { transform: translateX(8px); }
+.project-card:hover .project-card-title { transform: translateX(8px); }
 .project-card:hover .tile-image-block img { transform: scale(1.04); }
 .project-card p { margin-top: .55rem; max-width: 60ch; font-size: .95rem; line-height: 1.65; color: var(--on-light-dim); }
 .project-card ul { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .9rem; }

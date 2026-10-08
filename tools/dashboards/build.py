@@ -30,7 +30,7 @@ sys.path.insert(0, HERE)
 
 from common import Gen, esc, highlight  # noqa: E402
 
-VERSION = "20261007-6"
+VERSION = "20261007-7"
 SITE = "https://www.sarunshrestha.com.np"
 EMAIL = "sarun.shrestha.dev@gmail.com"
 LINKEDIN = "https://www.linkedin.com/in/sarun2003"
@@ -422,7 +422,7 @@ def index_page(mods):
             <div class="tile-image-block">{pic}</div>
             <div class="project-card-body">
               <p class="project-card-num">{num} · {cat}</p>
-              <h2><a class="project-card-main" href="/projects/{slug}/">{title}</a></h2>
+              <h2><a class="project-card-main" href="/projects/{slug}/"><span class="project-card-title">{title}</span></a></h2>
               <p>{tagline}</p>
               <ul aria-label="Tech stack">{chips}</ul>
               <span class="project-card-link" aria-hidden="true">Open dashboard {arrow}</span>

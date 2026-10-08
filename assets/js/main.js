@@ -715,7 +715,7 @@
   function initContactForm() {
     var form = $('#contact-form');
     if (!form) return;
-    var EMAIL = 'sarun.shrestha.dev@gmail.com';
+    var EMAIL = 'sarunshrestha03@gmail.com';
     // Built here rather than read from the page: Cloudflare's email obfuscation
     // can rewrite addresses that appear in the HTML.
     var endpoint = 'https://formsubmit.co/ajax/' + EMAIL;

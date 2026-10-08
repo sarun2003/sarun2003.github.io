@@ -22,8 +22,8 @@
   <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
   <link rel="preload" href="/assets/fonts/plus-jakarta-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/assets/css/style.css?v=20261007-6">
-  <link rel="stylesheet" href="/assets/css/projects.css?v=20261007-6">
+  <link rel="stylesheet" href="/assets/css/style.css?v=20261007-7">
+  <link rel="stylesheet" href="/assets/css/projects.css?v=20261007-7">
   <script>
     /* No intro greeting on this page; fall back to the plain page if the main script never starts. */
     (function () {
@@ -110,7 +110,7 @@
             <div class="tile-image-block"><picture><source srcset="/assets/img/projects/streaming-lakehouse.webp" type="image/webp"><img src="/assets/img/projects/streaming-lakehouse.jpg" alt="" width="1200" height="750" fetchpriority="high" decoding="async"></picture></div>
             <div class="project-card-body">
               <p class="project-card-num">01 · Real-time streaming</p>
-              <h2><a class="project-card-main" href="/projects/streaming-lakehouse/">Real-Time Streaming Lakehouse</a></h2>
+              <h2><a class="project-card-main" href="/projects/streaming-lakehouse/"><span class="project-card-title">Real-Time Streaming Lakehouse</span></a></h2>
               <p>Ride-hailing events streamed from Kafka through Spark Structured Streaming into Apache Iceberg on S3, queryable within seconds.</p>
               <ul aria-label="Tech stack"><li>Apache Kafka</li><li>Spark Structured Streaming</li><li>Apache Iceberg</li><li>Amazon S3</li><li>Apache Airflow</li></ul>
               <span class="project-card-link" aria-hidden="true">Open dashboard <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></span>
@@ -120,7 +120,7 @@
             <div class="tile-image-block"><picture><source srcset="/assets/img/projects/medallion-lakehouse.webp" type="image/webp"><img src="/assets/img/projects/medallion-lakehouse.jpg" alt="" width="1200" height="750" fetchpriority="high" decoding="async"></picture></div>
             <div class="project-card-body">
               <p class="project-card-num">02 · Lakehouse</p>
-              <h2><a class="project-card-main" href="/projects/medallion-lakehouse/">Data Lakehouse with Medallion Architecture</a></h2>
+              <h2><a class="project-card-main" href="/projects/medallion-lakehouse/"><span class="project-card-title">Data Lakehouse with Medallion Architecture</span></a></h2>
               <p>Retail orders, inventory and web events ingested with Auto Loader and refined bronze → silver → gold by a Lakeflow pipeline on Databricks.</p>
               <ul aria-label="Tech stack"><li>Databricks</li><li>Delta Lake</li><li>Auto Loader</li><li>Lakeflow Declarative Pipelines</li><li>Unity Catalog</li></ul>
               <span class="project-card-link" aria-hidden="true">Open dashboard <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></span>
@@ -130,7 +130,7 @@
             <div class="tile-image-block"><picture><source srcset="/assets/img/projects/cdc-pipeline.webp" type="image/webp"><img src="/assets/img/projects/cdc-pipeline.jpg" alt="" width="1200" height="750" loading="lazy" decoding="async"></picture></div>
             <div class="project-card-body">
               <p class="project-card-num">03 · Change data capture</p>
-              <h2><a class="project-card-main" href="/projects/cdc-pipeline/">CDC Pipeline: Postgres to Snowflake</a></h2>
+              <h2><a class="project-card-main" href="/projects/cdc-pipeline/"><span class="project-card-title">CDC Pipeline: Postgres to Snowflake</span></a></h2>
               <p>Every insert, update and delete in an orders database captured by Debezium, streamed through Kafka and Flink, and queryable in Snowflake within seconds.</p>
               <ul aria-label="Tech stack"><li>PostgreSQL</li><li>Debezium</li><li>Apache Kafka</li><li>Apache Flink</li><li>Snowflake</li></ul>
               <span class="project-card-link" aria-hidden="true">Open dashboard <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></span>
@@ -140,7 +140,7 @@
             <div class="tile-image-block"><picture><source srcset="/assets/img/projects/etl-orchestration-cicd.webp" type="image/webp"><img src="/assets/img/projects/etl-orchestration-cicd.jpg" alt="" width="1200" height="750" loading="lazy" decoding="async"></picture></div>
             <div class="project-card-body">
               <p class="project-card-num">04 · Orchestration &amp; CI/CD</p>
-              <h2><a class="project-card-main" href="/projects/etl-orchestration-cicd/">ETL with Orchestration and CI/CD</a></h2>
+              <h2><a class="project-card-main" href="/projects/etl-orchestration-cicd/"><span class="project-card-title">ETL with Orchestration and CI/CD</span></a></h2>
               <p>A subscription-revenue warehouse built with Airflow and dbt on Snowflake, tested and deployed through GitHub Actions, with Terraform managing every Snowflake object.</p>
               <ul aria-label="Tech stack"><li>Apache Airflow</li><li>dbt</li><li>Snowflake</li><li>GitHub Actions</li><li>Terraform</li></ul>
               <span class="project-card-link" aria-hidden="true">Open dashboard <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></span>
@@ -150,7 +150,7 @@
             <div class="tile-image-block"><picture><source srcset="/assets/img/projects/data-quality-observability.webp" type="image/webp"><img src="/assets/img/projects/data-quality-observability.jpg" alt="" width="1200" height="750" loading="lazy" decoding="async"></picture></div>
             <div class="project-card-body">
               <p class="project-card-num">05 · Data quality</p>
-              <h2><a class="project-card-main" href="/projects/data-quality-observability/">Data Quality and Observability Platform</a></h2>
+              <h2><a class="project-card-main" href="/projects/data-quality-observability/"><span class="project-card-title">Data Quality and Observability Platform</span></a></h2>
               <p>Freshness SLAs, volume anomaly detection, schema checks and a dead-letter queue across 148 tables, with every incident routed to the team that owns the data.</p>
               <ul aria-label="Tech stack"><li>Great Expectations</li><li>PySpark</li><li>Monte Carlo</li><li>Prometheus</li><li>Grafana</li></ul>
               <span class="project-card-link" aria-hidden="true">Open dashboard <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></span>
@@ -160,7 +160,7 @@
             <div class="tile-image-block"><picture><source srcset="/assets/img/projects/unified-streaming-batch.webp" type="image/webp"><img src="/assets/img/projects/unified-streaming-batch.jpg" alt="" width="1200" height="750" loading="lazy" decoding="async"></picture></div>
             <div class="project-card-body">
               <p class="project-card-num">06 · Streaming + batch</p>
-              <h2><a class="project-card-main" href="/projects/unified-streaming-batch/">Unified Streaming and Batch Pipeline</a></h2>
+              <h2><a class="project-card-main" href="/projects/unified-streaming-batch/"><span class="project-card-title">Unified Streaming and Batch Pipeline</span></a></h2>
               <p>Web and mobile clickstream processed in real time by Flink and recomputed nightly by Spark, both writing the same Apache Iceberg tables so the numbers agree.</p>
               <ul aria-label="Tech stack"><li>Apache Kafka</li><li>Amazon Kinesis</li><li>Apache Flink</li><li>Apache Iceberg</li><li>Apache Spark</li></ul>
               <span class="project-card-link" aria-hidden="true">Open dashboard <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></span>
@@ -170,7 +170,7 @@
             <div class="tile-image-block"><picture><source srcset="/assets/img/projects/serverless-aws-pipeline.webp" type="image/webp"><img src="/assets/img/projects/serverless-aws-pipeline.jpg" alt="" width="1200" height="750" loading="lazy" decoding="async"></picture></div>
             <div class="project-card-body">
               <p class="project-card-num">07 · Serverless on AWS</p>
-              <h2><a class="project-card-main" href="/projects/serverless-aws-pipeline/">Serverless Data Pipeline on AWS</a></h2>
+              <h2><a class="project-card-main" href="/projects/serverless-aws-pipeline/"><span class="project-card-title">Serverless Data Pipeline on AWS</span></a></h2>
               <p>Store sales files processed the moment they land in S3, by EventBridge, Step Functions, Lambda and Glue, with nothing running between files.</p>
               <ul aria-label="Tech stack"><li>Amazon S3</li><li>Amazon EventBridge</li><li>AWS Step Functions</li><li>AWS Lambda</li><li>AWS Glue</li><li>Amazon Athena</li><li>Amazon Redshift Serverless</li></ul>
               <span class="project-card-link" aria-hidden="true">Open dashboard <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></span>
@@ -180,7 +180,7 @@
             <div class="tile-image-block"><picture><source srcset="/assets/img/projects/rag-data-pipeline.webp" type="image/webp"><img src="/assets/img/projects/rag-data-pipeline.jpg" alt="" width="1200" height="750" loading="lazy" decoding="async"></picture></div>
             <div class="project-card-body">
               <p class="project-card-num">08 · AI data pipeline</p>
-              <h2><a class="project-card-main" href="/projects/rag-data-pipeline/">RAG Data Pipeline</a></h2>
+              <h2><a class="project-card-main" href="/projects/rag-data-pipeline/"><span class="project-card-title">RAG Data Pipeline</span></a></h2>
               <p>Company documents ingested, chunked, embedded and indexed in Pinecone every hour, with retrieval quality measured nightly against labelled questions.</p>
               <ul aria-label="Tech stack"><li>Python</li><li>Apache Airflow</li><li>LangChain</li><li>Pinecone</li><li>PostgreSQL</li></ul>
               <span class="project-card-link" aria-hidden="true">Open dashboard <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></span>
@@ -190,7 +190,7 @@
             <div class="tile-image-block"><picture><source srcset="/assets/img/projects/iac-data-platform.webp" type="image/webp"><img src="/assets/img/projects/iac-data-platform.jpg" alt="" width="1200" height="750" loading="lazy" decoding="async"></picture></div>
             <div class="project-card-body">
               <p class="project-card-num">09 · Infrastructure as code</p>
-              <h2><a class="project-card-main" href="/projects/iac-data-platform/">Infrastructure-as-Code Data Platform</a></h2>
+              <h2><a class="project-card-main" href="/projects/iac-data-platform/"><span class="project-card-title">Infrastructure-as-Code Data Platform</span></a></h2>
               <p>A complete lakehouse, from the network to the dashboards, defined in Terraform and Helm on Kubernetes and rebuilt from nothing in under 20 minutes.</p>
               <ul aria-label="Tech stack"><li>Terraform</li><li>Docker</li><li>Kubernetes</li><li>Helm</li><li>Apache Iceberg</li><li>PostgreSQL</li><li>Grafana</li></ul>
               <span class="project-card-link" aria-hidden="true">Open dashboard <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></span>
@@ -200,7 +200,7 @@
             <div class="tile-image-block"><picture><source srcset="/assets/img/projects/fraud-detection-streaming.webp" type="image/webp"><img src="/assets/img/projects/fraud-detection-streaming.jpg" alt="" width="1200" height="750" loading="lazy" decoding="async"></picture></div>
             <div class="project-card-body">
               <p class="project-card-num">10 · Real-time ML</p>
-              <h2><a class="project-card-main" href="/projects/fraud-detection-streaming/">Real-Time Fraud Detection Pipeline</a></h2>
+              <h2><a class="project-card-main" href="/projects/fraud-detection-streaming/"><span class="project-card-title">Real-Time Fraud Detection Pipeline</span></a></h2>
               <p>Card transactions scored in under 50 ms using streaming features from Spark and a Feast feature store, with alerts, analyst feedback and model quality in one view.</p>
               <ul aria-label="Tech stack"><li>Apache Kafka</li><li>Spark Structured Streaming</li><li>Feast</li><li>Redis</li><li>Grafana</li></ul>
               <span class="project-card-link" aria-hidden="true">Open dashboard <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></span>
@@ -233,6 +233,6 @@
     </div>
   </footer>
 
-  <script src="/assets/js/main.js?v=20261007-6" defer></script>
+  <script src="/assets/js/main.js?v=20261007-7" defer></script>
 </body>
 </html>
